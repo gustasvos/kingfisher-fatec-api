@@ -1,0 +1,39 @@
+# ignorar pastas ocultas
+/**/.*/ 
+# ignorar arquivos ocultos
+/**/.*  
+# exceto .gitignore e .gitkeep
+!/.gitignore
+!/**/.gitkeep
+
+# Node modules
+node_modules/
+
+# TypeScript
+*.tsbuildinfo
+
+# Build output
+/dist/
+/build/
+
+/# Debug and temp files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log*
+
+# Environment files
+.env
+.env.* 
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# TypeScript output
+*.tsbuildinfo
