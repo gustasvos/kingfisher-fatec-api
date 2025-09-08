@@ -111,4 +111,7 @@ A plataforma busca unificar e padronizar esses processos em um sistema centraliz
 - [ ] Estratégia de testes definida
 
 ## **Definição de Concluído (DoD)**
-
+- Código com resultados de saída testados de acordo com os cenários levantados no backlog;
+- Upload do código no repositório de projeto no GitHub seguindo os padrões de commit da equipe;
+- Informar PO sobre a finalização da tarefa para que possa ser validada pelo cliente;
+- Registro do tempo de realização da tarefa no Jira / informar PO ou SM o tempo que levou para finalização.
