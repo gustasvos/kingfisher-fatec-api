@@ -1,0 +1,18 @@
+### 📁 modules/
+Contém cada área funcional da aplicação (comercial, administrativo, operacional).
+ 
+**Estrutura de um módulo:**
+```
+modules/comercial/
+├── pages/         # Telas do sistema
+├── components/    # Componentes específicos do módulo
+├── hooks/         # Hooks específicos do módulo
+├── services/      # Comunicação com a API (ex: Axios)
+```
+ 
+**📌 Resumo:**
+ 
+- pages/: cada rota tem uma página (ex: ClientesPage.tsx)
+- components/: botões, tabelas, formulários do módulo
+- hooks/: lógica de estado ou comportamento (ex: useClientes)
+- services/: chamadas para a API backend (ex: clientes.api.ts)

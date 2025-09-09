@@ -1,0 +1,11 @@
+### 📁 config/
+Armazena configurações globais do backend.
+ 
+**📌 Exemplos:**
+- Conexão com banco de dados (database.ts)
+- CORS
+- Autenticação (JWT, OAuth)
+- Leitura e validação de variáveis de ambiente (env.ts)
+- Integrações (S3, Redis, etc.)
+ 
+ 

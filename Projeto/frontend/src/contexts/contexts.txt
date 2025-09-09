@@ -1,0 +1,7 @@
+### 📁 contexts/
+Armazena Contextos Globais com React Context API.
+ 
+**📌 Exemplos:**
+- AuthContext: login, logout, usuário atual
+- ThemeContext: tema claro/escuro
+- SidebarContext: controle de menu lateral

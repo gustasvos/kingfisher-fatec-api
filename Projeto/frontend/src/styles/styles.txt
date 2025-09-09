@@ -1,0 +1,8 @@
+### 📁 styles/
+Contém os estilos globais do projeto.
+ 
+**📌 Pode ter:**
+- styles.css ou global.scss
+- Tokens de cores
+- Fonts
+- Variáveis CSS

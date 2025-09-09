@@ -1,0 +1,18 @@
+### 📁 types/
+Guarda tipos globais do projeto (TypeScript).
+ 
+**📌 Exemplos:**
+- Tipagem do usuário autenticado
+- Enumerações (ex: status de pedido)
+- Tipos usados em múltiplos lugares
+ 
+### 📄 index.ts
+É o ponto de entrada do backend (como o main.tsx do frontend).
+ 
+**📌 Tarefas comuns:**
+- Iniciar o Express
+- Conectar ao banco de dados
+- Aplicar middlewares
+- Carregar rotas
+- Subir o servidor (app.listen())
+---

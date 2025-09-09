@@ -1,0 +1,7 @@
+### 📁 shared/
+Contém código reutilizável por todos os módulos.
+ 
+**📌 Exemplos:**
+- Serviços de envio de e-mail
+- Classes ou funções comuns (ex: AppError, DateProvider)
+- Interfaces e contratos compartilhados

@@ -1,0 +1,9 @@
+### 📁 shared/
+Contém componentes e utilitários reutilizáveis em todo o frontend.
+ 
+**📌 Exemplos:**
+- components/: botão padrão, modal, input, loader, toast
+- hooks/: useAuth, useDebounce, useMediaQuery
+- services/: api.ts com Axios configurado
+- utils/: formatCurrency, maskCPF, groupBy
+- types/: Tipos globais (ex: User, Role, ApiResponse)

@@ -1,0 +1,9 @@
+### 📁 middlewares/
+Contém funções intermediárias que interceptam requisições antes de chegarem ao controller.
+ 
+**📌 Exemplos:**
+- Verificação de autenticação (auth.middleware.ts)
+- Verificação de permissões (role.middleware.ts)
+- Tratamento de erros (error.middleware.ts)
+- Validação de dados
+ 

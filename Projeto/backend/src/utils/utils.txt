@@ -1,0 +1,9 @@
+
+ ### 📁 utils/
+Armazena funções utilitárias genéricas, que podem ser usadas em qualquer parte da aplicação.
+ 
+**📌 Exemplos:**
+- formatDate.ts: formata datas
+- generateToken.ts: gera tokens
+- uploadFile.ts: upload de arquivos
+- maskDocument.ts: aplica máscara em CPF/CNPJ

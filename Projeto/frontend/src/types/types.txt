@@ -1,0 +1,7 @@
+### 📁 types/
+Armazena tipos globais do frontend (parecido com o types/ do backend).
+ 
+**📌 Exemplos:**
+- Tipos de usuário
+- Tipos de resposta da API
+- Tipos de formulário

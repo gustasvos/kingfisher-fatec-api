@@ -1,0 +1,5 @@
+### 📁 routes/
+Define as rotas principais do aplicativo. Elas podem compor as rotas de cada módulo.
+ 
+**📌 Exemplo:**
+<Route path="/comercial/clientes" element={<ClientesPage />} />

@@ -1,0 +1,1 @@
+//Ponto de entrada do backend, (como o main.tsx do front)

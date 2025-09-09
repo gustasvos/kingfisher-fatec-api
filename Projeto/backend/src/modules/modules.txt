@@ -1,0 +1,23 @@
+### 📁 modules/
+Cada pasta representa um módulo funcional do sistema (ex: comercial, administrativo, operacional). Cada módulo segue uma arquitetura em camadas:
+ 
+**Estrutura de um módulo:**
+```
+modules/comercial/
+├── controllers/   # Controla as requisições HTTP (entrada)
+├── services/      # Regras de negócio
+├── models/        # Modelos de dados (ex: entidades do banco)
+├── repositories/  # Acesso ao banco de dados
+├── routes/        # Arquivos de rotas Express para o módulo
+├── dtos/          # Tipos/formatos esperados nas requisições
+```
+
+#### 📌 Resumo:
+ 
+- controllers/: recebe e responde à requisição.
+- services/: executa regras de negócio.
+- models/: define a estrutura dos dados.
+- repositories/: busca e salva dados no banco.
+- routes/: define os endpoints (/clientes, /produtos...).
+- dtos/: garante que os dados recebidos estão no formato certo.
+ 
