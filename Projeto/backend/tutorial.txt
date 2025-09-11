@@ -1,0 +1,29 @@
+cd .\Projeto\backend\
+
+//Verificar versão do Node.js
+node -v
+
+//Instalar as dependencias do Projeto
+npm i
+
+//MySQL, criando a database:
+create database newe;
+use newe;
+
+//Compilar o arquivo Typescript
+npx tsc
+node dist/index.js
+
+//Criando a migrations que será usada para criar a tabela no bancod de dados.
+npx typeorm migration:create src/config/migration/CreateUsersTable
+
+//scripts versionados que descrevem as mudanças no banco de dados
+npx typeorm migration:run -d dist/config/database.js
+
+//Obs: Se você está usando migrations no TypeORM, deve remover ou desativar a opção: synchronize: false
+
+//Verificar se pacotes foram instalados corretamente
+npm list --depth=0
+
+//Forma correta de remover todas as dependências:
+//Apague node_modules e package-lock.json

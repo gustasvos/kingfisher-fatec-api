@@ -37,3 +37,6 @@ Thumbs.db
 
 # TypeScript output
 *.tsbuildinfo
+
+# Ignorar a pasta dist/
+dist/
