@@ -49,3 +49,14 @@ router.post('/user',async (req: Request, res: Response) => {
 // const senhaValida = await bcrypt.compare('minhaSenhaSegura', hash);
 
 export default router
+
+
+// ENDPOINT LOGIN
+
+router.post('/login',async (req: Request, resp: Response) => {
+    try{
+
+    } catch{
+
+    }
+})
