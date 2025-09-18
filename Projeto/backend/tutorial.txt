@@ -38,3 +38,7 @@ npm list --depth=0
 
 //Forma correta de remover todas as dependências:
 //Apague node_modules e package-lock.json
+
+//Como pegar toda estrutura de pastas e arquivos no windows:
+cd /Projeto/backend/
+tree /F /A > estrutura_backend.txt
