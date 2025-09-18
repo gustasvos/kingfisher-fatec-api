@@ -42,3 +42,6 @@ npm list --depth=0
 //Como pegar toda estrutura de pastas e arquivos no windows:
 cd /Projeto/backend/
 tree /F /A > estrutura_backend.txt
+
+//Para testar a API use a extenção:
+REST Client
