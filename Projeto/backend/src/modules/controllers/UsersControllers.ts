@@ -144,6 +144,34 @@ export const updateUsuario = async (req: Request, res: Response) => {
     try{
         const {id} = req.params
         const data = req.body
+
+        if(!validarCPF(data.cpf)){
+            res.status(400).json({
+                mesage:'CPF inválido!'
+            })
+            return
+        }
+
+        if(!validarEmail(data.email)){
+            res.status(400).json({
+                mesage:'Email inválido!'
+            })
+            return
+        }
+
+        if(!validarTelefone(data.telefone)){
+            res.status(400).json({
+                mesage:'Telefone inválido!'
+            })
+            return
+        }
+
+        if (!validarSenha(data.senha)) {
+            res.status(400).json({
+                message: 'Senha inválida! A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.'
+            })
+            return
+        }
         const userRepository = AppDataSource.getRepository(User)
         const user = await userRepository.findOneBy({id: parseInt(id!)})
         if(!user){
@@ -159,10 +187,10 @@ export const updateUsuario = async (req: Request, res: Response) => {
             return
         }
         */
+       data.cpf = data.cpf.replace(/\D/g, '')//removendo caracteres não numéricos
         const existingUser = await userRepository.findOne({
             where: {
                 id: Not(parseInt(id!)),
-                email: data.email,
                 cpf: data.cpf
             }
         })
@@ -172,6 +200,12 @@ export const updateUsuario = async (req: Request, res: Response) => {
             })
         return
         }
+        
+        const saltRounds = Number(process.env.SALT_ROUNDS)
+        const senha = data.senha
+        const hash = await bcrypt.hash(senha, saltRounds)
+        data.senha = hash //inserindo a hash
+
         userRepository.merge(user, data)
         const results = await userRepository.save(user)
         res.status(200).json({
