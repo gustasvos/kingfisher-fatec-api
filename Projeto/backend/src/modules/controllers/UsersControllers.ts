@@ -55,17 +55,17 @@ router.post('/user',async (req: Request, res: Response) => {
 // ENDPOINT LOGIN
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        const { email, senha } = req.body;
+        const { cpf, senha } = req.body;
 
         const userRepository = AppDataSource.getRepository(User);
 
         const user = await userRepository.findOne({
-            where: { email: email }
+            where: { cpf: cpf }
         });
 
         if (!user) {
             return res.status(401).json({
-                message: 'Email ou senha inválidos.'
+                message: 'CPF ou senha inválidos.'
             });
         }
 
@@ -73,13 +73,13 @@ router.post('/login', async (req: Request, res: Response) => {
 
         if (!senhaValida) {
             return res.status(401).json({
-                message: 'Email ou senha inválidos.'
+                message: 'CPF ou senha inválidos.'
             });
         }
 
         // 🔹 GERAR O TOKEN 
         const token = jwt.sign(
-            { id: user.id, email: user.email }, // payload
+            { id: user.id, cpf: user.cpf }, // payload
             process.env.JWT_SECRET as string,   // chave secreta
             { expiresIn: process.env.JWT_EXPIRES_IN || '1h' } // expiração
         );
@@ -91,7 +91,6 @@ router.post('/login', async (req: Request, res: Response) => {
             user: {
                 id: user.id,
                 nome: user.nome,
-                email: user.email,
                 cpf: user.cpf
             }
         });
