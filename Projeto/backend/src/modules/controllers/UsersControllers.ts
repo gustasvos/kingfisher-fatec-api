@@ -4,6 +4,7 @@ import { User } from '../models/usuario'
 import { Not } from 'typeorm'
 import { console } from 'inspector'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const router = express.Router()
 
@@ -52,7 +53,6 @@ router.post('/user',async (req: Request, res: Response) => {
 
 
 // ENDPOINT LOGIN
-
 router.post('/login', async (req: Request, res: Response) => {
     try {
         const { email, senha } = req.body;
@@ -63,14 +63,12 @@ router.post('/login', async (req: Request, res: Response) => {
             where: { email: email }
         });
 
-        // Verifica se o usuário existe
         if (!user) {
             return res.status(401).json({
                 message: 'Email ou senha inválidos.'
             });
         }
 
-        // Compara a senha com a hash salva
         const senhaValida = await bcrypt.compare(senha, user.senha);
 
         if (!senhaValida) {
@@ -79,15 +77,22 @@ router.post('/login', async (req: Request, res: Response) => {
             });
         }
 
-        // Login bem-sucedido
+        // 🔹 GERAR O TOKEN 
+        const token = jwt.sign(
+            { id: user.id, email: user.email }, // payload
+            process.env.JWT_SECRET as string,   // chave secreta
+            { expiresIn: process.env.JWT_EXPIRES_IN || '1h' } // expiração
+        );
+
+        // 🔹 Resposta do login
         return res.status(200).json({
             message: 'Login realizado com sucesso!',
+            token,
             user: {
                 id: user.id,
                 nome: user.nome,
                 email: user.email,
                 cpf: user.cpf
-                // Não inclua a senha no retorno!
             }
         });
 
@@ -99,6 +104,5 @@ router.post('/login', async (req: Request, res: Response) => {
         });
     }
 });
-
 
 export default router
