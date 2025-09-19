@@ -106,4 +106,26 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 });
 
+// Simulando uma blacklist em memória
+const tokenBlacklist: string[] = [];
+
+router.post('/logout', (req: Request, res: Response) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log(token)
+
+    if (!token) {
+        return res.status(400).json({ message: 'Token não fornecido.' });
+    }
+
+    tokenBlacklist.push(token);
+    console.log(`Token adicionado à blacklist: ${token}`);
+
+    return res.status(200).json({
+        message: 'Logout efetuado com sucesso. Token foi invalidado.',
+        tokenDescartado: token
+    });
+});
+
+
 export default router
