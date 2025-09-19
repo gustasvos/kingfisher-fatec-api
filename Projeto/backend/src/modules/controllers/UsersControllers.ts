@@ -77,6 +77,8 @@ router.post('/login', async (req: Request, res: Response) => {
             });
         }
 
+        const jwt = require('jsonwebtoken');
+
         // 🔹 GERAR O TOKEN 
         const token = jwt.sign(
             { id: user.id, cpf: user.cpf }, // payload
