@@ -14,6 +14,15 @@ export class User {
     @Column({ type: 'varchar', length: 255, unique: true})
     email: string
 
+    @Column({ type: 'varchar', length: 15})
+    telefone: string
+
+    @Column({ type: 'varchar', length: 100})
+    cargo: string
+
     @Column({ type: 'varchar', length: 255})
     senha: string
+
+    @Column({type: 'date'})
+    data_contratacao: Date
 }

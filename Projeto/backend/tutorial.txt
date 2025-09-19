@@ -10,9 +10,20 @@ npm i
 create database newe;
 use newe;
 
+//Crie um arquivo .env dentro de backend/ e fora do diretório src/
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+SALT_ROUNDS=
+
 //Compilar o arquivo Typescript
 npx tsc
 node dist/index.js
+
+//Como compilar pontualmente um script, exemplo:
+npx ts-node ./src/utils/validarCPF.ts
 
 //Criando a migrations que será usada para criar a tabela no bancod de dados.
 npx typeorm migration:create src/config/migration/CreateUsersTable
@@ -27,3 +38,10 @@ npm list --depth=0
 
 //Forma correta de remover todas as dependências:
 //Apague node_modules e package-lock.json
+
+//Como pegar toda estrutura de pastas e arquivos no windows:
+cd /Projeto/backend/
+tree /F /A > estrutura_backend.txt
+
+//Para testar a API use a extenção:
+REST Client

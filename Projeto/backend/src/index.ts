@@ -1,13 +1,13 @@
 //Ponto de entrada do backend, (como o main.tsx do front)
 import express, {Request, Response} from 'express'
 import cors from 'cors'
-import UsersController from './modules/controllers/UsersControllers'
+import usuariosRoutes from './modules/routers/usuariosRoutes';
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.use('/',UsersController)
+app.use('/',usuariosRoutes)
 app.get('/', (req:Request, res:Response) =>{
     res.send('Bem Vindo')
 })
