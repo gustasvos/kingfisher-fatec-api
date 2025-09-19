@@ -2,12 +2,14 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
 import UsersController from './modules/controllers/UsersControllers'
+import motoristaRouter from './modules/routes/motoristaRouter'
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 
 app.use('/',UsersController)
+app.use('/',motoristaRouter)
 app.get('/', (req:Request, res:Response) =>{
     res.send('Bem Vindo')
 })
