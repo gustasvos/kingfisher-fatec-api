@@ -27,8 +27,8 @@ administrativos, comerciais e operacionais.
 ## ⚙️ Metodologia <a id="metodologia"></a>
 
 
-## 💡 MVP (Produto Mínimo Viável)
-
+## 💡 MVP (Produto Mínimo Viável)<a id="mvp"></a>
+<img src="documents/sprint-1/prototipofigma_kingfisher-ezgif.gif" width="600">
 
 ## 🛠️ Backlog do Produto <a id="backlog"></a>
 
