@@ -11,6 +11,7 @@ import { validarTelefone } from '../../utils/validarTelefone'
 //dotenv permite ler variáveis do .env
 import * as dotenv from "dotenv"
 dotenv.config()
+import jwt from 'jsonwebtoken'
 
 /*
     Json do Front-end
@@ -274,3 +275,80 @@ export const login = async (req: Request, res: Response) => {
   const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET!, {
     expiresIn: "1h",
 */
+
+
+
+// ENDPOINT LOGIN
+export const loginUsuario = async (req: Request, res: Response) => {
+    try {
+        const { cpf, senha } = req.body;
+
+        const userRepository = AppDataSource.getRepository(User);
+
+        const user = await userRepository.findOne({
+            where: { cpf: cpf }
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                message: 'CPF ou senha inválidos.'
+            });
+        }
+
+        const senhaValida = await bcrypt.compare(senha, user.senha);
+
+        if (!senhaValida) {
+            return res.status(401).json({
+                message: 'CPF ou senha inválidos.'
+            });
+        }
+
+        const jwt = require('jsonwebtoken');
+
+        // 🔹 GERAR O TOKEN 
+        const token = jwt.sign(
+            { id: user.id, cpf: user.cpf }, // payload
+            process.env.JWT_SECRET as string,   // chave secreta
+            { expiresIn: process.env.JWT_EXPIRES_IN || '1h' } // expiração
+        );
+
+        // 🔹 Resposta do login
+        return res.status(200).json({
+            message: 'Login realizado com sucesso!',
+            token,
+            user: {
+                id: user.id,
+                nome: user.nome,
+                cpf: user.cpf
+            }
+        });
+
+    } catch (error) {
+        console.error('Erro no login:', error);
+        return res.status(500).json({
+            message: 'Erro interno ao tentar realizar o login.',
+            error: error
+        });
+    }
+}
+
+// Simulando uma blacklist em memória
+const tokenBlacklist: string[] = [];
+
+export const logoutUsuario = (req: Request, res: Response) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log(token)
+
+    if (!token) {
+        return res.status(400).json({ message: 'Token não fornecido.' });
+    }
+
+    tokenBlacklist.push(token);
+    console.log(`Token adicionado à blacklist: ${token}`);
+
+    return res.status(200).json({
+        message: 'Logout efetuado com sucesso. Token foi invalidado.',
+        tokenDescartado: token
+    });
+}
