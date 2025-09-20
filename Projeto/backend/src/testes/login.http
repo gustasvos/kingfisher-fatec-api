@@ -4,14 +4,44 @@ Content-Type: application/json
 
 {
   "nome": "Thiago Lima",
-  "cpf": "851.073.660-07",
+  "nome_fantasia": "Thiago Lima LTDA",
+  "cpf": "85107366007",
+  "sexo": "M",
+  "estado_civil": "solteiro",
+  "data_nascimento": "1985-04-20",
+  "cidade_nascimento": "Rio de Janeiro",
+  "rg": "987656521",
+  "cidade_expedicao_rg": "Rio de Janeiro",
+  "orgao_expedidor": "SSP",
+  "data_emissao_rg": "2005-07-15",
+  "documento_exterior": "",
+  "inscricao_estadual": "9876543210",
+  "pis_pasep": "98765432101",
+  "rntrc": "987654321012345",
+  "validade_rntrc": "2027-05-30",
   "email": "thiago.lima@email.com",
   "telefone": "11999988877",
+  "celular": "11999988877",
+  "operadora": "Claro",
+  "codigo": "THI123",
+  "nome_pai": "José Lima",
+  "nome_mae": "Ana Lima",
+  "ativo": true,
+  "cep": "22040002",
+  "bairro": "Copacabana",
+  "logradouro": "Avenida Atlântica",
+  "numero": "456",
+  "complemento": "Sala 10",
+  "cidade": "Rio de Janeiro",
+  "tipo_endereco": "residencial",
+  "latitude": -22.971964,
+  "longitude": -43.182543,
   "cargo": "Product Owner",
   "senha": "Thiago@PO2025",
   "data_contratacao": "2025-09-01",
   "role": "admin"
 }
+
 
 ### login Adiministrador
 # @name login
@@ -41,19 +71,48 @@ GET http://localhost:8080/usuario/list
 Authorization: Bearer {{token}}
 
 ### Listar usuário por ID (requer ou seja o mesmo usuário ou admin)
-GET http://localhost:8080/usuario/2
+GET http://localhost:8080/usuario/1
 Authorization: Bearer {{token}}
 
 ### Atualizar usuário (requer admin)
-PUT http://localhost:8080/usuario/2
+PUT http://localhost:8080/usuario/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "nome": "Larissa Andrade",
-  "cpf": "111.444.777-35",
+  "nome_fantasia": "Larissa Andrade LTDA",
+  "cpf": "11144477735",
+  "sexo": "F",
+  "estado_civil": "solteiro",
+  "data_nascimento": "1990-05-15",
+  "cidade_nascimento": "São Paulo",
+  "rg": "123456789",
+  "cidade_expedicao_rg": "São Paulo",
+  "orgao_expedidor": "SSP",
+  "data_emissao_rg": "2010-04-10",
+  "documento_exterior": "",
+  "inscricao_estadual": "1234567890",
+  "pis_pasep": "12345678901",
+  "rntrc": "123456789012345",
+  "validade_rntrc": "2026-12-31",
   "email": "larissa.andrade@email.com",
   "telefone": "11987654321",
+  "celular": "11987654321",
+  "operadora": "Vivo",
+  "codigo": "LAR123",
+  "nome_pai": "João Andrade",
+  "nome_mae": "Maria Andrade",
+  "ativo": true,
+  "cep": "01234567",
+  "bairro": "Centro",
+  "logradouro": "Rua das Flores",
+  "numero": "123",
+  "complemento": "Apto 101",
+  "cidade": "São Paulo",
+  "tipo_endereco": "residencial",
+  "latitude": -23.55052,
+  "longitude": -46.633308,
   "cargo": "Desenvolvedora",
   "senha": "Larissa@2025",
   "data_contratacao": "2024-07-01",
