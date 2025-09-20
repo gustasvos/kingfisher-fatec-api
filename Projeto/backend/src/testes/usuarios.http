@@ -64,39 +64,3 @@ Content-Type: application/json
   "senha": "Amanda@2024",
   "data_contratacao": "2024-04-10"
 }
-### Criar novo usuário
-POST http://localhost:8080/usuario/create
-Content-Type: application/json
-
-{
-  "nome": "Thiago Lima",
-  "cpf": "851.073.660-07",
-  "email": "thiago.lima@email.com",
-  "telefone": "11999988877",
-  "cargo": "Product Owner",
-  "senha": "Thiago@PO2025",
-  "data_contratacao": "2025-09-01"
-}
-
-### Listar todos os usuários
-GET http://localhost:8080/usuario/list
-
-### Listar usuário específico por ID
-GET http://localhost:8080/usuario/6
-
-### Atualizar usuário por ID
-PUT http://localhost:8080/usuario/6
-Content-Type: application/json
-
-{
-  "nome": "Thiago Lima",
-  "cpf": "851.073.660-07",
-  "email": "thiago.lima@email.com",
-  "telefone": "11999988877",
-  "cargo": "Product Owner",
-  "senha": "Thiago@PO2025",
-  "data_contratacao": "2025-09-01"
-}
-
-### Deletar usuário por ID
-DELETE http://localhost:8080/usuario/6

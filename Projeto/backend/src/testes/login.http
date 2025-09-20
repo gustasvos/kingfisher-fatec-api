@@ -1,0 +1,74 @@
+### Criar super usuário
+POST http://localhost:8080/usuario/create
+Content-Type: application/json
+
+{
+  "nome": "Thiago Lima",
+  "cpf": "851.073.660-07",
+  "email": "thiago.lima@email.com",
+  "telefone": "11999988877",
+  "cargo": "Product Owner",
+  "senha": "Thiago@PO2025",
+  "data_contratacao": "2025-09-01",
+  "role": "admin"
+}
+
+### login Adiministrador
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "85107366007",
+  "senha": "Thiago@PO2025"
+}
+
+### login Adiministrador
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "11144477735",
+  "senha": "Larissa@2025"
+}
+
+###
+@token = {{login.response.body.token}}
+
+### Listar todos os usuários (requer admin)
+GET http://localhost:8080/usuario/list
+Authorization: Bearer {{token}}
+
+### Listar usuário por ID (requer ou seja o mesmo usuário ou admin)
+GET http://localhost:8080/usuario/2
+Authorization: Bearer {{token}}
+
+### Atualizar usuário (requer admin)
+PUT http://localhost:8080/usuario/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nome": "Larissa Andrade",
+  "cpf": "111.444.777-35",
+  "email": "larissa.andrade@email.com",
+  "telefone": "11987654321",
+  "cargo": "Desenvolvedora",
+  "senha": "Larissa@2025",
+  "data_contratacao": "2024-07-01",
+  "role": "admin"
+}
+
+### Deletar usuário (requer admin)
+DELETE http://localhost:8080/usuario/2
+Authorization: Bearer {{token}}
+
+### logout
+POST http://localhost:8080/logout
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+ 
+}
