@@ -13,19 +13,6 @@ import * as dotenv from "dotenv"
 dotenv.config()
 import jwt from 'jsonwebtoken'
 
-/*
-    Json do Front-end
-    {
-        "nome":     "string",
-        "cpf":      "string",
-        "email":    "string",
-        "telefone": "string",
-        "cargo":    "string",
-        "senha":    "string",
-        "data_de_contratacao": "2024-06-12",
-    }
- */
-
 export const createUsuario = async (req: Request, res: Response) => {
     try{
         let data = req.body
@@ -96,15 +83,14 @@ export const createUsuario = async (req: Request, res: Response) => {
 }
 export const listUsuario = async (req: Request, res: Response) => {
     try{
-        /*
         // Admin pode ver qualquer usuário
-        if (req.user?.role !== 'admin' && req.user?.role !== 'operacional') {
-            res.status(403).json({
-                message: 'Você não tem permissão para listar todos os usuários.'
-            })
-            return
-        }
-        */
+        // if (req.user?.role !== 'admin' && req.user?.role !== 'operacional') {
+        //     res.status(403).json({
+        //         message: 'Você não tem permissão para listar todos os usuários.'
+        //     })
+        //     return
+        // }
+
         const userRepository = AppDataSource.getRepository(User)
         const users = await userRepository.find()
 
@@ -126,15 +112,13 @@ export const listUsuarioById = async (req: Request, res: Response) => {
             })
             return
         }
-        /*
         // Somente o próprio usuário ou admin pode ver
-        if (req.user?.id !== user.id && req.user?.role !== 'admin') {
-            res.status(403).json({
-                message: 'Você não tem permissão para ver os dados deste usuário.'
-            })
-            return
-        }
-        */
+        // if (req.user?.id !== user.id && req.user?.role !== 'admin') {
+        //     res.status(403).json({
+        //         message: 'Você não tem permissão para ver os dados deste usuário.'
+        //     })
+        //     return
+        // }
         res.status(200).json(user)
         return
     }catch(error){
@@ -179,15 +163,13 @@ export const updateUsuario = async (req: Request, res: Response) => {
             res.status(404).json({message:'Usuário não encontrado!'})
             return
         }
-        /*
         // Somente admin ou o próprio usuário pode editar
-        if (req.user?.id !== user.id && req.user?.role !== 'admin' && req.user?.role !== 'comercial') {
-            res.status(403).json({
-                message: 'Você não tem permissão para editar este usuário.'
-            })
-            return
-        }
-        */
+        // if (req.user?.id !== user.id && req.user?.role !== 'admin' && req.user?.role !== 'comercial') {
+        //     res.status(403).json({
+        //         message: 'Você não tem permissão para editar este usuário.'
+        //     })
+        //     return
+        // }
        data.cpf = data.cpf.replace(/\D/g, '')//removendo caracteres não numéricos
         const existingUser = await userRepository.findOne({
             where: {
@@ -228,13 +210,11 @@ export const deleteUsuario = async (req: Request, res: Response) => {
             res.status(404).json({message:'Usuário não encontrado!'})
             return
         }
-        /*
-        if (req.user?.role !== 'admin') {
-            res.status(403).json({ 
-            message: 'Somente administradores podem deletar usuários.' })
-            return 
-        }
-        */
+        // if (req.user?.role !== 'admin') {
+        //     res.status(403).json({ 
+        //     message: 'Somente administradores podem deletar usuários.' })
+        //     return 
+        // }
         await userRepository.remove(user)
 
         res.status(200).json({message:'Usuário deletado com sucesso!'})
@@ -244,39 +224,6 @@ export const deleteUsuario = async (req: Request, res: Response) => {
         res.status(500).json({ message:"Erro ao deletar o usuário!" }) 
     }
 }
-/*
-✅ 1. Autenticação (Verificar se o usuário está logado)
-✅ 2. Autorização (Verificar o nível de acesso do usuário)
-src/
-├── middlewares/
-│   ├── authMiddleware.ts         ← já criado
-│   ├── autorizarUsuario          ← CRIAR AQUI
-
-// src/middlewares/authorize.ts
-import { Response, NextFunction } from "express";
-import { AuthRequest } from "./authMiddleware";
-
-export const authorize = (roles: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Acesso não autorizado para esta ação." });
-    }
-    next();
-  }
-}
-
-login:
-6. Dependências necessárias
-Instale as dependências se ainda não tiver:
-npm install jsonwebtoken bcrypt dotenv
-npm install --save-dev @types/jsonwebtoken @types/bcrypt
-
-export const login = async (req: Request, res: Response) => {
-  const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET!, {
-    expiresIn: "1h",
-*/
-
-
 
 // ENDPOINT LOGIN
 export const loginUsuario = async (req: Request, res: Response) => {
@@ -309,7 +256,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
         const token = jwt.sign(
             { id: user.id, cpf: user.cpf }, // payload
             process.env.JWT_SECRET as string,   // chave secreta
-            { expiresIn: process.env.JWT_EXPIRES_IN || '1h' } // expiração
+            { expiresIn: process.env.JWT_EXPIRES_IN} // expiração
         );
 
         // 🔹 Resposta do login
@@ -333,7 +280,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
 }
 
 // Simulando uma blacklist em memória
-const tokenBlacklist: string[] = [];
+export const tokenBlacklist: string[] = [];
 
 export const logoutUsuario = (req: Request, res: Response) => {
     const authHeader = req.headers.authorization;
