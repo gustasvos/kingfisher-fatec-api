@@ -8,10 +8,13 @@ import LoginPage from './modules/administrativo/pages/login-page';
 import React from 'react';
 import ReactDOM from "react-dom/client";
 import "../index.css"
+import PaginaCadastro from './modules/administrativo/pages/PaginaCadastro.jsx';
+
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <PaginaCadastro />
     <LoginPage />
   </React.StrictMode>
 )
