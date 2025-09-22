@@ -125,7 +125,7 @@ Authorization: Bearer {{token}}
 
 ### logout
 POST http://localhost:8080/logout
-Authorization: Bearer {{token}}
+# Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {

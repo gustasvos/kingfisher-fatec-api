@@ -291,7 +291,7 @@ export const logoutUsuario = (req: Request, res: Response) => {
         return res.status(400).json({ message: 'Token não fornecido.' });
     }
 
-    tokenBlacklist.push(token);
+    tokenBlacklist.push(token!);
     console.log(`Token adicionado à blacklist: ${token}`);
 
     return res.status(200).json({
