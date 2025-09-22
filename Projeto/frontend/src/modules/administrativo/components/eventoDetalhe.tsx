@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Botao from "../../../shared/components/botao"
+import Container from "../../../shared/components/container"
 
 export default function EventoDetalhe(){
 
@@ -15,7 +16,7 @@ export default function EventoDetalhe(){
 
     return(
         <section className="flex justify-center items-center h-screen">
-            <section className="bg-[rgba(232,246,255,0.94)] md:w-[800px] md:h-[500px] rounded-[15px]">
+            <Container>
                 <form action="" onSubmit={formEnviado} className="grid grid-cols-[58%,2%,40%] grid-rows-[35%,2%,63%] h-full rounded-[15px]">
                     <section className="col-start-1 row-start-1 ">
                         <h1 className="font-sans text-[36px] font-semibold pl-[20px] pt-[30px]  ">Evento 1</h1>
@@ -46,7 +47,6 @@ export default function EventoDetalhe(){
                         
                         {participa && <input type="submit" value={'ENVIAR'} className="bg-[#015084] w-[200px] h-[40px] rounded-[8px] text-white text-[15px] font-semibold cursor-pointer font-sans"/>}
                     </section>
-                    {/* <ToastContainer/> */}
                     {mensagem && (
                         <section className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
                             <section className="bg-white rounded-[15px] p-8 drop-shadow-lg flex flex-col justify-center items-center">
@@ -60,7 +60,7 @@ export default function EventoDetalhe(){
                         </section>
                     )}
                 </form>
-            </section>
+            </Container>
         </section>
     )
 }
