@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { IsDate } from 'class-validator'
 import { Sexo, EstadoCivil, TipoEndereco, TipoAcesso } from '../../utils/enums/usuarioEnums'
+import { OneToMany } from 'typeorm'
+import { EventoConvidado } from './EventoConvidado'
 
 @Entity('usuario')
 export class User {
@@ -122,4 +124,8 @@ export class User {
 
     @Column({ type: 'enum', enum: TipoAcesso, default: 'usuario' })
     role: TipoAcesso
+
+    // Relacionamentos
+    @OneToMany(() => EventoConvidado, ec => ec.funcionario)
+    eventosConvidado: EventoConvidado[];
 }
