@@ -63,6 +63,17 @@ Content-Type: application/json
   "senha": "Larissa@2025"
 }
 
+
+### logout
+POST http://localhost:8080/logout
+# Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+ 
+}
+
+
 ###
 @token = {{login.response.body.token}}
 
@@ -122,12 +133,3 @@ Content-Type: application/json
 ### Deletar usuário (requer admin)
 DELETE http://localhost:8080/usuario/2
 Authorization: Bearer {{token}}
-
-### logout
-POST http://localhost:8080/logout
-# Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
- 
-}
