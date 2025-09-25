@@ -1,42 +1,97 @@
-# **API – APRENDIZAGEM POR PROJETOS INTEGRADOS - EQUIPE KINGFISHER - FATEC SJC 2ºDSM 2025**
+# **Plataforma de Gestão Integrada - Kingfisher**
 
-Um projeto desenvolvido na FATEC de São José dos Campos como parte do API (Aprendizagem por Projetos Integrados), pela equipe Kingfisher do curso de Desenvolvimento de Software Multiplataforma em parceria com a empresa NeweLog.
+Projeto desenvolvido pela equipe Kingfisher do 2º semestre de Desenvolvimento de Software Multiplataforma da FATEC de São José dos Campos, como parte da metodologia API (Aprendizagem por Projetos Integrados), em parceria com a NeweLog.
 
-O objetivo é desenvolver uma plataforma única para centralizar e padronizar processos
-administrativos, comerciais e operacionais.
+---
 
 ## Índice
-1. [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-2. [Objetivo do Projeto](#-objetivo-do-projeto)
-3. [Visão do Produto](#visao)
-4. [Metodologia](#metodologia)
-5. [MVP](#mvp)
-6. [Backlog do Produto](#backlog)
-7. [Sprints](#-sprints)
-8. [Autores](#-autores)
+- [🧩 O Desafio](#-o-desafio)
+- [📋 Backlog de Produto](#-backlog-de-produto)
+- [🗓️ Cronograma de Evolução do Projeto](#️-cronograma-de-evolução-do-projeto)
+- [👟 Sprints](#-sprints)
+- [💻 Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [🗂️ Estrutura do Projeto](#️-estrutura-do-projeto)
+- [🚀 Como Executar, Usar e Testar o Projeto](#-como-executar-usar-e-testar-o-projeto)
+- [📚 Link para Pasta de Documentação](#-link-para-pasta-de-documentação)
+  - [✔️ Checklist de DoR e DoD](#️-checklist-de-dor-e-dod)
+  - [📌 DoR e DoD por Sprint](#-dor-e-dod-por-sprint)
+  - [🌿 Estratégia de Branch](#-estratégia-de-branch)
+  - [👤 Manual do Usuário](#-manual-do-usuário)
+  - [🛠️ Manual de Instalação](#️-manual-de-instalação)
+- [👥 Equipe](#-equipe)
 
-## 👨🏻‍💻 Tecnologias Utilizadas
+---
+## 🧩 O Desafio
+A Plataforma de Gestão Integrada, tem como objetivo principal resolver o problema da fragmentação de processos e informações na empresa. Atualmente, a gestão administrativa, comercial e operacional é realizada em ferramentas distintas, como Microsoft Lists, Google Forms e planilhas, o que causa retrabalho, inconsistência de dados e dificuldade na análise de resultados.
 
+A plataforma busca unificar e padronizar esses processos em um sistema centralizado e intuitivo. Com isso, os benefícios esperados são o aumento da eficiência operacional, a redução de erros, o maior controle sobre as atividades e a possibilidade de gerar relatórios precisos em tempo real, fornecendo uma base sólida para a tomada de decisões estratégicas.
 
-## 🎯 Objetivo do Projeto
+---
 
+## 📋 Backlog de Produto
+## **Product Backlog**
+| Id  | Prioridade | User Stories                                                                                                                                                         |
+| :-: | :--------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01  |    Alta    | Como administrador, eu quero criar e gerenciar colaboradores para ter um registro centralizado da equipe.                                                            |
+| 02  |    Alta    | Como colaborador, eu quero confirmar ou recusar minha participação em um evento para que o organizador saiba quem estará presente.                                   |
+| 03  |    Alta    | Como administrador, eu quero consultar os eventos pendentes de confirmação para monitorar as respostas dos convidados.                                               |
+| 04  |    Alta    | Como usuário, eu quero fazer login com segurança para acessar a plataforma.                                                                                          |
+| 05  |    Alta    | Como operador, eu quero preencher os checklists padronizados para registrar os processos.                                                                            |
+| 06  |    Alta    | Como gestor, eu quero visualizar e consultar os checklists preenchidos para acompanhar as operações.                                                                 |
+| 07  |    Alta    | Como novo agregado, quero cadastrar minhas informações e as do meu veículo e receber notificações automáticas sobre o andamento e o resultado do meu cadastro.       |
+| 08  |    Alta    | Como comercial, eu quero registrar o histórico de interações com cada cliente para ter um panorama completo da relação.                                              |
+| 09  |    Alta    | Como comercial, eu quero cadastrar e gerenciar clientes para centralizar as informações de contato.                                                                  |
+| 10  |    Média    | Como comercial, eu quero agendar tarefas e lembretes para o próximo contato com o cliente para não perder oportunidades.                                             |
+| 11  |    Alta    | Como comercial, eu quero mudar o status do cliente de acordo com o funil de vendas (Prospect, Inicial, etc.).                                                        |
+| 12  |   Média    | Como colaborador, eu quero receber notificações de eventos para ser informado sobre treinamentos e reuniões.                                                         |
+| 13  |    Alta    | Como comercial, eu quero pesquisar preços de frete para rotas e clientes específicos, para poder criar cotações de forma rápida e precisa.                           |
+| 14  |    Alta    | Como comercial, eu quero gerar e enviar uma cotação para o cliente, para documentar a proposta.                                                                      |
+| 15  |    Alta    | Como o comercial, eu quero transferir os detalhes de um frete fechado para a equipe operacional, para que eles possam dar início ao processo de logística e execução |
 
-## 💡 Visão do Produto <a id="visao"></a>
+---
 
+## 🗓️ Cronograma de Evolução do Projeto
+![Cronograma de Evolução do Projeto - Sprint 1](assets/sprint-1/cronograma-evolucao.jpg)
 
-## ⚙️ Metodologia <a id="metodologia"></a>
+---
 
+## 👟 Sprints
+| Sprint | Período | Documentação | Vídeo do Incremento |
+|---|---|---|---|
+| 1 | 08/09/2025 - 28/09/2025 | [Documentação Sprint 1](#) | [Vídeo Sprint 1](#) |
 
-## 💡 MVP (Produto Mínimo Viável)
+---
 
+## 💻 Tecnologias Utilizadas
 
-## 🛠️ Backlog do Produto <a id="backlog"></a>
+[![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=black)](https://reactjs.org/) [![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Tailwind CSS](https://img.shields.io/badge/-Tailwind%20CSS-06B6D4?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) [![Git](https://img.shields.io/badge/-Git-F05032?style=flat&logo=git&logoColor=white)](https://git-scm.com/) [![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/) [![Figma](https://img.shields.io/badge/-Figma-F24E1E?style=flat&logo=figma&logoColor=white)](https://www.figma.com/) [![Vertabelo](https://img.shields.io/badge/-Vertabelo-5D4F85?style=flat&logo=database&logoColor=white)](https://vertabelo.com/) [![MySQL](https://img.shields.io/badge/-MySQL-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
 
-
-## 📅 Sprints
-
-
-
+---
+## 🗂️ Estrutura do Projeto
+O projeto está dividido em duas partes principais: backend e frontend. Cada uma contém sua própria pasta src, com organização modular para facilitar o desenvolvimento e a manutenção do código.
+```
+kingfisher-fatec-api/
+├── backend/
+│   └── src/
+│       ├── modules/
+│       ├── shared/
+│       ├── config/
+│       ├── middlewares/
+│       ├── utils/
+│       ├── types/
+│       └── index.ts
+│
+├── frontend/
+│   └── src/
+│       ├── modules/
+│       ├── shared/
+│       ├── routes/
+│       ├── contexts/
+│       ├── styles/
+│       ├── types/
+│       └── main.tsx
+ ```
+---
 ## 👨‍💻 Autores
 
 | Nome      | Função          | Redes Sociais |
