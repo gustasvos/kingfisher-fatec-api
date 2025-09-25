@@ -2,9 +2,18 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import axios from "axios";
 
-const MultiSelectDropdown = () => {
-    const [options, setOptions] = useState([]);
-    const [selectedOptions, setSelectedOptions] = useState([])
+export type Opcoes = {
+    value: number | string
+    label: string
+}
+
+type multiSelectDropDownProps = {
+    value: Opcoes[]
+    onChange: (novoValor: Opcoes[] | null) => void
+}
+
+const MultiSelectDropdown : React.FC<multiSelectDropDownProps> = ({value, onChange}) => {
+    const [options, setOptions] = useState<Opcoes[]>([]);
 
     useEffect(() => {
         axios.get("http://localhost:8080/usuario/list")
@@ -21,10 +30,6 @@ const MultiSelectDropdown = () => {
             .catch((error) => console.error("Erro ao buscar dados:", error));
     }, []);
 
-    const handleChange = (selected: any) => {
-        setSelectedOptions(selected);
-    };
-
     return <div className="w-[300px] h-[200px] space-y-4">
         <label className="font-sans text-[#053657] font-medium">
             Convidados
@@ -32,14 +37,15 @@ const MultiSelectDropdown = () => {
         <Select
             isMulti
             options={options}
-            value={selectedOptions}
-            onChange={handleChange}
+            value={value}
+            onChange={(novoValor) => onChange(novoValor as Opcoes[] | null)}
             className="react-select-container"
             classNamePrefix="react-select"
             menuPortalTarget={document.body}
             menuPosition="fixed"
             placeholder="Selecione os colaboradores que serão convidados"
             required
+            
             styles={{
                 control: (provided) => ({
                     ...provided,
