@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { AppDataSource } from '../../config/database';
-import { Evento } from '../models/Event';
+import { Evento } from '../models/Evento';
 import { User } from '../models/usuario';
 import { EventoConvidado, StatusConvite } from '../models/EventoConvidado';
 import { In } from 'typeorm';
