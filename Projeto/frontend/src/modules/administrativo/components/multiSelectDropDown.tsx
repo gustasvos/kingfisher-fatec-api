@@ -7,7 +7,7 @@ const MultiSelectDropdown = () => {
     const [selectedOptions, setSelectedOptions] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:8080/usuarios")
+        axios.get("http://localhost:8080/usuario/list")
             .then((response) => {
                 const usuarios = response.data
                 console.log(usuarios)

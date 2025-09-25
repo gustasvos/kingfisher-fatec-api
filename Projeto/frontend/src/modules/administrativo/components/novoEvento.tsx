@@ -11,7 +11,7 @@ export default function NovoEvento() {
     const [descricao, setDescricao] = useState('')
     const [data, setData] = useState('')
     const [localizacao, setLocalizacao] = useState('')
-    const [convidados,setConvidados] = useState([])
+    // const [convidados,setConvidados] = useState([])
 
     const formEnviado = (e: React.FormEvent) => {
         e.preventDefault()
@@ -25,7 +25,7 @@ export default function NovoEvento() {
                     <p className="font-sans text-[25px] text-[#053657] font-semibold">Criação de Novo Evento</p>
                     <section>
                         <p className="font-sans text-[#053657] font-medium">Título</p>
-                        <input type="text" placeholder="Digite o título do evento" value={titulo} onChange={(e) => setTiulo(e.target.value)} required className="w-[300px] h-[30px] p-3 rounded-[8px] outline-[#053657]" />
+                        <input type="text" placeholder="Digite o título do evento" value={titulo} onChange={(e) => setTiulo(e.target.value)} required className="w-[300px] h-[30px] p-3 rounded-[8px] outline-[#053657] " />
                     </section>
                     <section>
                         <p className="font-sans text-[#053657] font-medium">Descrição</p>
