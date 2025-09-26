@@ -57,6 +57,7 @@ body {
 .input {
   display: flex;
   flex-direction: column;
+  color: #25272d;
 }
 
 .label {
