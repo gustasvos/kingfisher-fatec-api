@@ -1,0 +1,89 @@
+{
+  "Usuarios": [
+    {
+      "id": 1,
+      "nome": "Ana",
+      "email": "ana@gmail.com",
+      "cargo": "Frontend"
+    },
+    {
+      "id": 2,
+      "nome": "João",
+      "email": "joao@gmail.com",
+      "cargo": "Backend"
+    },
+    {
+      "id": 3,
+      "nome": "Maria",
+      "email": "maria@gmail.com",
+      "cargo": "UX Designer"
+    },
+    {
+      "id": 4,
+      "nome": "Carlos",
+      "email": "carlos@gmail.com",
+      "cargo": "Fullstack"
+    },
+    {
+      "id": 5,
+      "nome": "Beatriz",
+      "email": "beatriz@gmail.com",
+      "cargo": "Frontend"
+    },
+    {
+      "id": 6,
+      "nome": "Fernando",
+      "email": "fernando@gmail.com",
+      "cargo": "Backend"
+    },
+    {
+      "id": 7,
+      "nome": "Juliana",
+      "email": "juliana@gmail.com",
+      "cargo": "UI Designer"
+    },
+    {
+      "id": 8,
+      "nome": "Ricardo",
+      "email": "ricardo@gmail.com",
+      "cargo": "DevOps"
+    },
+    {
+      "id": 9,
+      "nome": "Carla",
+      "email": "carla@gmail.com",
+      "cargo": "QA"
+    },
+    {
+      "id": 10,
+      "nome": "Pedro",
+      "email": "pedro@gmail.com",
+      "cargo": "Backend"
+    },
+    {
+      "id": 11,
+      "nome": "Aline",
+      "email": "aline@gmail.com",
+      "cargo": "Frontend"
+    },
+    {
+      "id": 12,
+      "nome": "Marcos",
+      "email": "marcos@gmail.com",
+      "cargo": "Fullstack"
+    },
+    {
+      "id": 13,
+      "nome": "Patrícia",
+      "email": "patricia@gmail.com",
+      "cargo": "UX Designer"
+    },
+    
+    {
+      "id": 14,
+      "nome": "Alberto",
+      "email": "Alberto@gmail.com",
+      "cargo": "UX Designer"
+    }
+  ]
+}
