@@ -7,13 +7,11 @@
 import React from 'react';
 import ReactDOM from "react-dom/client";
 import "../index.css"
-import PaginaCadastro from './modules/administrativo/pages/PaginaCadastro.jsx';
-
+import RotasGerais from './routes';
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <PaginaCadastro />
-    <LoginPage />
+    <RotasGerais/>
   </React.StrictMode>
 )
