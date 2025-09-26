@@ -53,11 +53,11 @@ export default function Login(){
                         <p className="pt-8 md:pt-10 text-[15px] md:text-[25px] text-white font-sans font-medium pb-1 drop-shadow-[2px_2px_1px_rgba(0,0,0,0.3)]">
                             CPF
                         </p>
-                        <IMaskInput mask={"000.000.000-00"}  placeholder=" Digite seu CPF" required maxLength={14} value={cpf} onAccept={(value: any) => setCpf(value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657]"/>
+                        <IMaskInput mask={"000.000.000-00"}  placeholder=" Digite seu CPF" required maxLength={14} value={cpf} onAccept={(value: any) => setCpf(value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black"/>
                         <p className="pt-6 md:pt-8 text-[15px] md:text-[25px] text-white font-sans font-medium pb-1 drop-shadow-[2px_2px_1px_rgba(0,0,0,0.3)]">
                             Senha
                         </p>
-                        <input type="password" placeholder=" Digite sua senha" required value={senha} onChange={(e) => setSenha(e.target.value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657]"/>
+                        <input type="password" placeholder=" Digite sua senha" required value={senha} onChange={(e) => setSenha(e.target.value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black"/>
                         <div className="pt-10 flex justify-center">
                             <input type="submit" value={'ENTRAR'} className="bg-white w-[100px] md:w-[200px] p-2 rounded-[10px] md:rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-sans font-medium  shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white"/>
                         </div>
