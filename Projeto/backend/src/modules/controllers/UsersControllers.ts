@@ -12,6 +12,8 @@ import { validarTelefone } from '../../utils/validarTelefone'
 import * as dotenv from "dotenv"
 dotenv.config()
 import jwt from 'jsonwebtoken'
+// Simulando uma blacklist em memória
+export const tokenBlacklist: string[] = [];
 
 export const createUsuario = async (req: Request, res: Response) => {
     try{
@@ -69,7 +71,6 @@ export const createUsuario = async (req: Request, res: Response) => {
 
         const newUser = userRepository.create(data) 
         await userRepository.save(newUser)
-        console.log(newUser)
 
         res.status(201).json({
             message:'Usuário cadastrado com sucesso!',
@@ -83,13 +84,6 @@ export const createUsuario = async (req: Request, res: Response) => {
 }
 export const listUsuario = async (req: Request, res: Response) => {
     try{
-        // Admin pode ver qualquer usuário
-        // if (req.user?.role !== 'admin' && req.user?.role !== 'operacional') {
-        //     res.status(403).json({
-        //         message: 'Você não tem permissão para listar todos os usuários.'
-        //     })
-        //     return
-        // }
 
         const userRepository = AppDataSource.getRepository(User)
         const users = await userRepository.find()
@@ -112,13 +106,6 @@ export const listUsuarioById = async (req: Request, res: Response) => {
             })
             return
         }
-        // Somente o próprio usuário ou admin pode ver
-        // if (req.user?.id !== user.id && req.user?.role !== 'admin') {
-        //     res.status(403).json({
-        //         message: 'Você não tem permissão para ver os dados deste usuário.'
-        //     })
-        //     return
-        // }
         res.status(200).json(user)
         return
     }catch(error){
@@ -163,13 +150,7 @@ export const updateUsuario = async (req: Request, res: Response) => {
             res.status(404).json({message:'Usuário não encontrado!'})
             return
         }
-        // Somente admin ou o próprio usuário pode editar
-        // if (req.user?.id !== user.id && req.user?.role !== 'admin' && req.user?.role !== 'comercial') {
-        //     res.status(403).json({
-        //         message: 'Você não tem permissão para editar este usuário.'
-        //     })
-        //     return
-        // }
+
        data.cpf = data.cpf.replace(/\D/g, '')//removendo caracteres não numéricos
         const existingUser = await userRepository.findOne({
             where: {
@@ -210,11 +191,7 @@ export const deleteUsuario = async (req: Request, res: Response) => {
             res.status(404).json({message:'Usuário não encontrado!'})
             return
         }
-        // if (req.user?.role !== 'admin') {
-        //     res.status(403).json({ 
-        //     message: 'Somente administradores podem deletar usuários.' })
-        //     return 
-        // }
+
         await userRepository.remove(user)
 
         res.status(200).json({message:'Usuário deletado com sucesso!'})
@@ -279,13 +256,9 @@ export const loginUsuario = async (req: Request, res: Response) => {
     }
 }
 
-// Simulando uma blacklist em memória
-export const tokenBlacklist: string[] = [];
-
 export const logoutUsuario = (req: Request, res: Response) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
-    console.log(token)
 
     if (!token) {
         return res.status(400).json({ message: 'Token não fornecido.' });

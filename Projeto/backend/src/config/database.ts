@@ -3,6 +3,8 @@ import { DataSource } from 'typeorm'
 import { User } from '../modules/models/usuario'
 //dotenv permite ler variáveis do .env
 import * as dotenv from "dotenv"
+import { EventoConvidado } from '../modules/models/EventoConvidado'
+import { Evento } from '../modules/models/Evento'
 dotenv.config()
 
 export const AppDataSource = new DataSource({
@@ -14,7 +16,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME!,
     synchronize: true,
     logging: true,
-    entities: [User],
+    entities: [User, Evento, EventoConvidado],
     subscribers: [],
     migrations: [__dirname + './migration/*.js'],
 })

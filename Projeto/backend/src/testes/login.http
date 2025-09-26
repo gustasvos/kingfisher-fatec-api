@@ -43,7 +43,7 @@ Content-Type: application/json
 }
 
 
-### login Adiministrador
+### login Adiministrador Thiago
 # @name login
 POST http://localhost:8080/login
 Content-Type: application/json
@@ -53,7 +53,7 @@ Content-Type: application/json
   "senha": "Thiago@PO2025"
 }
 
-### login Adiministrador
+### login Colaborador Larissa
 # @name login
 POST http://localhost:8080/login
 Content-Type: application/json
@@ -63,27 +63,29 @@ Content-Type: application/json
   "senha": "Larissa@2025"
 }
 
+###
+@token = {{login.response.body.token}}
 
 ### logout
 POST http://localhost:8080/logout
-# Authorization: Bearer {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{
- 
-}
-
-
-###
-@token = {{login.response.body.token}}
+{}
 
 ### Listar todos os usuários (requer admin)
 GET http://localhost:8080/usuario/list
 Authorization: Bearer {{token}}
+Content-Type: application/json 
+
+{}
 
 ### Listar usuário por ID (requer ou seja o mesmo usuário ou admin)
 GET http://localhost:8080/usuario/1
 Authorization: Bearer {{token}}
+Content-Type: application/json 
+
+{}
 
 ### Atualizar usuário (requer admin)
 PUT http://localhost:8080/usuario/1
@@ -127,9 +129,12 @@ Content-Type: application/json
   "cargo": "Desenvolvedora",
   "senha": "Larissa@2025",
   "data_contratacao": "2024-07-01",
-  "role": "admin"
+  "role": "usuario"
 }
 
 ### Deletar usuário (requer admin)
 DELETE http://localhost:8080/usuario/2
 Authorization: Bearer {{token}}
+Content-Type: application/json 
+
+{}
