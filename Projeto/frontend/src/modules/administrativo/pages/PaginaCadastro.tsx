@@ -126,7 +126,7 @@ export default function Cadastro() {
       const response = await instance.post("/usuario/create", payload);
       setSucesso(`Cadastro realizado com sucesso! ID: ${response.data.id}`);
       setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 1000);
     } catch (error) {
       setErro("Erro ao cadastrar. Verifique os dados e tente novamente.");
