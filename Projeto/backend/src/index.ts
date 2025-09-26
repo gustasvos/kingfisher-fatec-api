@@ -2,11 +2,13 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
 import usuariosRoutes from './modules/routers/usuariosRoutes';
+import EventoRoutes from './modules/routers/EventoRoutes';
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 
+app.use('/',EventoRoutes)
 app.use('/',usuariosRoutes)
 app.get('/', (req:Request, res:Response) =>{
     res.send('Bem Vindo')
