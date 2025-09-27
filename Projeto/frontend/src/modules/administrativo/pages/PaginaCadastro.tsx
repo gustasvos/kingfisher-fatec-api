@@ -86,7 +86,7 @@ export default function Cadastro() {
     nome: limparTexto(nome),
     nome_fantasia: limparTexto(nome_fantasia),
     cpf: cpf.replace(/\D/g, ""),
-    data_nascimento,
+   data_nascimento, 
     documento_exterior: limparTexto(documento_exterior),
     telefone: telefone.replace(/\D/g, ""),
     celular: celular.replace(/\D/g, ""),
