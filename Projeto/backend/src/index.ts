@@ -1,6 +1,7 @@
 //Ponto de entrada do backend, (como o main.tsx do front)
 import express, {Request, Response} from 'express'
 import usuariosRoutes from './modules/routers/usuariosRoutes';
+import EventoRoutes from './modules/routers/EventoRoutes';
 const cors = require('cors');
 
 const app = express()
@@ -11,6 +12,7 @@ app.use(cors({
   credentials: true // se você usa cookies, tokens etc
 }));
 
+app.use('/',EventoRoutes)
 app.use('/',usuariosRoutes)
 app.get('/', (req:Request, res:Response) =>{
     res.send('Bem Vindo')
