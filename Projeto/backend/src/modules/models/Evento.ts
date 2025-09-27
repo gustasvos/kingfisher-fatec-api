@@ -15,6 +15,9 @@ export class Evento {
   @Column({ type: 'timestamp' })
   dataHora: Date;
 
+  @Column({ type: 'varchar', length: 255 })
+  localizacao: string;
+
   @OneToMany(() => EventoConvidado, ec => ec.evento, { cascade: true })
   convidados: EventoConvidado[];
 }
