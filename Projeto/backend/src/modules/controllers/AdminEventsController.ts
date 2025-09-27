@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response } from 'express'
 import { AppDataSource } from '../../config/database';
 import { Evento } from '../models/Evento';
 import { User } from '../models/usuario';
@@ -17,6 +17,7 @@ function formatEvento(evento: Evento) {
     titulo: evento.titulo,
     descricao: evento.descricao,
     dataHora: evento.dataHora,
+    localizacao: evento.localizacao,
     participantes: (evento.convidados || []).map(c => ({
       idConvite: c.id,
       funcionario: c.funcionario ? {
@@ -81,12 +82,13 @@ export const listEventoById = async (req: Request, res: Response) => {
 // POST /admin/events -> cria evento
 export const createEvento = async (req: Request, res: Response) => {
   try {
-    const { titulo, descricao, dataHora, convidados } = req.body;
+    const { titulo, descricao, dataHora, localizacao, convidados } = req.body;
     
     const evento = eventoRepo().create({
       titulo,
       descricao,
-      dataHora: dataHora ? new Date(dataHora) : new Date()
+      dataHora: dataHora ? new Date(dataHora) : new Date(),
+      localizacao
     });
 
     const saved = await eventoRepo().save(evento);
@@ -120,7 +122,7 @@ export const createEvento = async (req: Request, res: Response) => {
 export const autualizaEvento = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { titulo, descricao, dataHora } = req.body;
+    const { titulo, descricao, dataHora, localizacao } = req.body;
 
     const evento = await eventoRepo().findOneBy({ id: Number(id) });
     if (!evento) return res.status(404).json({ error: 'Evento não encontrado' });
@@ -128,6 +130,7 @@ export const autualizaEvento = async (req: Request, res: Response) => {
     evento.titulo = titulo ?? evento.titulo;
     evento.descricao = descricao ?? evento.descricao;
     evento.dataHora = dataHora ? new Date(dataHora) : evento.dataHora;
+    evento.localizacao = localizacao ?? evento.localizacao;
 
     await eventoRepo().save(evento);
 
