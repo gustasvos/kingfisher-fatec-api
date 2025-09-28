@@ -15,6 +15,20 @@ import jwt from 'jsonwebtoken'
 // Simulando uma blacklist em memória
 export const tokenBlacklist: string[] = [];
 
+export const checkIfUsersExist = async (req: Request, res: Response) => {
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const count = await userRepository.count();
+
+    // Se count for 0, não tem usuários ainda
+    const exists = count > 0;
+
+    res.status(200).json({ exists });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao verificar usuários" });
+  }
+};
+
 export const createUsuario = async (req: Request, res: Response) => {
     try{
         let data = req.body
