@@ -1,13 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-import imgHome from './../../../assets/imgHomepage.png';               // "/home"
-import imgUser from './../../../assets/imgAddUserMale.png';           // "/cadastrar"
-import imgCalendar from './../../../assets/imgTearOffCalendar.png';   // "/eventos"
-import imgNotification from './../../../assets/imgDoorbell.png';      // "/evento-convite"
-import imgColab from './../../../assets/imgTeam.svg';                 // "/colaboradores"
-import imgLogin from './../../../assets/imgLoginKey.svg';             // "/"
-import { useNavigate } from 'react-router-dom';
-
+import { Navigate, useNavigate } from "react-router-dom";
+import Navbar from "../../../shared/components/navbar";
+import usuarioIcon from "../../../assets/usuario.svg";
 
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
@@ -167,43 +162,25 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex bg-[var(--bg)] font-sans">
-      {/* Sidebar */}
-    <aside className="w-20 bg-[var(--teal)] min-h-screen flex flex-col items-center py-6 gap-6">
-      <button onClick={() => navigate('/')} title="Login">
-        <img src={imgLogin} alt="Login" className="w-8 h-8 sidebar-icon" />
-      </button>
-      <button onClick={() => navigate('/home')} title="Home">
-        <img src={imgHome} alt="Home" className="w-8 h-8 sidebar-icon" />
-      </button>
-      <button onClick={() => navigate('/cadastrar')} title="Cadastrar Usuário">
-        <img src={imgUser} alt="Usuário" className="w-8 h-8 sidebar-icon" />
-      </button>
-      <button onClick={() => navigate('/eventos')} title="Calendário de Eventos">
-        <img src={imgCalendar} alt="Calendário" className="w-8 h-8 sidebar-icon" />
-      </button>
-      <button onClick={() => navigate('/evento-convite')} title="Convites">
-        <img src={imgNotification} alt="Notificações" className="w-8 h-8 sidebar-icon" />
-      </button>
-      <button onClick={() => navigate('/colaboradores')} title="Colaboradores">
-        <img src={imgColab} alt="Colaboradores" className="w-8 h-8 sidebar-icon" />
-      </button>
-    </aside>
+      <Navbar/>
 
 
 
       <main className="flex-1 p-8">
         {/* Header */}
         <header className="card p-8 flex gap-6 items-center" style={{ background: "var(--hero)", color: "#000" }}>
-          <div
-            id="avatar"
-            className="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center text-black text-xl font-bold"
-          >
+          <div id="avatar" className="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center">
             {dashboard?.user.avatarUrl ? (
-              <img src={dashboard.user.avatarUrl} alt="avatar" className="w-28 h-28 rounded-full object-cover" />
+              <img
+                src={dashboard.user.avatarUrl}
+                alt="avatar"
+                className="w-28 h-28 rounded-full object-cover"
+              />
             ) : (
-              "?"
+              <img src={usuarioIcon} alt="usuário" className="w-28 h-28" />
             )}
           </div>
+
           <div>
             <h1 className="text-2xl font-bold tracking-wide text-black">
               SEJA BEM-VINDO {dashboard?.user.name.toUpperCase()}
@@ -222,7 +199,8 @@ export default function HomePage() {
           {/* Coluna esquerda */}
           <div className="col-span-4 space-y-6">
             {/* Calendário */}
-            <div className="card p-6">
+            <div className="card p-6 bg-white rounded-lg">
+
               <div className="flex items-start justify-between text-black">
                 <button
                   className="font-bold text-xl px-3 py-1 hover:bg-gray-200 rounded"

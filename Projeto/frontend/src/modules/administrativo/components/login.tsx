@@ -38,7 +38,7 @@ export default function Login(){
         setSucesso("Login realizado com sucesso!");
         // Aguarda 1 segundo e redireciona
         setTimeout(() => {
-            navigate("/cadastrar");
+            navigate("/home");
         }, 1000);
         } else {
         setErro("Token não recebido do servidor");

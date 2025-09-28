@@ -4,7 +4,7 @@ import Cadastro from '../modules/administrativo/pages/PaginaCadastro';
 import EventoDetalhePage from "../modules/administrativo/pages/eventoDetalhe-page"
 import ListagemColaborador from "../modules/administrativo/pages/listagem-colaborador-page"
 import NovoEvento from "../modules/administrativo/components/novoEvento";
-import PaginaEventos from "../modules/administrativo/components/pagina-eventos";
+import PaginaEventos from "../modules/administrativo/components/paginaEventos";
 import HomePage from "../modules/administrativo/pages/home-Page";
 
 
