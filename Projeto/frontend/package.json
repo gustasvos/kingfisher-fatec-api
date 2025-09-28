@@ -10,13 +10,19 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/daygrid": "^6.1.19",
+    "@fullcalendar/interaction": "^6.1.19",
+    "@fullcalendar/list": "^6.1.19",
+    "@fullcalendar/react": "^6.1.19",
+    "@fullcalendar/timegrid": "^6.1.19",
     "axios": "^1.12.2",
+    "chart.js": "^4.5.0",
     "lucide-react": "^0.544.0",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "react-imask": "^7.6.1",
     "react-router-dom": "^6.15.0",
-    "react-select": "^5.10.2",
     "react-select": "^5.10.2",
     "react-toastify": "^11.0.5"
   },
