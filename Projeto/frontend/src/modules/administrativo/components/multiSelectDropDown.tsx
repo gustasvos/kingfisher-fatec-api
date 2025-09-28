@@ -52,7 +52,11 @@ const MultiSelectDropdown : React.FC<multiSelectDropDownProps> = ({value, onChan
                     minHeight: "30px",
                     maxHeight: "250px",
                     overflowY: "auto"
-                })
+                }),
+                option: (base) => ({
+                ...base,
+                color: "#062846ff"
+                }),
             }}
         />
     </div>

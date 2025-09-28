@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #d1edff;
+  color: #ffffff;
+}
+
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #015084;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+}
+
+.header {
+  text-align: left;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 40px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.text {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.inputs::-webkit-scrollbar {
+  width: 8px;
+}
+.inputs::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  color: #25272d;
+}
+
+.label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.input input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+}
+
+.submit-container {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.submit {
+  background-color: #d1edff;
+  color: #015084;
+  padding: 12px 24px;
+  border: none;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit:hover {
+  background-color: #aee0ff;
+}
+
+@layer components {
+  .input-style {
+    @apply w-full h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-2 md:pl-3 mt-1 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657];
+  }
+}
