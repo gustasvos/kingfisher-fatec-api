@@ -10,7 +10,7 @@ export default function ListagemColaborador() {
 
     useEffect(() => {
         // colocar o nosso http, esse foi só para eu testar
-        axios.get<Colaborador[]>("http://localhost:3001/Usuarios")
+        axios.get<Colaborador[]>("http://localhost:8080/usuario/list")
             .then((response: any) => {
                 setColaborador(response.data)
             })
@@ -25,8 +25,11 @@ export default function ListagemColaborador() {
     const excluirColaborador = async(id:number) => {
         if(window.confirm("Tem certeza que deseja excluir esse colborador?")){
             // colocar o nosso http, esse foi só para eu testar
-            await fetch(`http://localhost:3001/Usuarios/${id}`, {
-                method: "DELETE"
+            await fetch(`http://localhost:8080/usuario/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             })
             setColaborador((prev) => prev.filter((colabo) => colabo.id !== id))
         }
@@ -44,7 +47,7 @@ export default function ListagemColaborador() {
             <section>
                 <Navbar />
             </section>
-            <section className="w-screen p-7 grid grid-cols-2 gap-2 gap-x-[100px] ml-[80px] max-h-screen overflow-auto">
+            <section className="w-screen p-7 grid grid-cols-2 gap-2 gap-x-[100px] ml-[80px] max-h-screen overflow-auto text-black">
                 {colaborador.map((c) => (
                     <CardColaborador key={c.id} colaborador={c} excluir={excluirColaborador} />
                 ))}
