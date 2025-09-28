@@ -81,6 +81,10 @@ export default function Cadastro() {
     const limparNumeroDecimal = (texto: string) => {
       return texto.replace(/[^0-9.-]/g, '').trim();
     };
+    const limparCodigo = (texto: string) => {
+      return texto.replace(/[^\w\d]/g, '').trim();
+    };
+
 
   const payload = {
     nome: limparTexto(nome),
@@ -92,7 +96,7 @@ export default function Cadastro() {
     celular: celular.replace(/\D/g, ""),
     operadora: limparTexto(operadora),
     cidade_nascimento: limparTexto(cidade_nascimento),
-    inscricao_estadual: limparTexto(inscricao_estadual),
+    inscricao_estadual: limparCodigo(inscricao_estadual),
     rg: rg.replace(/\D/g, ""),
     cidade_expedicao_rg: limparTexto(cidade_expedicao_rg),
     orgao_expedidor: limparTexto(orgao_expedidor),
@@ -106,7 +110,7 @@ export default function Cadastro() {
     data_contratacao,
     sexo: sexo.trim().charAt(0).toLowerCase(),
     estado_civil: limparTexto(estado_civil),
-    rntrc: limparTexto(rntrc),
+    rntrc: limparCodigo(rntrc),
     validade_rntrc,
     codigo: limparTexto(codigo),
     cep: cep.replace(/\D/g, ""),
