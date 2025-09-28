@@ -1,8 +1,9 @@
 import imgLogin from "../../../assets/imgLogin.jpeg";
 import { IMaskInput } from "react-imask";
 import instance from "../../../services/api";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios' 
 
 
 export default function Login(){
@@ -11,6 +12,18 @@ export default function Login(){
     const [erro, setErro] = useState<string | null>(null);
     const [sucesso, setSucesso] = useState<string | null>(null);
     const navigate = useNavigate(); // ⬅️ hook do react-router-dom
+    const [temUsuario, setTemUsuario] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        axios.get("http://localhost:8080/users/exists")
+        .then(response => {
+            setTemUsuario(response.data.exists);
+        })
+        .catch(err => {
+            console.error("Erro ao verificar usuários:", err);
+            setTemUsuario(true); // assume que tem pra evitar liberar criação indevida
+        });
+    }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,6 +74,14 @@ export default function Login(){
                         <div className="pt-10 flex justify-center">
                             <input type="submit" value={'ENTRAR'} className="bg-white w-[100px] md:w-[200px] p-2 rounded-[10px] md:rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-sans font-medium  shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white"/>
                         </div>
+                        {/* Se não tem usuário (temUsuario === false), mostra o link */}
+                        {temUsuario === false && (
+                            <div className="mt-4 text-center">
+                            <a href="/Cadastrar" className="text-white-600 underline" >
+                                Criar uma nova conta
+                            </a>
+                            </div>
+                        )}
                         {sucesso && (
                         <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
                             {sucesso}
