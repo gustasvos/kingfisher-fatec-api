@@ -256,3 +256,51 @@ export const removeConviteEvento = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Erro ao remover convite' });
   }
 };
+
+// GET /admin/invitations/user/:id -> lista os convites de um usuário específico
+export const listConvitesByUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const idNum = Number(id);
+
+    if (isNaN(idNum)) {
+      return res.status(400).json({ error: 'ID de usuário inválido' });
+    }
+
+    const convites = await conviteRepo().find({
+      where: {
+        funcionario: { id: idNum }
+      },
+      relations: ['evento']  // funcionario já vem no eager
+    });
+
+    if (convites.length === 0) {
+      return res.status(404).json({ error: 'Nenhum convite encontrado para esse usuário' });
+    }
+
+    const convitesFormatados = convites.map(convite => ({
+      idConvite: convite.id,
+      status: convite.status,
+      motivo: convite.motivo || null,
+      criadoEm: convite.criadoEm,
+      evento: {
+        id: convite.evento.id,
+        titulo: convite.evento.titulo,
+        descricao: convite.evento.descricao,
+        dataHora: convite.evento.dataHora,
+        localizacao: convite.evento.localizacao,
+      },
+      funcionario: {
+        id: convite.funcionario.id,
+        nome: convite.funcionario.nome,
+        email: convite.funcionario.email,
+      }
+    }));
+
+    return res.json(convitesFormatados);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Erro ao buscar convites do usuário' });
+  }
+};
+
