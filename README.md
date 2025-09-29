@@ -41,7 +41,7 @@ A plataforma busca unificar e padronizar esses processos em um sistema centraliz
 ## 👟 Sprints
 | Sprint | Período | Documentação | Vídeo do Incremento |
 |---|---|---|---|
-| 1 | 08/09/2025 - 28/09/2025 | [Documentação Sprint 1](/documents/sprint-1/README.md) | [Vídeo Sprint 1](#) |
+| 1 | 08/09/2025 - 28/09/2025 | [Documentação Sprint 1](/documents/sprint-1/README.md) | [Vídeo Sprint 1](https://youtu.be/kRzsDg2WI8k) |
 
 ---
 
@@ -140,7 +140,7 @@ O frontend estará disponível em: http://localhost:5173.
 ### 🎒 Banco de Dados (MySQL)
 1. Crie o banco de dados local.
 
-2. Execute os scripts SQL de criação (disponíveis [aqui](/documents/scripts-mysql)).
+2. Execute os scripts SQL de criação.
 
 3. Verifique se as credenciais estão corretas no arquivo .env.
 
