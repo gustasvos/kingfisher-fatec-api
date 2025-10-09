@@ -6,6 +6,7 @@ import ListagemColaborador from "../modules/administrativo/pages/listagem-colabo
 import NovoEvento from "../modules/administrativo/components/novoEvento";
 import PaginaEventos from "../modules/administrativo/components/paginaEventos";
 import HomePage from "../modules/administrativo/pages/home-Page";
+import Eventos from "../modules/administrativo/components/listagem-eventos";
 
 
 
@@ -21,6 +22,7 @@ export default function RotasADM(){
             <Route path="/eventos" element={<PaginaEventos/>}/>
             <Route path="/novo-evento" element={<NovoEvento/>}/>
             <Route path="/home" element={<HomePage/>} />
+            <Route path="/teste" element={<Eventos />} />
         </>
     )
 }

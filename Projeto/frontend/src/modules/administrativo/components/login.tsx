@@ -11,7 +11,7 @@ export default function Login(){
     const [senha, setSenha] = useState("");
     const [erro, setErro] = useState<string | null>(null);
     const [sucesso, setSucesso] = useState<string | null>(null);
-    const navigate = useNavigate(); // ⬅️ hook do react-router-dom
+    const navigate = useNavigate(); // hook do react-router-dom
     const [temUsuario, setTemUsuario] = useState<boolean | null>(null);
 
     useEffect(() => {
