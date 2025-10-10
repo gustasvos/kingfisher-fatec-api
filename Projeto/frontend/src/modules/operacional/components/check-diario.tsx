@@ -1,9 +1,24 @@
-import Botao from "../../../shared/components/botao";
+import { useState } from "react";
+import BotaoSubmit from "../../../shared/components/botao-submit";
 import InputLine from "../../../shared/components/inputLine";
 
 export default function CheckDiario() {
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+
+        setTimeout(() => {
+        alert("Formulário enviado!");
+        setLoading(false);
+        }, 2000);
+    };
     return (
         <>
+        <section>
+            <h1 style={{ color: "#000000ff", fontSize: "2.5rem", fontWeight: 700 }}>Checklist Diário - Frota Newe</h1>
+        </section>
             <form action="">
                 <InputLine type="text" placeholder="" id='nome' htmlfor="nome" required>Nome Completo</InputLine>
                 <InputLine type="text" placeholder="" id='placa-veiculo' htmlfor="placa-veiculo">Placa do veículo</InputLine>
@@ -62,7 +77,9 @@ export default function CheckDiario() {
                 </fieldset>
                 <InputLine type="datetime-local" id='data-hora-encerramento' htmlfor="data-hora-encerramento" required>Data e hora do encerramento da atividade</InputLine>
                 <InputLine type="text" placeholder="" id='observacoes' htmlfor="observacoes" required>Observações que sejam pertinentes</InputLine>
-                {/* <Botao children={undefined}/> */}
+                <section>
+                     <BotaoSubmit loading={loading} label="Enviar" type="submit"/>
+                </section>
             </form>
         </>
     )
