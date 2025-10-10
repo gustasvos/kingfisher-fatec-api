@@ -1,7 +1,7 @@
 import Navbar from "../../../shared/components/navbar"
 import EventoTabela from "./evento-tabela"
 
-export default function Eventos() {
+export default function ListagemEventos() {
     const eventos = [
         // preencher com array de eventos do backend/bd
         {
@@ -98,12 +98,11 @@ export default function Eventos() {
 
                 <div className="bg-white">
                     {/* primeira linha, nome das colunas */}
-                    <div className="border-b border-gray-300 px-4 py-2 grid grid-cols-6 gap-4 text-left font-bold text-black bg-gray-300 rounded-t-md">
+                    <div className="border-b border-gray-300 px-4 py-2 grid grid-cols-5 gap-4 text-left font-bold text-black bg-gray-300 rounded-t-md">
                         <div>Título</div>
                         <div>Descrição</div>
                         <div>Localização</div>
                         <div>Data/Hora</div>
-                        <div>Colaborador</div>
                         <div>Registrar Form. Aproveitamento</div>
                     </div>
 
