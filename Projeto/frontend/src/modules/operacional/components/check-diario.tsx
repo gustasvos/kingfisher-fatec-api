@@ -20,7 +20,7 @@ export default function CheckDiario() {
             <h1 style={{ color: "#000000ff", fontSize: "2.5rem", fontWeight: 700 }}>Checklist Diário - Frota Newe</h1>
         </section>
             <form action="">
-                <InputLine type="text" placeholder="" id='nome' htmlfor="nome" required>Nome Completo</InputLine>
+                {/* <InputLine type="text" placeholder="" id='nome' htmlfor="nome" required>Nome Completo</InputLine> */}
                 <InputLine type="text" placeholder="" id='placa-veiculo' htmlfor="placa-veiculo">Placa do veículo</InputLine>
                 <InputLine type="number" placeholder="" id='km-inicial' htmlfor="km-inicial">KM Inicial</InputLine>
                 <InputLine type="text" placeholder="" id='cidade-destino' htmlfor="cidade-destino">Destino</InputLine>
