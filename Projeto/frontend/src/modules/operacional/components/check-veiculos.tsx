@@ -1,24 +1,42 @@
 import { useState } from "react"
 import InputLine from "../../../shared/components/inputLine"
+import { IMaskInput } from "react-imask"
+import Botao from "../../../shared/components/botao"
 
 export default function CheckVeiculos() {
-    const [mostraOutro,setMostraOutro] = useState(false)
-    const [respVistoria,setRespVistoria] = useState('')
+    const [mostraOutro, setMostraOutro] = useState(false)
+    const [respVistoria, setRespVistoria] = useState('')
+    const [letraNum, setLetraNum] = useState('')
+    const [erro,setErro] = useState('')
 
-    const handlechange = (e: React.ChangeEvent<HTMLInputElement>) =>{
+    const handlechange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRespVistoria(e.target.value)
         setMostraOutro(e.target.value === 'outro')
+        setLetraNum(e.target.value)
+
+        const regex =  /^[a-zA-Z0-9]*$/
+
+        if (!regex.test(letraNum)) {
+            setErro('Digite apenas letras e números.');
+          } else {
+            setErro('');
+          }
     }
+
 
     return (
         <section>
             <form action="">
                 <p className="text-black">Sessão 1: Dados Cadastrais</p>
                 <section>
-                    <InputLine type="text" id='nome' htmlfor="nome" required>Nome Completo</InputLine>
-                    <InputLine type="text" id='cpf' htmlfor="cpf" required>CPF</InputLine>
-                    <InputLine type="text" id='email' htmlfor="email" required>E-mail</InputLine>
-                    <InputLine type="text" id='placa-veiculo' htmlfor="placa-veiculo">Placa do veículo</InputLine>
+                    <InputLine type="text" placeholder="" id='nome' htmlfor="nome" required>Nome Completo</InputLine>
+                    <section className="relative">
+                        <IMaskInput mask={"000.000.000-00"} required maxLength={14} className="w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                        <label htmlFor="" className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">CPF</label>
+                    </section>
+                    <InputLine type="email" placeholder="" id='email' htmlfor="email" required>E-mail</InputLine>
+                    <InputLine type="text" placeholder="" maxLength={7} id='placa-veiculo' htmlfor="placa-veiculo" onchange={handlechange}>Placa do veículo(apenas os numeros e letras!)</InputLine>
+                    {erro && <p className="text-red-700 text-[12px]">{erro}</p>}
                     <fieldset>
                         <legend className="text-black">tipo veiculo</legend>
                         <InputLine type="radio" name="tipo-veiculo" value="van" id='van' htmlfor="van" required>van</InputLine>
@@ -257,7 +275,7 @@ export default function CheckVeiculos() {
                     <InputLine type="file" id="lateral-dianteira" htmlfor="lateral-dianteira" required>Lateral Direita</InputLine>
                     <InputLine type="file" id="lateral-esquerda" htmlfor="lateral-esquerda" required>Lateral Esquerda</InputLine>
                     <InputLine type="file" id="traseira" htmlfor="traseira" required>Traseira com a porta aberta</InputLine>
-                    <InputLine type="text" id="obs" htmlfor="obs">Observações sobre o veículo</InputLine>
+                    <InputLine type="text" placeholder="" id="obs" htmlfor="obs">Observações sobre o veículo</InputLine>
                     <fieldset>
                         <legend className="text-black">Responsável pela vistoria</legend>
                         <InputLine type="radio" name="responsavel-vistoria" value="Diego-Sávio" id="Diego-Sávio" htmlfor="Diego-Sávio" onchange={handlechange} required>Diego Sávio</InputLine>
@@ -269,10 +287,13 @@ export default function CheckVeiculos() {
                         <InputLine type="radio" name="responsavel-vistoria" value="Samuel-Lucas" id="Samuel-Lucas" htmlfor="Samuel-Lucas" onchange={handlechange} required>Samuel Lucas</InputLine>
                         <InputLine type="radio" name="responsavel-vistoria" value="Tatiane-Dias" id="Tatiane-Dias" htmlfor="Tatiane-Dias" onchange={handlechange} required>Tatiane Dias</InputLine>
                         <InputLine type="radio" name="responsavel-vistoria" value="outro" id="outro" htmlfor="outro" onchange={handlechange} required>Outro</InputLine>
-                        {mostraOutro && 
-                        <InputLine type="text" id="outro" htmlfor="outro">Nome do responsável:</InputLine>
+                        {mostraOutro &&
+                            <InputLine type="text" id="outro" htmlfor="outro">Nome do responsável:</InputLine>
                         }
                     </fieldset>
+                </section>
+                <section>
+                    <input type="submit" value={'ENVIAR'} className="bg-[#015084] w-[250px] h-[45px] rounded-[8px] text-white text-[15px] font-semibold cursor-pointer font-sans text-black" />
                 </section>
             </form>
         </section>
