@@ -7,6 +7,7 @@ import { Colaborador } from "../../../types/colaborador";
 export default function ListagemColaborador() {
     const [colaborador, setColaborador] = useState<Colaborador[]>([])
     const [carregando, setCarregando] = useState(true)
+    const [pesquisa, setPesquisa] = useState("")
 
     useEffect(() => {
         // colocar o nosso http, esse foi só para eu testar
@@ -35,6 +36,10 @@ export default function ListagemColaborador() {
         }
     }
 
+    // filtra os colaboradores pelo nome
+    const colaboradoresFiltrados = colaborador.filter(c =>
+        c.nome.toLowerCase().includes(pesquisa.toLowerCase())
+    )
 
     if (carregando) {
         return (
@@ -43,16 +48,27 @@ export default function ListagemColaborador() {
     }
 
     return (
-        <section className="bg-[#EDF2FB] flex">
+        <section className="bg-[#d4eeff] flex">
             <section>
                 <Navbar />
             </section>
-            <section className="w-screen p-7 grid grid-cols-2 gap-2 gap-x-[100px] ml-[80px] max-h-screen overflow-auto text-black">
-                {colaborador.map((c) => (
-                    <CardColaborador key={c.id} colaborador={c} excluir={excluirColaborador} />
-                ))}
-            </section>
+            <section className="w-screen p-7 ml-[80px] max-h-screen overflow-auto text-black">
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        placeholder="Buscar colaborador..."
+                        value={pesquisa}
+                        onChange={(e) => setPesquisa(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
 
+                <div className="grid grid-cols-2 gap-2 gap-x-[100px]">
+                    {colaboradoresFiltrados.map((c) => (
+                        <CardColaborador key={c.id} colaborador={c} excluir={excluirColaborador} />
+                    ))}
+                </div>
+            </section>
         </section>
     )
 }
