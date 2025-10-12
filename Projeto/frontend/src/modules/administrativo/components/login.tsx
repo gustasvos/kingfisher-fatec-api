@@ -3,10 +3,10 @@ import { IMaskInput } from "react-imask";
 import instance from "../../../services/api";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios' 
+import axios from 'axios'
 
 
-export default function Login(){
+export default function Login() {
     const [cpf, setCpf] = useState("");
     const [senha, setSenha] = useState("");
     const [erro, setErro] = useState<string | null>(null);
@@ -16,40 +16,41 @@ export default function Login(){
 
     useEffect(() => {
         axios.get("http://localhost:8080/users/exists")
-        .then(response => {
-            setTemUsuario(response.data.exists);
-        })
-        .catch(err => {
-            console.error("Erro ao verificar usuários:", err);
-            setTemUsuario(true); // assume que tem pra evitar liberar criação indevida
-        });
+            .then(response => {
+                setTemUsuario(response.data.exists);
+            })
+            .catch(err => {
+                console.error("Erro ao verificar usuários:", err);
+                setTemUsuario(true); // assume que tem pra evitar liberar criação indevida
+            });
     }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErro(null);       // limpa erro anterior
-    setSucesso(null);    // limpa sucesso anterior
-    const cpfLimpo = cpf.replace(/\D/g, "");
-    try {
-        const response = await instance.post("/login", { cpf: cpfLimpo, senha });
-        const token = response.data.token;
-        if (token) {
-        localStorage.setItem("token", token);
-        setSucesso("Login realizado com sucesso!");
-        // Aguarda 1 segundo e redireciona
-        setTimeout(() => {
-            navigate("/home");
-        }, 1000);
-        } else {
-        setErro("Token não recebido do servidor");
+        e.preventDefault();
+        setErro(null);       // limpa erro anterior
+        setSucesso(null);    // limpa sucesso anterior
+        const cpfLimpo = cpf.replace(/\D/g, "");
+        try {
+            const response = await instance.post("/login", { cpf: cpfLimpo, senha });
+            const { token, user } = response.data;
+            if (token && user) {
+                localStorage.setItem("token", token);
+                localStorage.setItem("userId", user.id.toString());  // Armazenando o ID do usuário
+                setSucesso("Login realizado com sucesso!");
+                // Aguarda 1 segundo e redireciona
+                setTimeout(() => {
+                    navigate("/home");
+                }, 1000);
+            } else {
+                setErro("Token não recebido do servidor");
+            }
+        } catch (error) {
+            console.error("Erro no login:", error);
+            setErro("Erro ao fazer login");
         }
-    } catch (error) {
-        console.error("Erro no login:", error);
-        setErro("Erro ao fazer login");
     }
-    };
 
-    return(
+    return (
         <div className="grid grid-cols-[50%_50%]">
             <div >
                 <img src={imgLogin} alt="login" className="w-full object-cover h-screen" />
@@ -66,31 +67,31 @@ export default function Login(){
                         <p className="pt-8 md:pt-10 text-[15px] md:text-[25px] text-white font-sans font-medium pb-1 drop-shadow-[2px_2px_1px_rgba(0,0,0,0.3)]">
                             CPF
                         </p>
-                        <IMaskInput mask={"000.000.000-00"}  placeholder=" Digite seu CPF" required maxLength={14} value={cpf} onAccept={(value: any) => setCpf(value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black"/>
+                        <IMaskInput mask={"000.000.000-00"} placeholder=" Digite seu CPF" required maxLength={14} value={cpf} onAccept={(value: any) => setCpf(value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black" />
                         <p className="pt-6 md:pt-8 text-[15px] md:text-[25px] text-white font-sans font-medium pb-1 drop-shadow-[2px_2px_1px_rgba(0,0,0,0.3)]">
                             Senha
                         </p>
-                        <input type="password" placeholder=" Digite sua senha" required value={senha} onChange={(e) => setSenha(e.target.value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black"/>
+                        <input type="password" placeholder=" Digite sua senha" required value={senha} onChange={(e) => setSenha(e.target.value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black" />
                         <div className="pt-10 flex justify-center">
-                            <input type="submit" value={'ENTRAR'} className="bg-white w-[100px] md:w-[200px] p-2 rounded-[10px] md:rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-sans font-medium  shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white"/>
+                            <input type="submit" value={'ENTRAR'} className="bg-white w-[100px] md:w-[200px] p-2 rounded-[10px] md:rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-sans font-medium  shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white" />
                         </div>
                         {/* Se não tem usuário (temUsuario === false), mostra o link */}
                         {temUsuario === false && (
                             <div className="mt-4 text-center">
-                            <a href="/Cadastrar" className="text-white-600 underline" >
-                                Criar uma nova conta
-                            </a>
+                                <a href="/Cadastrar" className="text-white-600 underline" >
+                                    Criar uma nova conta
+                                </a>
                             </div>
                         )}
                         {sucesso && (
-                        <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
-                            {sucesso}
-                        </div>
+                            <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
+                                {sucesso}
+                            </div>
                         )}
                         {erro && (
                             <div className="pt-4 text-red-600 text-center text-[14px] md:text-[18px]">
-                            {erro}
-                        </div>
+                                {erro}
+                            </div>
                         )}
                     </form>
                 </div>

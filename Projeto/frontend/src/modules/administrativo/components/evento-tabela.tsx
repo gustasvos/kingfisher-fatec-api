@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 interface Evento {
     titulo: string
     descricao: string
@@ -10,7 +11,15 @@ interface EventoTabelaProps {
     eventos: Evento[]
 }
 
+
 export default function EventoTabela({ eventos }: EventoTabelaProps) {
+    const navigate = useNavigate()
+    
+    // trocar posteriormente pra rota de preencher formulários
+    const handleRedirect = () => {
+        navigate('/teste')
+    }
+
     return (
         <>
             {/* rows */}
@@ -21,7 +30,10 @@ export default function EventoTabela({ eventos }: EventoTabelaProps) {
                     <div>{evento.localizacao}</div>
                     <div>{evento.dataHora}</div>
                     <div>
-                        <button className="bg-blue-500 text-black px-3 py-1 rounded">
+                        <button
+                            onClick={handleRedirect}
+                            className="bg-blue-500 text-black px-3 py-1 rounded"
+                        >
                             Preencher
                         </button>
                     </div>

@@ -1,66 +1,73 @@
+import { useEffect, useState } from "react";
 import Navbar from "../../../shared/components/navbar"
 import EventoTabela from "./evento-tabela"
+import axios from "axios";
+import Loading from "../../../shared/components/loading";
+
+interface Evento {
+    id: number
+    titulo: string
+    descricao: string
+    localizacao: string
+    dataHora: string
+    participantes: {
+        idConvite: number
+        funcionario: {
+            id: number
+            nome: string
+            email: string
+        }
+        status: string
+        motivo: string | null
+        criadoEm: string
+    }[]
+}
 
 export default function ListagemEventos() {
-    const eventos = [
-        // preencher com array de eventos do backend/bd
-        {
-            titulo: "Título 1",
-            descricao: "Descrição 1",
-            localizacao: "Localização 1",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 1"
-        },
-        {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        }, {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        }, {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        }, {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        }, {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        }, {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        }, {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        }, {
-            titulo: "Título 2",
-            descricao: "Descrição 2",
-            localizacao: "Localização 2",
-            dataHora: "dd/mm/aaaa hh:mm",
-            colaborador: "Pessoa 2"
-        },
-    ]
+    const [eventos, setEventos] = useState<Evento[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | null>(null)
+
+    const userId = localStorage.getItem("userId")
+    // const userId = 2
+
+    const fetchEventos = async (userId: string) => {
+        try {
+            const res = await axios.get("http://localhost:8080/admin/events")
+            const eventosFiltrados = res.data.filter((e: Evento) => {
+                return e.participantes.some((participante) => participante.funcionario.id === parseInt(userId))
+            })
+
+            setEventos(eventosFiltrados)
+            setLoading(false)
+        }
+        catch (err) {
+            setError("Erro ao carregar eventos.")
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchEventos(userId)
+    }, [])
+
+
+    const formatarDataHora = (data: string) => {
+        const options: Intl.DateTimeFormatOptions = {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+        }
+
+        const dataFormatada = new Date(data).toLocaleString("pt-BR", options)
+        return dataFormatada
+    }
+
+    if (loading) return <Loading />
+    if (error) return <p>{error}</p>
 
     return (
         <>
@@ -103,11 +110,14 @@ export default function ListagemEventos() {
                         <div>Descrição</div>
                         <div>Localização</div>
                         <div>Data/Hora</div>
-                        <div>Registrar Form. Aproveitamento</div>
+                        <div>Registrar Aproveitamento</div>
                     </div>
 
                     {/* Passa os eventos para o componente EventoTabela */}
-                    <EventoTabela eventos={eventos} />
+                    <EventoTabela eventos={eventos.map((e) => ({
+                        ...e,
+                        dataHora: formatarDataHora(e.dataHora),
+                    }))} />
                 </div>
             </main>
         </>

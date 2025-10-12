@@ -22,8 +22,8 @@ export default function RotasADM(){
             <Route path="/eventos" element={<PaginaEventos/>}/>
             <Route path="/novo-evento" element={<NovoEvento/>}/>
             <Route path="/home" element={<HomePage/>} />
-            <Route path="/eventos-operacional" element={<ListagemEventos />} />
-            <Route path="/teste1" element={<LocalDeTrabalho />} />
+            <Route path="/eventos-colaborador" element={<ListagemEventos />} />
+            <Route path="/local-trabalho" element={<LocalDeTrabalho />} />
             <Route path="/relatorio-aproveitamento" element={<RelatorioAproveitamento />} />
         </>
     )
