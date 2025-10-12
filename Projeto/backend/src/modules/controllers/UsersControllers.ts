@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { AppDataSource } from '../../config/database'
 import { User } from '../models/usuario'
 import { Not } from 'typeorm'
@@ -269,6 +269,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
         });
     }
 }
+
 
 export const logoutUsuario = (req: Request, res: Response) => {
     const authHeader = req.headers.authorization;
