@@ -5,17 +5,23 @@ import { useState } from "react"
 export default function CheckMoto() {
     // Dados pessoais
     const [nome, setNome] = useState('')
-    const [rg, setRg] = useState('')
     const [dataNascimento, setDataNasc] = useState('')
     const [cidadeNatal, setCidadeNatal] = useState('')
+    const [nomePai, setNomePai] = useState('')
+    const [nomeMae, setNomeMae] = useState('')
+    const [pisPasep, setPisPasep] = useState('')
+    const [genero, setGenero] = useState(null)
 
     // Informações de contato
     const [celular, setCelular] = useState('')
     const [email, setEmail] = useState('')
 
-    //Pessoa Física/Jurídica e Documento
+    //Pessoa Física/Jurídica e Documentos
     const [tipoPessoa, setTipoPessoa] = useState(null) 
     const [documento, setDocumento] = useState('')
+    const [rg, setRg] = useState('')
+    const [orgaoExp, setOrgaoExp] = useState('')
+    const [dataEmissao, setDataEmissao] = useState('')
 
     //Endereço e CEP
     const [cep, setCep] = useState('')
@@ -25,8 +31,18 @@ export default function CheckMoto() {
     const [uf, setUf] = useState('')
     const [loading, setLoading] = useState(false)
     const [numero, setNumero] = useState('') 
-    
 
+    //Dados do veículo
+    const [nomeProprietarioVeiculo, setNomeProprietarioVeiculo] = useState('')
+    const [placa, setPlaca] = useState('')
+    const [marca, setMarca] = useState('')
+    const [modelo, setModelo] = useState('')
+    const [cor, setCor] = useState('')
+    const [anoFabricacao, setAnoFabricacao] = useState('')
+    const [cilindrada, setCilindrada] = useState('')
+    const [bau, setBau] = useState('')
+    const [seguro, setSeguro] = useState(null)
+    
     const handleTipoPessoaChange = (event) => {
         const novoTipo = event.target.value
         setTipoPessoa(novoTipo)
@@ -65,6 +81,18 @@ export default function CheckMoto() {
                 setLoading(false)
             }
         }
+    }
+
+    const handleGeneroChange = (event) => {
+        setGenero(event.target.value)
+    }
+
+    const handleSeguroChange = (event) => {
+        setSeguro(event.target.value)
+    }
+
+     const handleBauChange = (event) => {
+        setBau(event.target.value)
     }
 
     // Classes comuns para IMaskInput e labels flutuantes
@@ -151,12 +179,12 @@ export default function CheckMoto() {
                             <label htmlFor="rg" className={labelClasses}>RG</label> 
                         </div>
                         
-                        <InputLine type="date" placeholder="" id='data-emissao' htmlfor="data-emissao" required>Data de Emissão</InputLine>
-                        <InputLine type="text" placeholder="" id='orgao-exp' htmlfor="orgao-exp" required>Órgão Expeditor</InputLine>
+                        <InputLine type="date" placeholder="" id='data-emissao' htmlfor="data-emissao" value={dataEmissao} required>Data de Emissão</InputLine>
+                        <InputLine type="text" placeholder="" id='orgao-exp' htmlfor="orgao-exp" value={orgaoExp} required>Órgão Expeditor</InputLine>
 
-                        <InputLine type="text" placeholder="" id='nome-pai' htmlfor="nome-pai" required>Nome do Pai</InputLine>
-                        <InputLine type="text" placeholder="" id='nome-mae' htmlfor="nome-mae" required>Nome da Mãe</InputLine>
-                        <InputLine type="text" placeholder="" id='pis-pasep' htmlfor="pis-pasep" required>PIS/PASEP</InputLine>
+                        <InputLine type="text" placeholder="" id='nome-pai' htmlfor="nome-pai" value={nomePai} required>Nome do Pai</InputLine>
+                        <InputLine type="text" placeholder="" id='nome-mae' htmlfor="nome-mae" value={nomeMae} required>Nome da Mãe</InputLine>
+                        <InputLine type="text" placeholder="" id='pis-pasep' htmlfor="pis-pasep" value={pisPasep} required>PIS/PASEP</InputLine>
 
                         
                         
@@ -207,9 +235,62 @@ export default function CheckMoto() {
                         <fieldset className="">
                             <legend className="text-black">Gênero</legend>
                             <div className="flex space-x-4">
-                                <InputLine type="radio" name="genero" value="masculino" id='masculino' htmlfor="masculino" required>Masculino</InputLine>
-                                <InputLine type="radio" name="genero" value="feminino" id='feminino' htmlfor="feminino" required>Feminino</InputLine>
-                                <InputLine type="radio" name="genero" value="pref-n-informar" id='pref-n-informar' htmlfor="pref-n-informar" required>Prefiro não informar</InputLine>
+                                <InputLine type="radio" name="genero" id='masculino' htmlfor="masculino" required
+                                    checked={genero==='masculino'}
+                                    onChange={handleGeneroChange}>
+                                        Masculino
+                                </InputLine>
+                                <InputLine type="radio" name="genero" id='feminino' htmlfor="feminino" required
+                                    checked={genero==='feminino'}
+                                    onChange={handleGeneroChange}>
+                                        Feminino
+                                </InputLine>
+                                <InputLine type="radio" name="genero" id='pref-n-informar' htmlfor="pref-n-informar" required
+                                    checked={genero==='pref-n-informar'}
+                                    onChange={handleGeneroChange}>
+                                        Prefiro não informar
+                                </InputLine>
+                            </div>
+                        </fieldset>
+                    </section>
+                    <section id="sessao-2-dados-moto">
+                            <h2 style={{ color: "#0044ffff", fontSize: "1.5rem", fontWeight: 700 }} className="mt-8 mb-4 border-b pb-2">
+                                Sessão 2: Dados do Veículo
+                            </h2>
+                        <InputLine type="text" placeholder="" id='nome-proprietario-veiculo' htmlfor="nome-proprietario-veiculo" value={nomeProprietarioVeiculo} required>Nome completo do Proprietário do Veículo</InputLine>
+                        <InputLine type="text" placeholder="" id='placa' htmlfor="placa" value={placa} required>Placa</InputLine>
+                        <InputLine type="text" placeholder="" id='marca' htmlfor="marca" value={marca} required>Marca</InputLine>
+                        <InputLine type="text" placeholder="" id='modelo' htmlfor="modelo" value={modelo} required>Modelo</InputLine>
+                        <InputLine type="text" placeholder="" id='cor' htmlfor="cor" value={cor} required>Cor</InputLine>
+                        <InputLine type="text" placeholder="" id='ano-fabricacao' htmlfor="ano-fabricacao" value={anoFabricacao} required>Ano fabricação</InputLine>
+                        <InputLine type="text" placeholder="" id='cilindrada' htmlfor="cilindrada" value={cilindrada} required>Cilindrada</InputLine>
+                        <fieldset className="">
+                            <legend className="text-black">Possui báu ou suporte para carga?</legend>
+                            <div className="flex space-x-4">
+                                <InputLine type="radio" name="bau" value="bau-sim" id='bau-sim' htmlfor="bau-sim" required
+                                    checked={bau==='sim'}
+                                    onChange={handleBauChange}>
+                                        Sim
+                                </InputLine>
+                                <InputLine type="radio" name="bau" value="bau-nao" id='bau-nao' htmlfor="bau-nao" required
+                                    checked={bau==='nao'}
+                                    onChange={handleBauChange}>Não</InputLine>
+                            </div>
+                        </fieldset>
+                        <fieldset className="">
+                            <legend className="text-black">Possui seguro?</legend>
+                            <div className="flex space-x-4">
+                                <InputLine type="radio" name="seguro" value="seguro-sim" id='seguro-sim' htmlfor="seguro-sim"  required
+                                    checked={seguro==='sim'}
+                                    onChange={handleSeguroChange}>
+                                        Sim
+                                </InputLine>
+
+                                <InputLine type="radio" name="seguro" value="seguro-nao" id='seguro-nao' htmlfor="seguro-nao" required
+                                    checked={seguro==='nao'}
+                                    onChange={handleSeguroChange}>
+                                        Não
+                                </InputLine>
                             </div>
                         </fieldset>
                     </section>
