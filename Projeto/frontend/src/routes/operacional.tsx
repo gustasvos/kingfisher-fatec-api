@@ -3,6 +3,7 @@ import CheckVeiculosPage from "../modules/operacional/pages/check-veiculos-page"
 import CheckDiarioPage from "../modules/operacional/pages/check-diario-page"
 import FormAberturaPage from "../modules/operacional/pages/form-abertura-page"
 import FormFechamentoPage from "../modules/operacional/pages/form-fechamento-page"
+import FormManutencaoPage from "../modules/operacional/pages/form-manutencao-page"
 
 export default function RotasOp(){
     return(
@@ -10,7 +11,8 @@ export default function RotasOp(){
             <Route path="/check-veiculo" element={<CheckVeiculosPage/>}/>
             <Route path="/check-diario" element={<CheckDiarioPage/>}/>
             <Route path="/form-abertura" element={<FormAberturaPage/>}/>
-            <Route path="/form-fechamento" element={<FormFechamentoPage/>}/>
+            <Route path="/form-fechamento" element={<FormFechamentoPage/>}/>            
+            <Route path="/form-manutencao" element={<FormManutencaoPage/>}/>
         </>
     )
 }
