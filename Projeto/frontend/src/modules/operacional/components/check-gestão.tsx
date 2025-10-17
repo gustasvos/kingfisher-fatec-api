@@ -15,8 +15,15 @@ export default function CheckGestao() {
     const [valorFrete, setValorFrete] = useState('')
     const [obs, setObs] = useState('')
     const [loading, setLoading] = useState(false)
-    const enviaForm = (e: React.FormEvent<HTMLFormElement>) => {
-        
+    
+    const enviaForm = (e: React.FormEvent<HTMLFormElement>) =>{
+        e.preventDefault();
+        setLoading(true);
+
+        setTimeout(() => {
+        alert("Formulário enviado!");
+        setLoading(false);
+        }, 2000);
     }
 
     // Coleta
@@ -219,7 +226,24 @@ export default function CheckGestao() {
 
                     <InputLine type="number" placeholder="" id='peso' htmlfor="peso" value={peso} onChange={(e) => setPeso(e.target.value)} required>Peso estimado</InputLine>
                     <InputLine type="text" placeholder="" id='tipo-veiculo' htmlfor="tipo-veiculo" value={tipoVeiculo} onChange={(e) => setTipoVeiculo(e.target.value)} required>Tipo do Veículo</InputLine>
-                    <InputLine type="number" placeholder="" id='valor-frete' htmlfor="valor-frete" value={valorFrete} onChange={(e) => setValorFrete(e.target.value)} required>Valor do Frete a ser Cobrado</InputLine>
+                    {/* <InputLine type="number" placeholder="" id='valor-frete' htmlfor="valor-frete" value={valorFrete} onChange={(e) => setValorFrete(e.target.value)} required>Valor do Frete a ser Cobrado</InputLine> */}
+                    <div className="relative mb-6">
+                    <IMaskInput
+                        id="valor-frete"
+                        className={inputClasses}
+                        required
+                        value={valorFrete}
+                        onAccept={(value) => setValorFrete(value)}
+                        mask={Number}
+                        scale={2}
+                        thousandsSeparator="."
+                        radix=","
+                        mapToRadix={["."]}
+                        padFractionalZeros={true}
+                        normalizeZeros={true}
+                    />
+                            <label htmlFor="valor-frete" className={labelClasses}>Valor do frete a ser cobrado</label> 
+                    </div>
                     <InputLine type="text" placeholder="" id='obs' htmlfor="obs" value={obs} onChange={(e) => setObs(e.target.value)}>Observações adicionais para a equipe</InputLine>
                     </section>
                     <BotaoSubmit loading={loading} label="Enviar" type="submit"/>
@@ -227,6 +251,6 @@ export default function CheckGestao() {
             </section>
         </div>
 
-                        )
+        )
                         
 }
