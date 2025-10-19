@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InputField from '../components/InputField.tsx';
 import InputMaskField from '../components/InputMaskField.tsx';
 import './PaginaCadastro.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import instance from "../../../services/api";
 
+// Verifica se a data está no formato DD/MM/AAAA
+const isValidDataPtBr = (data: string): boolean => /^\d{2}\/\d{2}\/\d{4}$/.test(data);
 
-// Regex simples para validar formato DD/MM/YYYY
-const isValidDataPtBr = (data: string): boolean => {
-  return /^\d{2}\/\d{2}\/\d{4}$/.test(data);
-};
-
-// Converte data DD/MM/YYYY -> YYYY-MM-DD (para salvar no estado)
+// Converte data do formato PT-BR para ISO (AAAA-MM-DD)
 const dataLimpa = (dataPtBr: string): string => {
   const [dia, mes, ano] = dataPtBr.split('/');
   if (!dia || !mes || !ano) return "";
-  return `${ano.padStart(4,'0')}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')}`;
-}
+  return `${ano.padStart(4, '0')}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+};
 
-// Converte data YYYY-MM-DD -> DD/MM/YYYY (para mostrar no input)
+// Converte data ISO para PT-BR (DD/MM/AAAA)
 const formatarDataParaPtBr = (dataIso: string): string => {
   if (!dataIso) return "";
   const [ano, mes, dia] = dataIso.split("-");
   return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
 };
 
-export default function Cadastro() {
+export default function AtualizarCadastro() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setData_nascimento] = useState("");
@@ -36,19 +33,47 @@ export default function Cadastro() {
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const handleCadastro = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setErro(null);       // limpa erro anterior
-    setSucesso(null);    // limpa sucesso anterior
+  useEffect(() => { 
+  const fetchUsuario = async () => {
+    try {
+      // aqui eu coloquei o que seriam os dados para quando o backend estiver pronto
+      // const response = await instance.get(`/usuario/${id}`);
+      // const usuario = response.data;
+      // setNome(usuario.nome);
+      // setCpf(usuario.cpf);
+      // setData_nascimento(usuario.data_nascimento);
+      // setGenero(usuario.genero);
+      // setDataAdmissao(usuario.data_admissao);
+      // setCargo(usuario.cargo);
+      // setSetor(usuario.setor);
 
-    const limparTexto = (texto: string) => {
-      return texto
-        // .normalize('NFD')                       // separa acentos
-        .replace(/[^\p{L}\sçÇ]/gu, '')          // remove tudo exceto letras, espaços e ç/Ç
-        .replace(/\s+/g, ' ')                   // troca múltiplos espaços por 1 só
-        .trim();                                // remove espaços no início/fim
-    };
+      // por enquanto eu coloquei esses dados de um usuário teste
+      setNome("Carlos Pereira");
+      setCpf("123.456.789-00");
+      setData_nascimento("2000-10-11");
+      setGenero("Masculino");
+      setDataAdmissao("2020-10-11");
+      setCargo("Analista");
+      setSetor("Financeiro");
+    } catch (error) {
+      setErro("Falha ao carregar dados do usuário, tenta de novo mais tarde."); //nesse caso como esse usuário teste não está no sistema quando clicado o botão "salvar alterações" aparece a seguinte mensagem "Erro ao salvar alterações, tente novamente"
+    }
+  };
+
+  fetchUsuario();
+}, [id]);
+
+
+  const handleSalvar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErro(null);
+    setSucesso(null);
+
+    // Remove caracteres que não são letras, espaços ou cedilha e ajeita espaços
+    const limparTexto = (texto: string) =>
+      texto.replace(/[^\p{L}\sçÇ]/gu, '').replace(/\s+/g, ' ').trim();
 
     const payload = {
       nome: limparTexto(nome),
@@ -61,26 +86,30 @@ export default function Cadastro() {
     };
 
     try {
-      const response = await instance.post("/usuario/create", payload);
-      setSucesso(`Cadastro realizado com sucesso! ID: ${response.data.id}`);
+      await instance.put(`/usuario/${id}`, payload);
+      setSucesso("Cadastro atualizado com sucesso!");
       setTimeout(() => {
-        navigate("/");
+        navigate("/colaboradores");
       }, 1000);
     } catch (error) {
-      setErro("Erro ao cadastrar. Verifique os dados e tente novamente.");
+      setErro("Erro ao salvar alterações, tente novamente");
     }
+  };
+
+  const handleDescartar = () => {
+    navigate("/colaboradores");
   };
 
   return (
     <div className="bg-[#EAF7FF] min-h-screen flex items-center justify-center">
       <div className="form-container container">
         <div className="header">
-          <p className="text-[25px] md:text-[45px] font-sans font-bold italic text-white pt-5 md:drop-shadow-[10px_8px_3px_rgba(0,0,0,0.3)]">
-            Cadastro
+          <p className="text-[20px] md:text-[38px] font-sans font-bold italic text-white pt-5 md:drop-shadow-[10px_8px_3px_rgba(0,0,0,0.3)]">
+            Atualizar Cadastro
           </p>
         </div>
 
-        <form onSubmit={handleCadastro}>
+        <form onSubmit={handleSalvar}>
           <div className="inputs">
             <InputField
               label="Nome Completo"
@@ -114,12 +143,6 @@ export default function Cadastro() {
                   setData_nascimento(dataLimpa(value));
                 }
               }}
-              onPaste={(e) => {
-                const pastedData = e.clipboardData.getData('Text');
-                if (!isValidDataPtBr(pastedData)) {
-                  e.preventDefault(); // cancela o paste se não for válido
-                }
-              }}
             />
 
             <InputField
@@ -142,12 +165,6 @@ export default function Cadastro() {
               onAccept={(value: string) => {
                 if (isValidDataPtBr(value)) {
                   setDataAdmissao(dataLimpa(value));
-                }
-              }}
-              onPaste={(e) => {
-                const pastedData = e.clipboardData.getData('Text');
-                if (!isValidDataPtBr(pastedData)) {
-                  e.preventDefault(); // cancela o paste se não for válido
                 }
               }}
             />
@@ -173,8 +190,23 @@ export default function Cadastro() {
             />
           </div>
 
-          <div className="submit-container">
-            <input type="submit" value="CADASTRAR" className="submit" />
+          <div className="submit-container flex flex-col md:flex-row gap-4 items-center justify-center">
+            <button
+              type="submit"
+              style={{ backgroundColor: "#d1edff", color: "#015084" }}
+              className="py-2 px-4 rounded font-semibold hover:brightness-90 transition"
+            >
+              Salvar Alterações
+            </button>
+
+            <button
+              type="button"
+              style={{ backgroundColor: "#d1edff", color: "#015084" }}
+              onClick={handleDescartar}
+              className="py-2 px-4 rounded font-semibold hover:brightness-90 transition"
+            >
+              Descartar Alterações
+            </button>
           </div>
 
           {sucesso && (

@@ -6,7 +6,7 @@ Content-Type: application/json
   "nome": "Larissa Andrade",
   "nome_fantasia": "Larissa Andrade LTDA",
   "cpf": "11144477735",
-  "sexo": "F",
+  "genero": "F",
   "estado_civil": "solteiro",
   "data_nascimento": "1990-05-15",
   "cidade_nascimento": "São Paulo",
@@ -51,7 +51,7 @@ Content-Type: application/json
   "nome": "Rafael Monteiro",
   "nome_fantasia": "Rafael Monteiro ME",
   "cpf": "54294676000",
-  "sexo": "M",
+  "genero": "M",
   "estado_civil": "Casado",
   "data_nascimento": "1988-03-22",
   "cidade_nascimento": "Rio de Janeiro",
@@ -95,7 +95,7 @@ Content-Type: application/json
   "nome": "Juliana Costa",
   "nome_fantasia": "Juliana Costa Ltda",
   "cpf": "88997057049",
-  "sexo": "f",
+  "genero": "F",
   "estado_civil": "Solteiro",
   "data_nascimento": "1992-11-05",
   "cidade_nascimento": "São Paulo",
@@ -139,7 +139,7 @@ Content-Type: application/json
   "nome": "Carlos Henrique",
   "nome_fantasia": "Carlos Henrique Soluções",
   "cpf": "60394609034",
-  "sexo": "m",
+  "genero": "m",
   "estado_civil": "Divorciado",
   "data_nascimento": "1985-07-19",
   "cidade_nascimento": "Belo Horizonte",
@@ -175,7 +175,7 @@ Content-Type: application/json
   "role": "usuario"
 }
 
-### Criar novo usuário
+### Criar novo usuário - USUARIO ANTIGO
 POST http://localhost:8080/usuario/create
 Content-Type: application/json
 
@@ -183,7 +183,7 @@ Content-Type: application/json
   "nome": "Amanda Ribeiro",
   "nome_fantasia": "Amanda Ribeiro Design",
   "cpf": "33383627063",
-  "sexo": "f",
+  "genero": "f",
   "estado_civil": "Solteiro",
   "data_nascimento": "1994-12-30",
   "cidade_nascimento": "Rio de Janeiro",
@@ -218,3 +218,37 @@ Content-Type: application/json
   "data_contratacao": "2024-04-10",
   "role": "usuario"
 }
+
+### Criar novo usuário - USUARIO NOVO
+POST http://localhost:8080/usuario/create
+Content-Type: application/json
+
+{
+  "nome": "Carlos Pereira",
+  "cpf": "36755031194",
+  "genero": "O",
+  "data_nascimento": "1996-08-22",
+  "cargo": "Operador",
+  "senha": "Carlos@2025",
+  "data_contratacao": "2025-08-01",
+  "role": "usuario"
+}
+
+
+### Criar novo usuário
+POST http://localhost:8080/usuario/create
+Content-Type: application/json
+
+{
+  "nome": "Carlos Pereira 2",
+  "cpf": "63488281078",
+  "genero": "O",
+  "data_nascimento": "1996-08-22",
+  "cargo": "Operador",
+  "senha": "Carlos@2025",
+  "data_contratacao": "2025-08-01",
+  "role": "usuario"
+}
+
+### DELETE USUARIO BY ID
+DELETE http://localhost:8080/usuario/4

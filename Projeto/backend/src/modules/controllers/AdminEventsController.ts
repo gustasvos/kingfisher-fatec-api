@@ -23,7 +23,6 @@ function formatEvento(evento: Evento) {
       funcionario: c.funcionario ? {
         id: c.funcionario.id,
         nome: c.funcionario.nome,
-        email: c.funcionario.email,
       } : null,
       status: c.status,
       motivo: c.motivo || null,
@@ -293,7 +292,6 @@ export const listConvitesByUser = async (req: Request, res: Response) => {
       funcionario: {
         id: convite.funcionario.id,
         nome: convite.funcionario.nome,
-        email: convite.funcionario.email,
       }
     }));
 

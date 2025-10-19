@@ -1,30 +1,31 @@
 import React, { useRef, useState, useEffect } from 'react'
 import axios from 'axios'
-import FullCalendar from '@fullcalendar/react' 
-import dayGridPlugin from '@fullcalendar/daygrid'      
-import timeGridPlugin from '@fullcalendar/timegrid'    
-import listPlugin from '@fullcalendar/list'           
-import interactionPlugin from '@fullcalendar/interaction' 
-import ptBrLocale from '@fullcalendar/core/locales/pt-br' 
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import listPlugin from '@fullcalendar/list'
+import interactionPlugin from '@fullcalendar/interaction'
+import ptBrLocale from '@fullcalendar/core/locales/pt-br'
 import "./pagina-eventos.css"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import { CalendarApi } from '@fullcalendar/core'
 
-import imgLogin from './../../../assets/imgLoginKey.svg';
-import imgHome from './../../../assets/imgHomepage.png';
-import imgUser from './../../../assets/imgAddUserMale.png';
-import imgCalendar from './../../../assets/imgTearOffCalendar.png';
-import imgNotification from './../../../assets/imgDoorbell.png';
-import imgColab from './../../../assets/imgTeam.svg';
+import imgLogin from './../../../assets/imgLoginKey.svg'
+import imgHome from './../../../assets/imgHomepage.png'
+import imgUser from './../../../assets/imgAddUserMale.png'
+import imgCalendar from './../../../assets/imgTearOffCalendar.png'
+import imgNotification from './../../../assets/imgDoorbell.png'
+import imgColab from './../../../assets/imgTeam.svg'
 
 function PaginaEventos() {
-  const calendarRef = useRef<CalendarApi | null>(null) 
-  const [eventosCalendar, setEventosCalendar] = useState<any[]>([]);
-  const usuarioID = 1;
+  const calendarRef = useRef<CalendarApi | null>(null)
+  const [eventosCalendar, setEventosCalendar] = useState<any[]>([])
+  const usuarioID = 1
 
-  const [aberto, setAberto] = useState(false); // sidebar aberta ou fechada
+  const [aberto, setAberto] = useState(false)
+  const [eventoSelecionado, setEventoSelecionado] = useState<any | null>(null)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios.get(`http://localhost:8080/admin/events/convidado/${usuarioID}`)
@@ -38,20 +39,31 @@ function PaginaEventos() {
             localizacao: convite.evento.localizacao,
             status: convite.status,
           }
-        }));
-        setEventosCalendar(eventosFormatados);
+        }))
+        setEventosCalendar(eventosFormatados)
       })
-      .catch((error) => console.error("Erro ao buscar eventos:", error));
-  }, []);
+      .catch((error) => console.error("Erro ao buscar eventos:", error))
+  }, [])
 
   const handleCreateEvent = () => {
-    navigate('/novo-evento');
+    navigate('/novo-evento')
   }
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {  
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const termo = e.target.value.trim().toLowerCase()
-    console.log('Pesquisar evento:', termo) 
+    console.log('Pesquisar evento:', termo)
   }
+
+  const handleEventClick = (info: any) => {
+    setEventoSelecionado({
+      titulo: info.event.title,
+      data: info.event.start?.toLocaleDateString('pt-BR'),
+      local: info.event.extendedProps.localizacao,
+      descricao: info.event.extendedProps.descricao,
+    })
+  }
+
+  const fecharModal = () => setEventoSelecionado(null)
 
   const menuItems = [
     { src: imgLogin, alt: "Login", title: "Login", route: "/" },
@@ -60,10 +72,11 @@ function PaginaEventos() {
     { src: imgCalendar, alt: "Calendário", title: "Calendário", route: "/eventos" },
     { src: imgNotification, alt: "Notificações", title: "Notificações", route: "/evento-convite" },
     { src: imgColab, alt: "Colaboradores", title: "Colaboradores", route: "/colaboradores" }
-  ];
+  ]
 
   return (
     <>
+      {/* Sidebar */}
       <aside style={{
         width: aberto ? '200px' : '60px',
         backgroundColor: '#135b78',
@@ -78,7 +91,6 @@ function PaginaEventos() {
         color: 'white',
         boxSizing: 'border-box',
       }}>
-        {/* Botão hamburguer */}
         <section
           onClick={() => setAberto(!aberto)}
           style={{
@@ -99,9 +111,8 @@ function PaginaEventos() {
           <span style={{ width: '25px', height: '3px', backgroundColor: 'white', borderRadius: '2px' }} />
         </section>
 
-        {/* Menu */}
         <section style={{ width: '100%' }}>
-          {menuItems.map(({src, alt, title, route}) => (
+          {menuItems.map(({ src, alt, title, route }) => (
             <button
               key={title}
               title={title}
@@ -132,6 +143,7 @@ function PaginaEventos() {
         </section>
       </aside>
 
+      {/* Conteúdo principal */}
       <main style={{ marginLeft: aberto ? '200px' : '60px', padding: '20px', transition: 'margin-left 0.3s ease' }}>
         <div className="top-bar" style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
           <button onClick={handleCreateEvent} className="btn">
@@ -150,7 +162,7 @@ function PaginaEventos() {
           <FullCalendar
             ref={(el) => {
               if (el !== null) {
-                calendarRef.current = (el as any).getApi();
+                calendarRef.current = (el as any).getApi()
               }
             }}
             plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
@@ -163,18 +175,23 @@ function PaginaEventos() {
             }}
             height="1200px"
             events={eventosCalendar}
-            eventClick={(info) => {
-              const evento = info.event;
-              alert(
-                `Evento: ${evento.title}\n` +
-                `Data: ${evento.start?.toLocaleDateString('pt-BR')}\n` +
-                `Local: ${evento.extendedProps.localizacao}\n` +
-                `Descrição: ${evento.extendedProps.descricao}`
-              );
-            }}
+            eventClick={handleEventClick}
           />
         </div>
       </main>
+
+      {/* modal ev */}
+      {eventoSelecionado && (
+        <div className="modal-overlay" onClick={fecharModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>{eventoSelecionado.titulo}</h2>
+            <p><strong>Data:</strong> {eventoSelecionado.data}</p>
+            <p><strong>Local:</strong> {eventoSelecionado.local}</p>
+            <p><strong>Descrição:</strong> {eventoSelecionado.descricao}</p>
+            <button onClick={fecharModal}>Fechar</button>
+          </div>
+        </div>
+      )}
     </>
   )
 }
