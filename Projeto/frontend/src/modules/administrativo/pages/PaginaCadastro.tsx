@@ -72,123 +72,121 @@ export default function Cadastro() {
   };
 
   return (
-    <div className="bg-[#EAF7FF] min-h-screen flex items-center justify-center">
-      <div className="form-container container">
-        <div className="header">
-          <p className="text-[25px] md:text-[45px] font-sans font-bold italic text-white pt-5 md:drop-shadow-[10px_8px_3px_rgba(0,0,0,0.3)]">
-            Cadastro
-          </p>
+    <div className="form-container container">
+      <div className="header">
+        <p className="text-[25px] md:text-[45px] font-sans font-bold italic text-white pt-5 md:drop-shadow-[10px_8px_3px_rgba(0,0,0,0.3)]">
+          Cadastro
+        </p>
+      </div>
+
+      <form onSubmit={handleCadastro}>
+        <div className="inputs">
+          <InputField
+            label="Nome Completo"
+            type="text"
+            placeholder="Digite o nome completo"
+            required
+            maxLength={100}
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+
+          <InputMaskField
+            label="CPF"
+            mask="000.000.000-00"
+            placeholder="Digite o CPF"
+            required
+            maxLength={14}
+            value={cpf}
+            onAccept={(value: string) => setCpf(value)}
+          />
+
+          <InputMaskField
+            label="Data de Nascimento"
+            mask="00/00/0000"
+            placeholder="DD/MM/AAAA"
+            required
+            maxLength={10}
+            value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
+            onAccept={(value: string) => {
+              if (isValidDataPtBr(value)) {
+                setData_nascimento(dataLimpa(value));
+              }
+            }}
+            onPaste={(e) => {
+              const pastedData = e.clipboardData.getData('Text');
+              if (!isValidDataPtBr(pastedData)) {
+                e.preventDefault(); // cancela o paste se não for válido
+              }
+            }}
+          />
+
+          <InputField
+            label="Gênero"
+            type="text"
+            placeholder="Ex: Masculino, Feminino, Outro"
+            required
+            maxLength={20}
+            value={genero}
+            onChange={(e) => setGenero(e.target.value)}
+          />
+
+          <InputMaskField
+            label="Data de Admissão"
+            mask="00/00/0000"
+            placeholder="DD/MM/AAAA"
+            required
+            maxLength={10}
+            value={data_admissao ? formatarDataParaPtBr(data_admissao) : ""}
+            onAccept={(value: string) => {
+              if (isValidDataPtBr(value)) {
+                setDataAdmissao(dataLimpa(value));
+              }
+            }}
+            onPaste={(e) => {
+              const pastedData = e.clipboardData.getData('Text');
+              if (!isValidDataPtBr(pastedData)) {
+                e.preventDefault(); // cancela o paste se não for válido
+              }
+            }}
+          />
+
+          <InputField
+            label="Cargo"
+            type="text"
+            placeholder="Digite o cargo"
+            required
+            maxLength={50}
+            value={cargo}
+            onChange={(e) => setCargo(e.target.value)}
+          />
+
+          <InputField
+            label="Setor"
+            type="text"
+            placeholder="Digite o setor"
+            required
+            maxLength={50}
+            value={setor}
+            onChange={(e) => setSetor(e.target.value)}
+          />
         </div>
 
-        <form onSubmit={handleCadastro}>
-          <div className="inputs">
-            <InputField
-              label="Nome Completo"
-              type="text"
-              placeholder="Digite o nome completo"
-              required
-              maxLength={100}
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
+        <div className="submit-container">
+          <input type="submit" value="CADASTRAR" className="submit" />
+        </div>
 
-            <InputMaskField
-              label="CPF"
-              mask="000.000.000-00"
-              placeholder="Digite o CPF"
-              required
-              maxLength={14}
-              value={cpf}
-              onAccept={(value: string) => setCpf(value)}
-            />
-
-            <InputMaskField
-              label="Data de Nascimento"
-              mask="00/00/0000"
-              placeholder="DD/MM/AAAA"
-              required
-              maxLength={10}
-              value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
-              onAccept={(value: string) => {
-                if (isValidDataPtBr(value)) {
-                  setData_nascimento(dataLimpa(value));
-                }
-              }}
-              onPaste={(e) => {
-                const pastedData = e.clipboardData.getData('Text');
-                if (!isValidDataPtBr(pastedData)) {
-                  e.preventDefault(); // cancela o paste se não for válido
-                }
-              }}
-            />
-
-            <InputField
-              label="Gênero"
-              type="text"
-              placeholder="Ex: Masculino, Feminino, Outro"
-              required
-              maxLength={20}
-              value={genero}
-              onChange={(e) => setGenero(e.target.value)}
-            />
-
-            <InputMaskField
-              label="Data de Admissão"
-              mask="00/00/0000"
-              placeholder="DD/MM/AAAA"
-              required
-              maxLength={10}
-              value={data_admissao ? formatarDataParaPtBr(data_admissao) : ""}
-              onAccept={(value: string) => {
-                if (isValidDataPtBr(value)) {
-                  setDataAdmissao(dataLimpa(value));
-                }
-              }}
-              onPaste={(e) => {
-                const pastedData = e.clipboardData.getData('Text');
-                if (!isValidDataPtBr(pastedData)) {
-                  e.preventDefault(); // cancela o paste se não for válido
-                }
-              }}
-            />
-
-            <InputField
-              label="Cargo"
-              type="text"
-              placeholder="Digite o cargo"
-              required
-              maxLength={50}
-              value={cargo}
-              onChange={(e) => setCargo(e.target.value)}
-            />
-
-            <InputField
-              label="Setor"
-              type="text"
-              placeholder="Digite o setor"
-              required
-              maxLength={50}
-              value={setor}
-              onChange={(e) => setSetor(e.target.value)}
-            />
+        {sucesso && (
+          <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
+            {sucesso}
           </div>
-
-          <div className="submit-container">
-            <input type="submit" value="CADASTRAR" className="submit" />
+        )}
+        {erro && (
+          <div className="pt-4 text-red-600 text-center text-[14px] md:text-[18px]">
+            {erro}
           </div>
-
-          {sucesso && (
-            <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
-              {sucesso}
-            </div>
-          )}
-          {erro && (
-            <div className="pt-4 text-red-600 text-center text-[14px] md:text-[18px]">
-              {erro}
-            </div>
-          )}
-        </form>
-      </div>
+        )}
+      </form>
     </div>
   );
 }
