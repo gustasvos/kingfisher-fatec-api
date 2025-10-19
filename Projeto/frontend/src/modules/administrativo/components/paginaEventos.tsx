@@ -7,7 +7,6 @@ import listPlugin from '@fullcalendar/list'
 import interactionPlugin from '@fullcalendar/interaction'
 import ptBrLocale from '@fullcalendar/core/locales/pt-br'
 import "./pagina-eventos.css"
-import { useNavigate } from 'react-router-dom'
 import { CalendarApi } from '@fullcalendar/core'
 
 import imgLogin from './../../../assets/imgLoginKey.svg'
@@ -16,16 +15,19 @@ import imgUser from './../../../assets/imgAddUserMale.png'
 import imgCalendar from './../../../assets/imgTearOffCalendar.png'
 import imgNotification from './../../../assets/imgDoorbell.png'
 import imgColab from './../../../assets/imgTeam.svg'
+import Modal from '../../../shared/components/modal'
+import NovoEvento from './novoEvento'
+import Navbar from '../../../shared/components/navbar'
 
 function PaginaEventos() {
-  const calendarRef = useRef<CalendarApi | null>(null)
   const [eventosCalendar, setEventosCalendar] = useState<any[]>([])
-  const usuarioID = 1
-
   const [aberto, setAberto] = useState(false)
   const [eventoSelecionado, setEventoSelecionado] = useState<any | null>(null)
+  const [abertoModal, setAbertoModal] = useState(false)
+  const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
 
-  const navigate = useNavigate()
+  const calendarRef = useRef<CalendarApi | null>(null)
+  const usuarioID = 1
 
   useEffect(() => {
     axios.get(`http://localhost:8080/admin/events/convidado/${usuarioID}`)
@@ -45,10 +47,6 @@ function PaginaEventos() {
       .catch((error) => console.error("Erro ao buscar eventos:", error))
   }, [])
 
-  const handleCreateEvent = () => {
-    navigate('/novo-evento')
-  }
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const termo = e.target.value.trim().toLowerCase()
     console.log('Pesquisar evento:', termo)
@@ -65,6 +63,12 @@ function PaginaEventos() {
 
   const fecharModal = () => setEventoSelecionado(null)
 
+  const abrirModalCriarEvento = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<NovoEvento onFechar={() => setAbertoModal(false)} />)
+    setAbertoModal(true)
+  }
+
   const menuItems = [
     { src: imgLogin, alt: "Login", title: "Login", route: "/" },
     { src: imgHome, alt: "Home", title: "Home", route: "/home" },
@@ -75,78 +79,18 @@ function PaginaEventos() {
   ]
 
   return (
-    <>
-      {/* Sidebar */}
-      <aside style={{
-        width: aberto ? '200px' : '60px',
-        backgroundColor: '#135b78',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: aberto ? 'flex-start' : 'center',
-        paddingTop: '20px',
-        paddingLeft: aberto ? '15px' : '0',
-        gap: '25px',
-        transition: 'width 0.3s ease',
-        color: 'white',
-        boxSizing: 'border-box',
-      }}>
-        <section
-          onClick={() => setAberto(!aberto)}
-          style={{
-            cursor: 'pointer',
-            marginBottom: '20px',
-            paddingLeft: aberto ? '10px' : '0',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-          }}
-          aria-label="Toggle sidebar"
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAberto(!aberto); }}
-        >
-          <span style={{ width: '25px', height: '3px', backgroundColor: 'white', borderRadius: '2px' }} />
-          <span style={{ width: '25px', height: '3px', backgroundColor: 'white', borderRadius: '2px' }} />
-          <span style={{ width: '25px', height: '3px', backgroundColor: 'white', borderRadius: '2px' }} />
-        </section>
+    <div className={abertoModal ? "overflow-hidden h-screen" : ""}>
+      <Navbar />
 
-        <section style={{ width: '100%' }}>
-          {menuItems.map(({ src, alt, title, route }) => (
-            <button
-              key={title}
-              title={title}
-              onClick={() => navigate(route)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px 10px',
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                color: 'inherit',
-                fontWeight: '600',
-                fontSize: '15px',
-                borderRadius: '5px',
-                whiteSpace: 'nowrap',
-                textAlign: 'left',
-              }}
-              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#1b7091d8'}
-              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-            >
-              <img src={src} alt={alt} style={{ width: '28px', height: '28px', flexShrink: 0 }} />
-              {aberto ? title : null}
-            </button>
-          ))}
-        </section>
-      </aside>
-
-      {/* Conteúdo principal */}
-      <main style={{ marginLeft: aberto ? '200px' : '60px', padding: '20px', transition: 'margin-left 0.3s ease' }}>
-        <div className="top-bar" style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <button onClick={handleCreateEvent} className="btn">
+      <main
+        style={{
+          marginLeft: aberto ? '200px' : '60px',
+          padding: '20px',
+          transition: 'margin-left 0.3s ease'
+        }}
+      >
+        <div className="top-bar mb-5 flex items-center gap-4">
+          <button onClick={abrirModalCriarEvento} className="btn">
             Criar Evento
           </button>
           <input
@@ -181,9 +125,19 @@ function PaginaEventos() {
             }}
           />
         </div>
+
+        <Modal
+          aberto={abertoModal}
+          onFechar={() => setAbertoModal(false)}
+          // modalClassName="w-[90%] sm:w-[95%] md:w-[80%] lg:w-[750px] xl:w-[900px] max-h-[90vh] bg-[rgba(28,175,23,0.94)] rounded-[15px]"
+          modalClassName=""
+        >
+          <div className='max-w-[900px] w-[70vw]'>
+            {conteudoModal}
+          </div>
+        </Modal>
       </main>
 
-      {/* modal ev */}
       {eventoSelecionado && (
         <div className="modal-overlay" onClick={fecharModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -195,8 +149,9 @@ function PaginaEventos() {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
+
 }
 
 export default PaginaEventos
