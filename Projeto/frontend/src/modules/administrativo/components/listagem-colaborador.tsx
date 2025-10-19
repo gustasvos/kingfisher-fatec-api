@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import axios from "axios";
 import CardColaborador from "./cardColaborador"
 import { Colaborador } from "../../../types/colaborador";
+import Loading from "../../../shared/components/loading";
 
 export default function ListagemColaborador() {
     const [colaborador, setColaborador] = useState<Colaborador[]>([])
@@ -42,7 +43,7 @@ export default function ListagemColaborador() {
 
     if (carregando) {
         return (
-            <p>Carregando colaboradores</p>
+            <Loading />
         )
     }
 

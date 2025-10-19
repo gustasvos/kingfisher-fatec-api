@@ -10,6 +10,7 @@ import imgNotification from './../../assets/imgDoorbell.png';
 import imgColab from './../../assets/imgTeam.svg';
 import Cadastro from "../../modules/administrativo/pages/PaginaCadastro";
 import Modal from "./modal";
+import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
 
 export default function Navbar() {
   const [aberto, setAberto] = useState(false);
@@ -22,6 +23,12 @@ export default function Navbar() {
   const abrirModalCadastro = (e: React.MouseEvent) => {
     e.preventDefault()
     setConteudoModal(<Cadastro />)
+    setAbertoModal(true)
+  }
+
+  const abrirModalConvites = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<EventoDetalhe />)
     setAbertoModal(true)
   }
 
@@ -58,7 +65,7 @@ export default function Navbar() {
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Calendário de Eventos</p> : null}
         </NavLink>
 
-        <NavLink to="/evento-convite" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
+        <NavLink to="#" className="rounded-md flex items-center hover:bg-[#1b7091d8]" onClick={abrirModalConvites}>
           <img src={imgNotification} alt="Convites" className="w-7 h-7" />
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Convites</p> : null}
         </NavLink>

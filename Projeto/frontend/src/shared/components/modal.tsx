@@ -11,6 +11,7 @@ const Modal: React.FC<ModalProps> = ({ aberto, onFechar, children, modalClassNam
     if (!aberto) return null
 
     const handleClickOutside = (e: React.MouseEvent) => {
+        console.log('clicou fora?', e.target === e.currentTarget)
         if (e.target === e.currentTarget) {
             onFechar()
         }
