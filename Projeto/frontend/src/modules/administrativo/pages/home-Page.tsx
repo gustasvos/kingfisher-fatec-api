@@ -129,7 +129,7 @@ export default function HomePage() {
       <Navbar />
       <main className="flex-1 px-6 py-8"> 
         <header
-          className="card p-8 flex gap-6 items-center relative"
+          className="card p-8 flex gap-6 items-center bg-[#135b78] rounded-lg overflow-hidden"
           style={{ backgroundColor: "#135b78", color: "#fff", borderRadius: "0.5rem", overflow: "hidden" }}
         >
           <div

@@ -16,7 +16,7 @@ export default function RotasADM(){
         <>
             <Route path="/" element={<LoginPage/>}/>
             <Route path="/cadastrar" element={<Cadastro />} />
-            <Route path="/editar-cadastro/:id" element={<AtualizarCadastro colaboradorId={0} />} />
+            <Route path="/editar-cadastro/:id" element={<AtualizarCadastro />} />
             <Route path="/evento-convite" element={<EventoDetalhePage/>}/>
             <Route path="/colaboradores" element={<ListagemColaborador/>}/>
             <Route path="/eventos" element={<PaginaEventos/>}/>
