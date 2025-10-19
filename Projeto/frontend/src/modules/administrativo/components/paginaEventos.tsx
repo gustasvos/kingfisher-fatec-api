@@ -176,6 +176,9 @@ function PaginaEventos() {
             height="1200px"
             events={eventosCalendar}
             eventClick={handleEventClick}
+            eventDidMount={(info) => {
+              info.el.style.cursor = 'pointer'
+            }}
           />
         </div>
       </main>
