@@ -40,20 +40,6 @@ export const createUsuario = async (req: Request, res: Response) => {
             return
         }
 
-        if(!validarEmail(data.email)){
-            res.status(400).json({
-                mesage:'Email inválido!'
-            })
-            return
-        }
-
-        if(!validarTelefone(data.telefone)){
-            res.status(400).json({
-                mesage:'Telefone inválido!'
-            })
-            return
-        }
-
         if (!validarSenha(data.senha)) {
             res.status(400).json({
                 message: 'Senha inválida! A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.'
@@ -66,8 +52,7 @@ export const createUsuario = async (req: Request, res: Response) => {
         const existingUser = await userRepository.findOne({
             //condição OR no TypeORM
             where: [
-                {cpf: data.cpf},
-                {email: data.email}
+                {cpf: data.cpf}
             ]            
         })
         if(existingUser){
@@ -138,20 +123,6 @@ export const updateUsuario = async (req: Request, res: Response) => {
             return
         }
 
-        if(!validarEmail(data.email)){
-            res.status(400).json({
-                mesage:'Email inválido!'
-            })
-            return
-        }
-
-        if(!validarTelefone(data.telefone)){
-            res.status(400).json({
-                mesage:'Telefone inválido!'
-            })
-            return
-        }
-
         if (!validarSenha(data.senha)) {
             res.status(400).json({
                 message: 'Senha inválida! A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.'
@@ -195,6 +166,7 @@ export const updateUsuario = async (req: Request, res: Response) => {
         res.status(500).json({ message:"Erro ao editar o usuário!" }) 
     }
 }
+
 export const deleteUsuario = async (req: Request, res: Response) => {
     try{
         const {id} = req.params
@@ -243,14 +215,14 @@ export const loginUsuario = async (req: Request, res: Response) => {
 
         const jwt = require('jsonwebtoken');
 
-        // 🔹 GERAR O TOKEN 
+        // GERAR O TOKEN 
         const token = jwt.sign(
             { id: user.id, cpf: user.cpf }, // payload
             process.env.JWT_SECRET as string,   // chave secreta
             { expiresIn: process.env.JWT_EXPIRES_IN} // expiração
         );
 
-        // 🔹 Resposta do login
+        // Resposta do login
         return res.status(200).json({
             message: 'Login realizado com sucesso!',
             token,

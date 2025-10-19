@@ -6,7 +6,7 @@ Content-Type: application/json
   "nome": "Thiago Lima",
   "nome_fantasia": "Thiago Lima LTDA",
   "cpf": "85107366007",
-  "sexo": "M",
+  "genero": "M",
   "estado_civil": "solteiro",
   "data_nascimento": "1985-04-20",
   "cidade_nascimento": "Rio de Janeiro",
@@ -96,7 +96,7 @@ Content-Type: application/json
   "nome": "Larissa Andrade",
   "nome_fantasia": "Larissa Andrade LTDA",
   "cpf": "11144477735",
-  "sexo": "F",
+  "genero": "F",
   "estado_civil": "solteiro",
   "data_nascimento": "1990-05-15",
   "cidade_nascimento": "São Paulo",
@@ -133,7 +133,7 @@ Content-Type: application/json
 }
 
 ### Deletar usuário (requer admin)
-DELETE http://localhost:8080/usuario/2
+DELETE http://localhost:8080/usuario/3
 Authorization: Bearer {{token}}
 Content-Type: application/json 
 
