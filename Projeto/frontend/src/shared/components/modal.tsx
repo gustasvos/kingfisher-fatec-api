@@ -1,5 +1,4 @@
 import React from "react"
-import Botao from "./botao"
 
 type ModalProps = {
     aberto: boolean

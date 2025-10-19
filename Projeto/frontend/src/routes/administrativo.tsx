@@ -3,9 +3,9 @@ import LoginPage from "../modules/administrativo/pages/login-page"
 import Cadastro from '../modules/administrativo/pages/PaginaCadastro';
 import AtualizarCadastro from '../modules/administrativo/pages/atualizarCadastro';
 import EventoDetalhePage from "../modules/administrativo/pages/eventoDetalhe-page"
-import ListagemColaborador from "../modules/administrativo/pages/listagem-colaborador-page"
 import NovoEvento from "../modules/administrativo/components/novoEvento";
 import PaginaEventos from "../modules/administrativo/components/paginaEventos";
+import ListagemColaborador from "../modules/administrativo/components/listagem-colaborador";
 import HomePage from "../modules/administrativo/pages/home-Page";
 import LocalDeTrabalho from "../modules/administrativo/components/colaboradorLoca";
 import ListagemEventos from "../modules/administrativo/components/listagem-eventos";

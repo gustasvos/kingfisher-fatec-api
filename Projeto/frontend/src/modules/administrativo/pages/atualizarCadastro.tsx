@@ -22,7 +22,11 @@ const formatarDataParaPtBr = (dataIso: string): string => {
   return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
 };
 
-export default function AtualizarCadastro() {
+interface AtualizarCadastroProps {
+  id: number
+}
+
+export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setData_nascimento] = useState("");
@@ -34,7 +38,6 @@ export default function AtualizarCadastro() {
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { id } = useParams();
 
   useEffect(() => {
     const fetchUsuario = async () => {
@@ -51,12 +54,12 @@ export default function AtualizarCadastro() {
         setCpf(usuario.cpf)
         setData_nascimento(usuario.data_nascimento)
         setGenero(usuario.genero)
-        setDataAdmissao(usuario.data_admissao)
+        setDataAdmissao(usuario.data_contratacao)
         setCargo(usuario.cargo)
         setSetor(usuario.setor)
 
       } catch (error) {
-        setErro("Falha ao carregar dados do usuário, tenta de novo mais tarde."); 
+        setErro("Falha ao carregar dados do usuário, tenta de novo mais tarde.");
       }
     };
 
@@ -116,136 +119,134 @@ export default function AtualizarCadastro() {
   };
 
   return (
-    <div className="bg-[#EAF7FF] min-h-screen flex items-center justify-center">
-      <div className="form-container container">
-        <div className="header">
-          <p className="text-[20px] md:text-[38px] font-sans font-bold italic text-white pt-5 md:drop-shadow-[10px_8px_3px_rgba(0,0,0,0.3)]">
-            Atualizar Cadastro
-          </p>
+    <div className="form-container container">
+      <div className="header">
+        <p className="text-[20px] md:text-[38px] font-sans font-bold italic text-white pt-5 md:drop-shadow-[10px_8px_3px_rgba(0,0,0,0.3)]">
+          Atualizar Cadastro
+        </p>
+      </div>
+
+      <form onSubmit={handleSalvar}>
+        <div className="inputs">
+          <InputField
+            label="Nome Completo"
+            type="text"
+            placeholder="Digite o nome completo"
+            required
+            maxLength={100}
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+
+          <InputMaskField
+            label="CPF"
+            mask="000.000.000-00"
+            placeholder="Digite o CPF"
+            required
+            maxLength={14}
+            value={cpf}
+            onAccept={(value: string) => setCpf(value)}
+          />
+
+          <InputMaskField
+            label="Data de Nascimento"
+            mask="00/00/0000"
+            placeholder="DD/MM/AAAA"
+            required
+            maxLength={10}
+            value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
+            onAccept={(value: string) => {
+              if (isValidDataPtBr(value)) {
+                setData_nascimento(dataLimpa(value));
+              }
+            }}
+          />
+
+          <InputField
+            label="Gênero"
+            type="text"
+            placeholder="Ex: Masculino, Feminino, Outro"
+            required
+            maxLength={20}
+            value={genero}
+            onChange={(e) => setGenero(e.target.value)}
+          />
+
+          <InputMaskField
+            label="Data de Admissão"
+            mask="00/00/0000"
+            placeholder="DD/MM/AAAA"
+            required
+            maxLength={10}
+            value={data_admissao ? formatarDataParaPtBr(data_admissao) : ""}
+            onAccept={(value: string) => {
+              if (isValidDataPtBr(value)) {
+                setDataAdmissao(dataLimpa(value));
+              }
+            }}
+          />
+
+          <InputField
+            label="Cargo"
+            type="text"
+            placeholder="Digite o cargo"
+            required
+            maxLength={50}
+            value={cargo}
+            onChange={(e) => setCargo(e.target.value)}
+          />
+
+          <InputField
+            label="Setor"
+            type="text"
+            placeholder="Digite o setor"
+            required
+            maxLength={50}
+            value={setor}
+            onChange={(e) => setSetor(e.target.value)}
+          />
+
+          <InputField
+            label="Senha"
+            type="password"
+            placeholder="Digite a nova senha"
+            maxLength={100}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+
         </div>
 
-        <form onSubmit={handleSalvar}>
-          <div className="inputs">
-            <InputField
-              label="Nome Completo"
-              type="text"
-              placeholder="Digite o nome completo"
-              required
-              maxLength={100}
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
+        <div className="submit-container flex flex-col md:flex-row gap-4 items-center justify-center">
+          <button
+            type="submit"
+            style={{ backgroundColor: "#d1edff", color: "#015084" }}
+            className="py-2 px-4 rounded font-semibold hover:brightness-90 transition"
+          >
+            Salvar Alterações
+          </button>
 
-            <InputMaskField
-              label="CPF"
-              mask="000.000.000-00"
-              placeholder="Digite o CPF"
-              required
-              maxLength={14}
-              value={cpf}
-              onAccept={(value: string) => setCpf(value)}
-            />
+          <button
+            type="button"
+            style={{ backgroundColor: "#d1edff", color: "#015084" }}
+            onClick={handleDescartar}
+            className="py-2 px-4 rounded font-semibold hover:brightness-90 transition"
+          >
+            Descartar Alterações
+          </button>
+        </div>
 
-            <InputMaskField
-              label="Data de Nascimento"
-              mask="00/00/0000"
-              placeholder="DD/MM/AAAA"
-              required
-              maxLength={10}
-              value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
-              onAccept={(value: string) => {
-                if (isValidDataPtBr(value)) {
-                  setData_nascimento(dataLimpa(value));
-                }
-              }}
-            />
-
-            <InputField
-              label="Gênero"
-              type="text"
-              placeholder="Ex: Masculino, Feminino, Outro"
-              required
-              maxLength={20}
-              value={genero}
-              onChange={(e) => setGenero(e.target.value)}
-            />
-
-            <InputMaskField
-              label="Data de Admissão"
-              mask="00/00/0000"
-              placeholder="DD/MM/AAAA"
-              required
-              maxLength={10}
-              value={data_admissao ? formatarDataParaPtBr(data_admissao) : ""}
-              onAccept={(value: string) => {
-                if (isValidDataPtBr(value)) {
-                  setDataAdmissao(dataLimpa(value));
-                }
-              }}
-            />
-
-            <InputField
-              label="Cargo"
-              type="text"
-              placeholder="Digite o cargo"
-              required
-              maxLength={50}
-              value={cargo}
-              onChange={(e) => setCargo(e.target.value)}
-            />
-
-            <InputField
-              label="Setor"
-              type="text"
-              placeholder="Digite o setor"
-              required
-              maxLength={50}
-              value={setor}
-              onChange={(e) => setSetor(e.target.value)}
-            />
-
-            <InputField
-              label="Senha"
-              type="password"
-              placeholder="Digite a nova senha"
-              maxLength={100}
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-
+        {sucesso && (
+          <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
+            {sucesso}
           </div>
-
-          <div className="submit-container flex flex-col md:flex-row gap-4 items-center justify-center">
-            <button
-              type="submit"
-              style={{ backgroundColor: "#d1edff", color: "#015084" }}
-              className="py-2 px-4 rounded font-semibold hover:brightness-90 transition"
-            >
-              Salvar Alterações
-            </button>
-
-            <button
-              type="button"
-              style={{ backgroundColor: "#d1edff", color: "#015084" }}
-              onClick={handleDescartar}
-              className="py-2 px-4 rounded font-semibold hover:brightness-90 transition"
-            >
-              Descartar Alterações
-            </button>
+        )}
+        {erro && (
+          <div className="pt-4 text-red-600 text-center text-[14px] md:text-[18px]">
+            {erro}
           </div>
-
-          {sucesso && (
-            <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
-              {sucesso}
-            </div>
-          )}
-          {erro && (
-            <div className="pt-4 text-red-600 text-center text-[14px] md:text-[18px]">
-              {erro}
-            </div>
-          )}
-        </form>
-      </div>
+        )}
+      </form>
     </div>
   );
 }

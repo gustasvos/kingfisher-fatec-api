@@ -16,6 +16,9 @@ export default function Navbar() {
   const [abertoModal, setAbertoModal] = useState(false)
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null); // Controla o conteúdo do modal
 
+
+  // Modals
+
   const abrirModalCadastro = (e: React.MouseEvent) => {
     e.preventDefault()
     setConteudoModal(<Cadastro />)
