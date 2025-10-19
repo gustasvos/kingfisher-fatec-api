@@ -133,7 +133,7 @@ Content-Type: application/json
 }
 
 ### Deletar usuário (requer admin)
-DELETE http://localhost:8080/usuario/3
+DELETE http://localhost:8080/usuario/6
 Authorization: Bearer {{token}}
 Content-Type: application/json 
 
