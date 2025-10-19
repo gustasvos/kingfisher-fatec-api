@@ -10,7 +10,6 @@ export default function ListagemColaborador() {
     const [pesquisa, setPesquisa] = useState("")
 
     useEffect(() => {
-        // colocar o nosso http, esse foi só para eu testar
         axios.get<Colaborador[]>("http://localhost:8080/usuario/list")
             .then((response: any) => {
                 setColaborador(response.data)

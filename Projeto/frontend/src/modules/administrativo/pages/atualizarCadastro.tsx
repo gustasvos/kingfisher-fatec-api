@@ -30,40 +30,38 @@ export default function AtualizarCadastro() {
   const [data_admissao, setDataAdmissao] = useState("");
   const [cargo, setCargo] = useState("");
   const [setor, setSetor] = useState("");
+  const [senha, setSenha] = useState("");
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
   const { id } = useParams();
 
-  useEffect(() => { 
-  const fetchUsuario = async () => {
-    try {
-      // aqui eu coloquei o que seriam os dados para quando o backend estiver pronto
-      // const response = await instance.get(`/usuario/${id}`);
-      // const usuario = response.data;
-      // setNome(usuario.nome);
-      // setCpf(usuario.cpf);
-      // setData_nascimento(usuario.data_nascimento);
-      // setGenero(usuario.genero);
-      // setDataAdmissao(usuario.data_admissao);
-      // setCargo(usuario.cargo);
-      // setSetor(usuario.setor);
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+        const response = await instance.get(`/usuario/${id}`)
+        const usuario = response.data
 
-      // por enquanto eu coloquei esses dados de um usuário teste
-      setNome("Carlos Pereira");
-      setCpf("123.456.789-00");
-      setData_nascimento("2000-10-11");
-      setGenero("Masculino");
-      setDataAdmissao("2020-10-11");
-      setCargo("Analista");
-      setSetor("Financeiro");
-    } catch (error) {
-      setErro("Falha ao carregar dados do usuário, tenta de novo mais tarde."); //nesse caso como esse usuário teste não está no sistema quando clicado o botão "salvar alterações" aparece a seguinte mensagem "Erro ao salvar alterações, tente novamente"
-    }
-  };
+        if (!usuario) {
+          setErro("Usuário não encontrado.")
+          return
+        }
 
-  fetchUsuario();
-}, [id]);
+        setNome(usuario.nome)
+        setCpf(usuario.cpf)
+        setData_nascimento(usuario.data_nascimento)
+        setGenero(usuario.genero)
+        setDataAdmissao(usuario.data_admissao)
+        setCargo(usuario.cargo)
+        setSetor(usuario.setor)
+
+      } catch (error) {
+        setErro("Falha ao carregar dados do usuário, tenta de novo mais tarde."); 
+      }
+    };
+
+    fetchUsuario();
+  }, [id]);
 
 
   const handleSalvar = async (e: React.FormEvent) => {
@@ -75,7 +73,17 @@ export default function AtualizarCadastro() {
     const limparTexto = (texto: string) =>
       texto.replace(/[^\p{L}\sçÇ]/gu, '').replace(/\s+/g, ' ').trim();
 
-    const payload = {
+
+    const payload: {
+      nome: string
+      cpf: string
+      data_nascimento: string
+      genero: string
+      data_admissao: string
+      cargo: string
+      setor: string
+      senha?: string
+    } = {
       nome: limparTexto(nome),
       cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
@@ -85,14 +93,21 @@ export default function AtualizarCadastro() {
       setor: limparTexto(setor),
     };
 
+    // não incluir senha na atualização, a não ser que ela tenha sido alterada
+    if (senha) {
+      payload.senha = senha
+    }
+
     try {
       await instance.put(`/usuario/${id}`, payload);
       setSucesso("Cadastro atualizado com sucesso!");
       setTimeout(() => {
+        setSucesso(null)
         navigate("/colaboradores");
-      }, 1000);
-    } catch (error) {
-      setErro("Erro ao salvar alterações, tente novamente");
+      }, 1200);
+    } catch (error: any) {
+      const mensagemErro = error?.response?.data?.message || "Erro desconhecido. Tente novamente."
+      setErro(mensagemErro);
     }
   };
 
@@ -188,6 +203,16 @@ export default function AtualizarCadastro() {
               value={setor}
               onChange={(e) => setSetor(e.target.value)}
             />
+
+            <InputField
+              label="Senha"
+              type="password"
+              placeholder="Digite a nova senha"
+              maxLength={100}
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+
           </div>
 
           <div className="submit-container flex flex-col md:flex-row gap-4 items-center justify-center">

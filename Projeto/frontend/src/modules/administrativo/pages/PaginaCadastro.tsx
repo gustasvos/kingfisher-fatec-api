@@ -15,7 +15,7 @@ const isValidDataPtBr = (data: string): boolean => {
 const dataLimpa = (dataPtBr: string): string => {
   const [dia, mes, ano] = dataPtBr.split('/');
   if (!dia || !mes || !ano) return "";
-  return `${ano.padStart(4,'0')}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')}`;
+  return `${ano.padStart(4, '0')}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
 }
 
 // Converte data YYYY-MM-DD -> DD/MM/YYYY (para mostrar no input)
