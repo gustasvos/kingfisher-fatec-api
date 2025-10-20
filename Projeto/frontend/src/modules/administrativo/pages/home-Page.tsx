@@ -2,6 +2,8 @@ import React, { useMemo, useState, useEffect } from "react";
 import Navbar from "../../../shared/components/navbar";
 import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
+import axios from "axios";
+
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
 type CalendarData = { year: number; month: number; highlightedDates: number[] };
@@ -58,6 +60,30 @@ function PreferenceChart({ data }: { data: { labels: string[]; values: number[] 
 }
 
 export default function HomePage() {
+
+  // user
+  const [user, setUser] = useState(null)
+  const userId = localStorage.getItem("userId")
+  const token = localStorage.getItem("token")
+
+  useEffect(() => {
+    if (userId) {
+      axios
+        .get(`http://localhost:8080/usuario/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar usuário:", error);
+        });
+    }
+  }, [userId]);
+
+  // CALENDARIO
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth() + 1);
   const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
@@ -127,30 +153,42 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex bg-[var(--bg)] font-sans">
       <Navbar />
-      <main className="flex-1 px-6 py-8"> 
+      <main className="flex-1 px-6 py-8">
         <header
           className="card p-8 flex gap-6 items-center bg-[#135b78] rounded-lg overflow-hidden"
-          style={{ backgroundColor: "#135b78", color: "#fff", borderRadius: "0.5rem", overflow: "hidden" }}
+          style={{
+            backgroundColor: "#135b78",
+            color: "#fff",
+            borderRadius: "0.5rem",
+            overflow: "hidden",
+          }}
         >
           <div
             className="absolute inset-0 -z-10"
             style={{ backgroundColor: "#135b78", opacity: 0.85 }}
           ></div>
 
-          <div className="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center">
+          {/* <div className="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center">
             <img
-              src={dashboard?.user.avatarUrl || usuarioIcon}
+              src={usuarioIcon}
               alt="usuário"
               className="w-28 h-28 rounded-full object-cover"
             />
-          </div>
+          </div> */}
 
           <div>
             <h1 className="text-2xl font-bold tracking-wide text-white">
-              SEJA BEM-VINDO {dashboard?.user.name?.toUpperCase() || "USUÁRIO"}
+              {user?.genero === "F"
+                ? `SEJA BEM-VINDA ${user?.nome.toUpperCase()}`
+                : `SEJA BEM-VINDO ${user?.nome.toUpperCase() || "Usuário"}`
+              }
             </h1>
-            <p className="mt-4 font-medium text-white">{dashboard?.user.role || "-"}</p>
-            <p className="text-sm opacity-90 text-white">{dashboard?.user.email || "-"}</p>
+            <p className="mt-4 font-medium text-white">
+              {user?.cargo.toUpperCase() || "—"}
+            </p>
+            {/* <p className="text-sm opacity-90 text-white">
+              CPF: {user?.cpf || "—"}
+            </p> */}
           </div>
         </header>
 
@@ -169,17 +207,16 @@ export default function HomePage() {
               </div>
               <div className="mt-4">
                 <div className="grid grid-cols-7 gap-1 text-xs text-black">
-                  {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map(d => <div key={d} className="text-center font-medium">{d}</div>)}
+                  {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map(d => <div key={d} className="text-center font-medium">{d}</div>)}
                 </div>
                 <div className="grid grid-cols-7 gap-1 mt-3 text-sm text-black">
                   {calendarDays.map(day => (
                     <div
                       key={day}
-                      className={`calendar-day text-center text-sm cursor-pointer rounded-md ${
-                        day === todayDay && currentMonth === todayMonth && currentYear === todayYear
+                      className={`calendar-day text-center text-sm cursor-pointer rounded-md ${day === todayDay && currentMonth === todayMonth && currentYear === todayYear
                           ? "bg-blue-200 font-bold"
                           : ""
-                      }`}
+                        }`}
                     >
                       {day}
                     </div>
@@ -221,6 +258,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
       </main>
     </div>
   );

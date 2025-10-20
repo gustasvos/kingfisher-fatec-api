@@ -1,4 +1,5 @@
 import React from "react"
+import { createPortal } from "react-dom";
 
 type ModalProps = {
     aberto: boolean
@@ -17,14 +18,20 @@ const Modal: React.FC<ModalProps> = ({ aberto, onFechar, children, modalClassNam
         }
     }
 
-    return (
-        <section className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-auto ${modalClassName}`} onClick={handleClickOutside}>
+    const modalRoot = document.getElementById('modal-root')
+    if (!modalRoot) return null
+
+    return createPortal(
+        <section
+            className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999] overflow-y-auto ${modalClassName}`}
+            onClick={handleClickOutside}>
             {children}
             {/* <section className={`p-6 w-[30vw] h-[40vh] max-w-full max-h-auto ${modalClassName}`} onClick={(e) => e.stopPropagation()}>
                 {children}
             </section> */}
-        </section>
-    );
+        </section>,
+        modalRoot
+    )
 };
 
 export default Modal

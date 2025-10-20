@@ -1,11 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "../../../services/api";
 
-export default function RelatorioAproveitamento() {
-  const [titulo, setTitulo] = useState("");
-  const [data, setData] = useState("");
-  const [objetivo, setObjetivo] = useState(""); 
+interface Evento {
+  id: number;
+  titulo: string;
+  dataHora: string;
+}
+
+export default function RelatorioAproveitamento({ tituloInicial, dataInicial, onFechar }: RelatorioAproveitamentoProps) {
+  const [titulo, setTitulo] = useState(tituloInicial);
+  const [data, setData] = useState(dataInicial);
+  const [objetivo, setObjetivo] = useState("");
   const [avaliacao, setAvaliacao] = useState(0);
   const [comentarios, setComentarios] = useState("");
+
+  // Se o título e data não forem passados, buscar a partir da API
+  useEffect(() => {
+    if (!titulo || !data) {
+      async function fetchEvento() {
+        try {
+          const response = await api.get<Evento[]>("/admin/events");
+          if (response.data.length > 0) {
+            const evento = response.data[0]; // Pega o primeiro evento
+            setTitulo(evento.titulo);
+            setData(evento.dataHora); // Pega a data
+          }
+        } catch (error) {
+          console.error("Erro ao carregar dados do evento", error);
+        }
+      }
+
+      fetchEvento();
+    }
+  }, [titulo, data]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +56,7 @@ export default function RelatorioAproveitamento() {
       alert("Por favor, faça uma avaliação do evento.");
       return;
     }
+
     console.log({
       titulo,
       data,
@@ -40,8 +68,23 @@ export default function RelatorioAproveitamento() {
     alert("Relatório enviado com sucesso!");
   };
 
+  // Formatação da data para exibir de forma legível
+  const formatarData = (data: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+
+    const dataFormatada = new Date(data).toLocaleString("pt-BR", options);
+    return dataFormatada;
+  };
+
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg mt-10">
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg mt-10 w-[80vw] v-[50vh]">
       <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
         Relatório de Aproveitamento
       </h1>
@@ -51,25 +94,16 @@ export default function RelatorioAproveitamento() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Título do evento
           </label>
-          <input
-            type="text"
-            placeholder="Digite o título do evento"
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            className="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 text-black"
-          />
+          {/* Exibindo o título do evento como texto */}
+          <p className="text-lg font-semibold text-gray-800">{titulo}</p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Data do evento
           </label>
-          <input
-            type="date"
-            value={data}
-            onChange={(e) => setData(e.target.value)}
-            className="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 text-black"
-          />
+          {/* Exibindo a data formatada */}
+          <p className="text-lg font-semibold text-gray-800">{formatarData(data)}</p>
         </div>
 
         <div>
@@ -94,9 +128,7 @@ export default function RelatorioAproveitamento() {
                 key={star}
                 type="button"
                 onClick={() => setAvaliacao(star)}
-                className={`text-2xl ${
-                  avaliacao >= star ? "text-yellow-400" : "text-gray-300"
-                }`}
+                className={`text-2xl ${avaliacao >= star ? "text-yellow-400" : "text-gray-300"}`}
               >
                 ★
               </button>
