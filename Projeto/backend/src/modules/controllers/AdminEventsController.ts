@@ -9,6 +9,7 @@ const router = Router();
 const eventoRepo = () => AppDataSource.getRepository(Evento);
 const usuarioRepo = () => AppDataSource.getRepository(User);
 const conviteRepo = () => AppDataSource.getRepository(EventoConvidado);
+const eventoRespostaRepo = () => AppDataSource.getRepository(eventoRepo)
 
 // Helper para formatar o evento com participantes
 function formatEvento(evento: Evento) {
@@ -29,6 +30,28 @@ function formatEvento(evento: Evento) {
       criadoEm: c.criadoEm
     }))
   };
+}
+
+// Helper para formatar a resposta do evento
+function formatEventoResposta(resposta: EventoResposta) {
+  return {
+    id: resposta.id,
+    tituloEvento: resposta.titulo_evento,
+    dataEvento: resposta.data_evento,
+    objetivo: resposta.objetivo,
+    comentarios: resposta.comentarios,
+    evento: {
+      id: resposta.evento.id,
+      titulo: resposta.evento.titulo,
+      descricao: resposta.evento.descricao,
+      dataHora: resposta.evento.dataHora,
+      localizacao: resposta.evento.localizacao,
+    },
+    usuario: {
+      id: resposta.usuario.id,
+      nome: resposta.usuario.nome,
+    },
+  }
 }
 
 // GET /admin/events -> lista todos os eventos (com convidados)
@@ -302,3 +325,22 @@ export const listConvitesByUser = async (req: Request, res: Response) => {
   }
 };
 
+// GET /admin/respostas -> lista todas as respostas de eventos
+router.get('/respostas', async (req: Request, res: Response) => {
+  try {
+    const respostas = await eventoRespostaRepo().find({
+      relations: ['evento', 'usuario'],  // Trazendo as relações de evento e usuário
+    });
+
+    if (respostas.length === 0) {
+      return res.status(404).json({ error: 'Nenhuma resposta encontrada' });
+    }
+
+    // Formatando as respostas para uma estrutura mais legível
+    const respostasFormatadas = respostas.map(formatEventoResposta);
+    return res.json(respostasFormatadas);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Erro ao buscar respostas dos eventos' });
+  }
+});
