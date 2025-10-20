@@ -62,13 +62,18 @@ function PreferenceChart({ data }: { data: { labels: string[]; values: number[] 
 export default function HomePage() {
 
   // user
-  const [user, setUser] = useState(null);
-  const userId = localStorage.getItem("userId");
+  const [user, setUser] = useState(null)
+  const userId = localStorage.getItem("userId")
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
     if (userId) {
       axios
-        .get(`http://localhost:8080/usuario/${userId}`)
+        .get(`http://localhost:8080/usuario/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((res) => {
           setUser(res.data);
         })
@@ -174,8 +179,8 @@ export default function HomePage() {
           <div>
             <h1 className="text-2xl font-bold tracking-wide text-white">
               {user?.genero === "F"
-                ? `SEJA BEM-VINDA ${user?.nome.toUpperCase()}` // If true (F)
-                : `SEJA BEM-VINDO ${user?.nome.toUpperCase() || "Usuário"}` // If false (not F, or null/undefined)
+                ? `SEJA BEM-VINDA ${user?.nome.toUpperCase()}`
+                : `SEJA BEM-VINDO ${user?.nome.toUpperCase() || "Usuário"}`
               }
             </h1>
             <p className="mt-4 font-medium text-white">

@@ -1,4 +1,6 @@
-import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import RelatorioAproveitamento from "./relatorio-aproveitamento"
+import Modal from "../../../shared/components/modal"
 interface Evento {
     titulo: string
     descricao: string
@@ -13,11 +15,19 @@ interface EventoTabelaProps {
 
 
 export default function EventoTabela({ eventos }: EventoTabelaProps) {
-    const navigate = useNavigate()
-    
+    const [abertoModal, setAbertoModal] = useState(false)
+    const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
+    // const navigate = useNavigate()
+
     // trocar posteriormente pra rota de preencher formulários
-    const handleRedirect = () => {
-        navigate('/teste')
+    // const handleRedirect = () => {
+    //     navigate('/')
+    // }
+
+    const abrirModalPreencherEvento = (e: React.MouseEvent) => {
+        e.preventDefault()
+        setConteudoModal(<RelatorioAproveitamento onFechar={() => setAbertoModal(false)} />)
+        setAbertoModal(true)
     }
 
     return (
@@ -31,11 +41,18 @@ export default function EventoTabela({ eventos }: EventoTabelaProps) {
                     <div>{evento.dataHora}</div>
                     <div>
                         <button
-                            onClick={handleRedirect}
+                            onClick={abrirModalPreencherEvento}
                             className="bg-blue-500 text-black px-3 py-1 rounded"
                         >
                             Preencher
                         </button>
+                        <Modal
+                            aberto={abertoModal}
+                            onFechar={() => setAbertoModal(false)}
+                            modalClassName=""
+                        >
+                            {conteudoModal}
+                        </Modal>
                     </div>
                 </div>
             ))}

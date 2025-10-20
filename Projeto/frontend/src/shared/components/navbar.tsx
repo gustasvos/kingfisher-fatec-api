@@ -65,7 +65,7 @@ export default function Navbar() {
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Calendário de Eventos</p> : null}
         </NavLink>
 
-        <NavLink to="#" className="rounded-md flex items-center hover:bg-[#1b7091d8]" onClick={abrirModalConvites}>
+        <NavLink to="/eventos-colaborador" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
           <img src={imgNotification} alt="Convites" className="w-7 h-7" />
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Convites</p> : null}
         </NavLink>

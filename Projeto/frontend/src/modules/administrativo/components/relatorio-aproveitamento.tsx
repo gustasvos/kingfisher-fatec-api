@@ -3,9 +3,12 @@ import React, { useState } from "react";
 export default function RelatorioAproveitamento() {
   const [titulo, setTitulo] = useState("");
   const [data, setData] = useState("");
-  const [objetivo, setObjetivo] = useState(""); 
+  const [objetivo, setObjetivo] = useState("");
   const [avaliacao, setAvaliacao] = useState(0);
   const [comentarios, setComentarios] = useState("");
+
+
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +44,7 @@ export default function RelatorioAproveitamento() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg mt-10">
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg mt-10 w-[80vw] v-[50vh]">
       <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
         Relatório de Aproveitamento
       </h1>
@@ -94,9 +97,8 @@ export default function RelatorioAproveitamento() {
                 key={star}
                 type="button"
                 onClick={() => setAvaliacao(star)}
-                className={`text-2xl ${
-                  avaliacao >= star ? "text-yellow-400" : "text-gray-300"
-                }`}
+                className={`text-2xl ${avaliacao >= star ? "text-yellow-400" : "text-gray-300"
+                  }`}
               >
                 ★
               </button>
