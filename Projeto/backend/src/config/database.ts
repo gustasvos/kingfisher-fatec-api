@@ -5,6 +5,7 @@ import { User } from '../modules/models/usuario'
 import * as dotenv from "dotenv"
 import { EventoConvidado } from '../modules/models/EventoConvidado'
 import { Evento } from '../modules/models/Evento'
+import { Evento_resposta } from '../modules/models/evento-resposta'
 dotenv.config()
 
 export const AppDataSource = new DataSource({
@@ -16,7 +17,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME!,
     synchronize: true,
     logging: true,
-    entities: [User, Evento, EventoConvidado],
+    entities: [User, Evento, EventoConvidado, Evento_resposta],
     subscribers: [],
     migrations: [__dirname + './migration/*.js'],
 })

@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 import { EventoConvidado } from './EventoConvidado';
+import { Evento } from './Evento';
+import { User } from './usuario';
 
 @Entity('evento_resposta')
 export class Evento_resposta{
@@ -18,8 +20,10 @@ export class Evento_resposta{
     @Column({type: 'varchar', length: 255})
     comentarios: string
 
-    // relacionamentos
+    @ManyToOne(() => Evento, { onDelete: 'CASCADE' })
+    evento: Evento;
 
-    // @ManyToOne(() => EventoConvidado, (evento) => evento    )
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
+    usuario: User;
 
 }
