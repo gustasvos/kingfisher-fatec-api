@@ -63,7 +63,7 @@ export default function ListagemColaborador() {
                     />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 gap-x-[100px]">
+                <div className="grid grid-cols-2 gap-2">
                     {colaboradoresFiltrados.map((c) => (
                         <CardColaborador key={c.id} colaborador={c} excluir={excluirColaborador} />
                     ))}
