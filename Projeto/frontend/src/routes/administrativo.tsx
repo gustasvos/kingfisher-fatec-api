@@ -7,7 +7,6 @@ import ListagemColaborador from "../modules/administrativo/components/listagem-c
 import HomePage from "../modules/administrativo/pages/home-Page";
 import LocalDeTrabalho from "../modules/administrativo/components/colaboradorLoca";
 import ListagemEventos from "../modules/administrativo/components/listagem-eventos";
-import RelatorioAproveitamento  from "../modules/administrativo/components/relatorio-aproveitamento";
 
 export default function RotasADM(){
     return (
@@ -20,7 +19,6 @@ export default function RotasADM(){
             <Route path="/home" element={<HomePage/>} />
             <Route path="/eventos-colaborador" element={<ListagemEventos />} />
             <Route path="/local-trabalho" element={<LocalDeTrabalho />} />
-            <Route path="/relatorio-aproveitamento" element={<RelatorioAproveitamento />} />
         </>
     )
 }
