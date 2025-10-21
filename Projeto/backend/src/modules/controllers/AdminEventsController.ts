@@ -365,6 +365,7 @@ export const getEventoRespostaById = async (req: Request, res: Response) => {
       data_evento: resposta.data_evento,
       objetivo: resposta.objetivo,
       comentarios: resposta.comentarios,
+      avaliacao: resposta.avaliacao,
       usuario: {
         id: resposta.usuario.id,
         nome: resposta.usuario.nome,
@@ -384,44 +385,46 @@ export const getEventoRespostaById = async (req: Request, res: Response) => {
 };
 
 
-// POST /admin/respostas/:eventoId/user/:usuarioId -> cria uma nova resposta de evento
 export const createEventoResposta = async (req: Request, res: Response) => {
   try {
-    const { eventoId, usuarioId } = req.params
-    const { titulo_evento, objetivo, comentarios } = req.body
+    const { eventoId, usuarioId } = req.params;
+    const { titulo_evento, objetivo, comentarios, avaliacao } = req.body;
 
     if (!eventoId || !usuarioId) {
-      return res.status(400).json({ error: 'IDs de evento e usuário são obrigatórios' })
+      return res.status(400).json({ error: 'IDs de evento e usuário são obrigatórios' });
     }
 
-    const evento = await eventoRepo().findOneBy({ id: Number(eventoId) })
-    const usuario = await usuarioRepo().findOneBy({ id: Number(usuarioId) })
+    const evento = await eventoRepo().findOneBy({ id: Number(eventoId) });
+    const usuario = await usuarioRepo().findOneBy({ id: Number(usuarioId) });
 
-    if (!evento) return res.status(404).json({ error: 'Evento não encontrado' })
-    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' })
+    if (!evento) return res.status(404).json({ error: 'Evento não encontrado' });
+    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
 
-    // impede respostas duplicadas
+    // impedir respostas duplicadas
     const respostaExistente = await respostaRepo().findOne({
-      where: {
-        evento: { id: evento.id },
-        usuario: { id: usuario.id }
-      }
-    })
+      where: { evento: { id: evento.id }, usuario: { id: usuario.id } }
+    });
 
     if (respostaExistente) {
-      return res.status(409).json({ error: 'Este usuário já respondeu a este evento' })
+      return res.status(409).json({ error: 'Este usuário já respondeu a este evento' });
+    }
+
+    // validação da avaliacao
+    if (!Number.isInteger(avaliacao) || avaliacao < 1 || avaliacao > 5) {
+      return res.status(400).json({ error: 'Avaliacao deve ser um número inteiro entre 1 e 5' });
     }
 
     const resposta = respostaRepo().create({
       titulo_evento: titulo_evento ?? evento.titulo,
-      data_evento: evento.dataHora, // usa data do evento
+      data_evento: evento.dataHora,
       objetivo: objetivo ?? '',
       comentarios: comentarios ?? '',
+      avaliacao,
       evento,
       usuario
-    })
+    });
 
-    const saved = await respostaRepo().save(resposta)
+    const saved = await respostaRepo().save(resposta);
 
     return res.status(201).json({
       id: saved.id,
@@ -429,21 +432,14 @@ export const createEventoResposta = async (req: Request, res: Response) => {
       data_evento: saved.data_evento,
       objetivo: saved.objetivo,
       comentarios: saved.comentarios,
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        cargo: usuario.cargo
-      },
-      evento: {
-        id: evento.id,
-        titulo: evento.titulo,
-        dataHora: evento.dataHora,
-        localizacao: evento.localizacao
-      }
-    })
+      avaliacao: saved.avaliacao,
+      usuario: { id: usuario.id, nome: usuario.nome, cargo: usuario.cargo },
+      evento: { id: evento.id, titulo: evento.titulo, dataHora: evento.dataHora, localizacao: evento.localizacao }
+    });
   } catch (err) {
-    console.error(err)
-    return res.status(500).json({ error: 'Erro ao criar resposta de evento' })
+    console.error(err);
+    return res.status(500).json({ error: 'Erro ao criar resposta de evento' });
   }
-}
+};
+
 
