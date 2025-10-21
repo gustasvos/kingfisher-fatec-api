@@ -17,6 +17,9 @@ export class EventoResposta{
     @Column({type: 'varchar', length: 255})
     objetivo: string
 
+    @Column({type: 'int'})
+    avaliacao: number
+
     @Column({type: 'varchar', length: 255})
     comentarios: string
 

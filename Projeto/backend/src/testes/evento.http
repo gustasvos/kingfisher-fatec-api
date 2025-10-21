@@ -156,8 +156,10 @@ Content-Type: application/json
 {
   "titulo_evento": "Feedback do evento de liderança",
   "objetivo": "Avaliar aprendizado e engajamento",
-  "comentarios": "Foi um evento excelente, ótimas dinâmicas!"
+  "comentarios": "Ótimas dinâmicas e aprendizado",
+  "avaliacao": 5
 }
+
 
 ### GET RESPOSTA BY ID
 GET {{api}}admin/respostas/1
