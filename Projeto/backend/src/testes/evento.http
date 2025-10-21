@@ -121,7 +121,7 @@ Content-Type: application/json
 }
 
 ### CONFIRMAR CONVITE
-PATCH http://localhost:8080/admin/events/2/convidado/1
+PATCH http://localhost:8080/admin/events/7/convidado/1
 Content-Type: application/json
 
 {
@@ -149,6 +149,19 @@ Content-Type: application/json
 
 {}
 
+### GET ALL RESPOSTAS
+GET {{api}}admin/events/respostas
+Content-Type: application/json
+
+{}
+
+### GET RESPOSTA BY ID
+GET {{api}}admin/events/respostas/2
+Content-Type: application/json
+
+{}
+
+
 ### POST RESPOSTA
 POST {{api}}admin/events/respostas/5/participante/2
 Content-Type: application/json
@@ -159,10 +172,3 @@ Content-Type: application/json
   "comentarios": "Ótimas dinâmicas e aprendizado",
   "avaliacao": 5
 }
-
-
-### GET RESPOSTA BY ID
-GET {{api}}admin/respostas/1
-Content-Type: application/json
-
-{}

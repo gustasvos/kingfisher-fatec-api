@@ -7,43 +7,56 @@ interface Evento {
   dataHora: string;
 }
 
-export default function RelatorioAproveitamento({ tituloInicial, dataInicial, onFechar }: RelatorioAproveitamentoProps) {
-  const [titulo, setTitulo] = useState(tituloInicial);
-  const [data, setData] = useState(dataInicial);
+interface RelatorioAproveitamentoProps {
+  tituloInicial?: string;
+  dataInicial?: string;
+  onFechar?: () => void;
+}
+
+export default function RelatorioAproveitamento({
+  tituloInicial,
+  dataInicial,
+  onFechar,
+}: RelatorioAproveitamentoProps) {
+  const [evento, setEvento] = useState<Evento | null>(null);
   const [objetivo, setObjetivo] = useState("");
   const [avaliacao, setAvaliacao] = useState(0);
   const [comentarios, setComentarios] = useState("");
+  const [respostaEnviada, setRespostaEnviada] = useState(false);
 
-  // Se o título e data não forem passados, buscar a partir da API
+  const userId = localStorage.getItem("userId");
+
+  // Buscar evento se título/data não forem passados
   useEffect(() => {
-    if (!titulo || !data) {
-      async function fetchEvento() {
-        try {
-          const response = await api.get<Evento[]>("/admin/events");
-          if (response.data.length > 0) {
-            const evento = response.data[0]; // Pega o primeiro evento
-            setTitulo(evento.titulo);
-            setData(evento.dataHora); // Pega a data
-          }
-        } catch (error) {
-          console.error("Erro ao carregar dados do evento", error);
+    async function fetchEvento() {
+      try {
+        const response = await api.get<Evento[]>("/admin/events");
+        if (response.data.length > 0) {
+          const ev = response.data[0]; // pegar primeiro evento como exemplo
+          setEvento(ev);
         }
+      } catch (error) {
+        console.error("Erro ao carregar dados do evento", error);
       }
-
-      fetchEvento();
     }
-  }, [titulo, data]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+    if (!tituloInicial || !dataInicial) {
+      fetchEvento();
+    } else {
+      setEvento({ id: 0, titulo: tituloInicial, dataHora: dataInicial });
+    }
+  }, [tituloInicial, dataInicial]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!titulo.trim()) {
-      alert("O título do evento é obrigatório.");
+    if (!evento) {
+      alert("Evento não carregado.");
       return;
     }
 
-    if (!data.trim()) {
-      alert("A data do evento é obrigatória.");
+    if (!userId) {
+      alert("Usuário não logado!");
       return;
     }
 
@@ -52,23 +65,35 @@ export default function RelatorioAproveitamento({ tituloInicial, dataInicial, on
       return;
     }
 
-    if (avaliacao === 0) {
+    if (avaliacao < 1 || avaliacao > 5) {
       alert("Por favor, faça uma avaliação do evento.");
       return;
     }
 
-    console.log({
-      titulo,
-      data,
-      objetivo,
-      avaliacao,
-      comentarios,
-    });
+    try {
+      await api.post(
+        `/admin/events/respostas/${evento.id}/participante/${userId}`,
+        {
+          titulo_evento: evento.titulo,
+          objetivo,
+          comentarios,
+          avaliacao,
+        }
+      );
 
-    alert("Relatório enviado com sucesso!");
+      setRespostaEnviada(true);
+      alert("Relatório enviado com sucesso!");
+    } catch (err: any) {
+      console.error(err);
+      if (err.response?.status === 409) {
+        alert("Você já respondeu a este evento.");
+        setRespostaEnviada(true);
+      } else {
+        alert("Erro ao enviar relatório.");
+      }
+    }
   };
 
-  // Formatação da data para exibir de forma legível
   const formatarData = (data: string) => {
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -78,10 +103,10 @@ export default function RelatorioAproveitamento({ tituloInicial, dataInicial, on
       minute: "2-digit",
       hour12: false,
     };
-
-    const dataFormatada = new Date(data).toLocaleString("pt-BR", options);
-    return dataFormatada;
+    return new Date(data).toLocaleString("pt-BR", options);
   };
+
+  if (!evento) return <p>Carregando evento...</p>;
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg mt-10 w-[80vw] v-[50vh]">
@@ -94,16 +119,16 @@ export default function RelatorioAproveitamento({ tituloInicial, dataInicial, on
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Título do evento
           </label>
-          {/* Exibindo o título do evento como texto */}
-          <p className="text-lg font-semibold text-gray-800">{titulo}</p>
+          <p className="text-lg font-semibold text-gray-800">{evento.titulo}</p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Data do evento
           </label>
-          {/* Exibindo a data formatada */}
-          <p className="text-lg font-semibold text-gray-800">{formatarData(data)}</p>
+          <p className="text-lg font-semibold text-gray-800">
+            {formatarData(evento.dataHora)}
+          </p>
         </div>
 
         <div>
@@ -128,7 +153,9 @@ export default function RelatorioAproveitamento({ tituloInicial, dataInicial, on
                 key={star}
                 type="button"
                 onClick={() => setAvaliacao(star)}
-                className={`text-2xl ${avaliacao >= star ? "text-yellow-400" : "text-gray-300"}`}
+                className={`text-2xl ${
+                  avaliacao >= star ? "text-yellow-400" : "text-gray-300"
+                }`}
               >
                 ★
               </button>
@@ -148,13 +175,17 @@ export default function RelatorioAproveitamento({ tituloInicial, dataInicial, on
           />
         </div>
 
-        <button
-          type="submit"
-          style={{ backgroundColor: "#135b78" }}
-          className="w-full text-white font-semibold py-2 rounded-lg hover:brightness-110"
-        >
-          Enviar Relatório
-        </button>
+        {!respostaEnviada && (
+          <button
+            type="submit"
+            style={{ backgroundColor: "#135b78" }}
+            className="w-full text-white font-semibold py-2 rounded-lg hover:brightness-110"
+          >
+            Enviar Relatório
+          </button>
+        )}
+
+        {respostaEnviada && <p className="text-green-600 font-semibold">Você já respondeu a este evento.</p>}
       </form>
     </div>
   );

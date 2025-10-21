@@ -14,6 +14,6 @@ router.delete('/admin/events/:eventId/convidado/:conviteId', removeConviteEvento
 router.get('/admin/events/convidado/:id', listConvitesByUser)
 router.get('/admin/events/respostas', listEventoRespostas)
 router.post('/admin/events/respostas/:eventoId/participante/:usuarioId', createEventoResposta)
-router.get('/admin/respostas/:id', getEventoRespostaById)
+router.get('/admin/events/respostas/:id', getEventoRespostaById)
 
 export default router

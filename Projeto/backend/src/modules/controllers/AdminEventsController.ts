@@ -365,6 +365,7 @@ export const getEventoRespostaById = async (req: Request, res: Response) => {
       data_evento: resposta.data_evento,
       objetivo: resposta.objetivo,
       comentarios: resposta.comentarios,
+      avaliacao: resposta.avaliacao,
       usuario: {
         id: resposta.usuario.id,
         nome: resposta.usuario.nome,
@@ -399,7 +400,7 @@ export const createEventoResposta = async (req: Request, res: Response) => {
     if (!evento) return res.status(404).json({ error: 'Evento não encontrado' });
     if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
 
-    // ❌ Validação: impedir respostas duplicadas
+    // impedir respostas duplicadas
     const respostaExistente = await respostaRepo().findOne({
       where: { evento: { id: evento.id }, usuario: { id: usuario.id } }
     });

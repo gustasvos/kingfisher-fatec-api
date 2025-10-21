@@ -48,7 +48,11 @@ export default function EventoTabela({ eventos }: EventoTabelaProps) {
                         >
                             Preencher
                         </button>
-                        <Modal aberto={abertoModal} onFechar={() => setAbertoModal(false)}>
+                        <Modal
+                            aberto={abertoModal}
+                            onFechar={() => setAbertoModal(false)}
+                            modalClassName=""
+                            >
                             {conteudoModal}
                         </Modal>
                     </div>
