@@ -4,6 +4,8 @@ import instance from "../../../services/api";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import LocalTrabalho from "./colaboradorLoca";
+import Modal from "../../../shared/components/modal";
 
 
 export default function Login() {
@@ -13,6 +15,8 @@ export default function Login() {
     const [sucesso, setSucesso] = useState<string | null>(null);
     const navigate = useNavigate(); // hook do react-router-dom
     const [temUsuario, setTemUsuario] = useState<boolean | null>(null);
+    const [abertoModal, setAbertoModal] = useState(false)
+    const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
 
     useEffect(() => {
         axios.get("http://localhost:8080/users/exists")
@@ -50,6 +54,12 @@ export default function Login() {
         }
     }
 
+    const abrirModalLocalTrabalho = (e: React.MouseEvent) => {
+        e.preventDefault()
+        setConteudoModal(<LocalTrabalho onFechar={() => setAbertoModal(false)} />)
+        setAbertoModal(true)
+    }
+
     return (
         <div className="grid grid-cols-[50%_50%]">
             <div >
@@ -73,7 +83,13 @@ export default function Login() {
                         </p>
                         <input type="password" placeholder=" Digite sua senha" required value={senha} onChange={(e) => setSenha(e.target.value)} className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] md:rounded-[15px] pl-1 md:pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black" />
                         <div className="pt-10 flex justify-center">
-                            <input type="submit" value={'ENTRAR'} className="bg-white w-[100px] md:w-[200px] p-2 rounded-[10px] md:rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-sans font-medium  shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white" />
+                            {/* <button 
+                                onClick={abrirModalLocalTrabalho}
+                                className="bg-white w-[100px] md:w-[200px] p-2 rounded-[10px] md:rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-sans font-medium  shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white"
+                                >
+                                    ENTRAR
+                            </button> */}
+                            <input type="submit" value={'ENTRAR'} onClick={abrirModalLocalTrabalho} className="bg-white w-[100px] md:w-[200px] p-2 rounded-[10px] md:rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-sans font-medium  shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white" />
                         </div>
                         {/* Se não tem usuário (temUsuario === false), mostra o link */}
                         {temUsuario === false && (
@@ -86,6 +102,16 @@ export default function Login() {
                         {sucesso && (
                             <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
                                 {sucesso}
+                                <Modal
+                                    aberto={abertoModal}
+                                    onFechar={() => setAbertoModal(false)}
+                                    // modalClassName="w-[90%] sm:w-[95%] md:w-[80%] lg:w-[750px] xl:w-[900px] max-h-[90vh] bg-[rgba(28,175,23,0.94)] rounded-[15px]"
+                                    modalClassName=""
+                                >
+                                    <div className='max-w-[900px] w-[70vw]'>
+                                        {conteudoModal}
+                                    </div>
+                                </Modal>
                             </div>
                         )}
                         {erro && (
