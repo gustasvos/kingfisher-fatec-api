@@ -384,22 +384,33 @@ export const getEventoRespostaById = async (req: Request, res: Response) => {
 };
 
 
-
-// POST /admin/events/respostas/:eventoId/user/:usuarioId -> cria uma nova resposta de evento
+// POST /admin/respostas/:eventoId/user/:usuarioId -> cria uma nova resposta de evento
 export const createEventoResposta = async (req: Request, res: Response) => {
   try {
-    const { eventoId, usuarioId } = req.params;
-    const { titulo_evento, objetivo, comentarios } = req.body;
+    const { eventoId, usuarioId } = req.params
+    const { titulo_evento, objetivo, comentarios } = req.body
 
     if (!eventoId || !usuarioId) {
-      return res.status(400).json({ error: 'IDs de evento e usuário são obrigatórios' });
+      return res.status(400).json({ error: 'IDs de evento e usuário são obrigatórios' })
     }
 
-    const evento = await eventoRepo().findOneBy({ id: Number(eventoId) });
-    const usuario = await usuarioRepo().findOneBy({ id: Number(usuarioId) });
+    const evento = await eventoRepo().findOneBy({ id: Number(eventoId) })
+    const usuario = await usuarioRepo().findOneBy({ id: Number(usuarioId) })
 
-    if (!evento) return res.status(404).json({ error: 'Evento não encontrado' });
-    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
+    if (!evento) return res.status(404).json({ error: 'Evento não encontrado' })
+    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' })
+
+    // impede respostas duplicadas
+    const respostaExistente = await respostaRepo().findOne({
+      where: {
+        evento: { id: evento.id },
+        usuario: { id: usuario.id }
+      }
+    })
+
+    if (respostaExistente) {
+      return res.status(409).json({ error: 'Este usuário já respondeu a este evento' })
+    }
 
     const resposta = respostaRepo().create({
       titulo_evento: titulo_evento ?? evento.titulo,
@@ -408,9 +419,9 @@ export const createEventoResposta = async (req: Request, res: Response) => {
       comentarios: comentarios ?? '',
       evento,
       usuario
-    });
+    })
 
-    const saved = await respostaRepo().save(resposta);
+    const saved = await respostaRepo().save(resposta)
 
     return res.status(201).json({
       id: saved.id,
@@ -429,9 +440,10 @@ export const createEventoResposta = async (req: Request, res: Response) => {
         dataHora: evento.dataHora,
         localizacao: evento.localizacao
       }
-    });
+    })
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Erro ao criar resposta de evento' });
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao criar resposta de evento' })
   }
-};
+}
+

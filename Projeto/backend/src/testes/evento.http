@@ -150,7 +150,7 @@ Content-Type: application/json
 {}
 
 ### POST RESPOSTA
-POST {{api}}admin/respostas/5/participante/1
+POST {{api}}admin/events/respostas/5/participante/2
 Content-Type: application/json
 
 {
