@@ -1,3 +1,5 @@
+@api = http://localhost:8080/
+
 ### LISTAR TODOS OS EVENTOS
 GET http://localhost:8080/admin/events
 Content-Type: application/json
@@ -146,3 +148,16 @@ GET http://localhost:8080/admin/events/convidado/1
 Content-Type: application/json
 
 {}
+
+### POST RESPOSTA
+POST {{api}}admin/events/respostas
+Content-Type: application/json
+
+{
+  "eventoId": 5,
+  "usuarioId": 12,
+  "titulo_evento": "Feedback do evento de liderança",
+  "data_evento": "2025-10-20",
+  "objetivo": "Avaliar aprendizado e engajamento",
+  "comentarios": "Foi um evento excelente, ótimas dinâmicas!"
+}

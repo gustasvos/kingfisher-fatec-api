@@ -4,7 +4,7 @@ import { Evento } from './Evento';
 import { User } from './usuario';
 
 @Entity('evento_resposta')
-export class Evento_resposta{
+export class EventoResposta{
     @PrimaryGeneratedColumn()
     id: number
 
@@ -21,9 +21,9 @@ export class Evento_resposta{
     comentarios: string
 
     @ManyToOne(() => Evento, { onDelete: 'CASCADE' })
-    evento: Evento;
+    evento: Evento
 
     @ManyToOne(() => User, { onDelete: 'CASCADE' })
-    usuario: User;
+    usuario: User
 
 }
