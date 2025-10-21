@@ -27,6 +27,7 @@ export default function ListagemEventos() {
     const [eventos, setEventos] = useState<Evento[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
+    const [searchTerm, setSearchTerm] = useState<string>("") // estado do termo de pesquisa
 
     const userId = localStorage.getItem("userId")
     // const userId = 2
@@ -51,7 +52,6 @@ export default function ListagemEventos() {
         fetchEventos(userId)
     }, [])
 
-
     const formatarDataHora = (data: string) => {
         const options: Intl.DateTimeFormatOptions = {
             day: "2-digit",
@@ -73,12 +73,19 @@ export default function ListagemEventos() {
         <>
             <Navbar />
             <main className="p-8">
-                <form action="/search" method="get" className="w-full max-w-sm mx-auto">
+                <form
+                    action="/search"
+                    method="get"
+                    className="w-full max-w-sm mx-auto"
+                    onSubmit={(e) => e.preventDefault()} // evita recarregamento da página
+                >
                     <div className="flex items-center border-b-2 border-gray-400 pb-2 mb-[15%]">
                         <input
                             type="text"
                             name="query"
                             placeholder="Pesquisar evento"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)} // atualiza o estado
                             className="appearance-none bg-transparent border-none w-full text-black mr-3 py-1 px-2 leading-tight focus:outline-none placeholder-gray-400"
                         />
                         <button
@@ -114,10 +121,16 @@ export default function ListagemEventos() {
                     </div>
 
                     {/* Passa os eventos para o componente EventoTabela */}
-                    <EventoTabela eventos={eventos.map((e) => ({
-                        ...e,
-                        dataHora: formatarDataHora(e.dataHora),
-                    }))} />
+                    <EventoTabela eventos={eventos
+                        .filter((e) =>
+                            e.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            e.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            e.localizacao.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
+                        .map((e) => ({
+                            ...e,
+                            dataHora: formatarDataHora(e.dataHora),
+                        }))} />
                 </div>
             </main>
         </>
