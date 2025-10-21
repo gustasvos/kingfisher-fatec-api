@@ -3,33 +3,34 @@ import { IsDate } from 'class-validator'
 import { Genero, TipoAcesso } from '../../utils/enums/usuarioEnums'
 import { OneToMany } from 'typeorm'
 import { EventoConvidado } from './EventoConvidado'
+import { UsuarioLocal } from './UsuarioLocal'
 
 @Entity('usuario')
 export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type: 'varchar', length: 255})
+    @Column({ type: 'varchar', length: 255 })
     nome: string
 
-    @Column({type: 'varchar', length: 11, unique: true})
+    @Column({ type: 'varchar', length: 11, unique: true })
     cpf: string
 
-    @Column({type: 'enum', enum: Genero})
+    @Column({ type: 'enum', enum: Genero })
     genero: Genero
 
     @IsDate()
-    @Column({type: 'date'})
+    @Column({ type: 'date' })
     data_nascimento: Date
 
-    @Column({ type: 'varchar', length: 100})
+    @Column({ type: 'varchar', length: 100 })
     cargo: string
 
-    @Column({ type: 'varchar', length: 255})
+    @Column({ type: 'varchar', length: 255 })
     senha: string
 
     @IsDate()
-    @Column({type: 'date'})
+    @Column({ type: 'date' })
     data_contratacao: Date
 
     @Column({ type: 'enum', enum: TipoAcesso, default: 'usuario' })
@@ -38,4 +39,8 @@ export class User {
     // Relacionamentos
     @OneToMany(() => EventoConvidado, ec => ec.funcionario)
     eventosConvidado: EventoConvidado[];
+
+    @OneToMany(() => UsuarioLocal, ul => ul.usuario)
+    locais: UsuarioLocal[]
+
 }
