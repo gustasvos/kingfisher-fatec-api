@@ -9,6 +9,111 @@ type Relatorio = {
   enviado?: boolean;
 };
 
+type DetalhesRelatorio = {
+  id: number;
+  titulo?: string;
+  descricao?: string;
+  dataEnvio?: string;
+  setor?: string;
+  enviado?: boolean;
+};
+
+const FiltroDropdown: React.FC<{
+  filtro: "todos" | "enviado" | "nao_enviado";
+  setFiltro: (value: "todos" | "enviado" | "nao_enviado") => void;
+}> = ({ filtro, setFiltro }) => {
+  const [aberto, setAberto] = useState(false);
+
+  const opcoes = [
+    { label: "Todos", value: "todos" },
+    { label: "Enviados", value: "enviado" },
+    { label: "Não Enviados", value: "nao_enviado" },
+  ];
+
+  return (
+    <div className="relative">
+      <div
+        className="bg-[#0f5260] text-white px-4 py-2 rounded-full cursor-pointer shadow-sm hover:bg-[#156970] flex items-center justify-between min-w-[150px]"
+        onClick={() => setAberto(!aberto)}
+      >
+        <span className="capitalize">
+          {opcoes.find((o) => o.value === filtro)?.label}
+        </span>
+        <span className="ml-2">▾</span>
+      </div>
+
+      {aberto && (
+        <div className="absolute mt-2 w-full bg-[#0f5260] rounded-xl shadow-lg overflow-hidden z-20">
+          {opcoes.map((o) => (
+            <div
+              key={o.value}
+              className={`px-4 py-2 cursor-pointer text-white hover:bg-[#156970] ${
+                o.value === filtro ? "font-semibold" : "font-normal"
+              }`}
+              onClick={() => {
+                setFiltro(o.value as "todos" | "enviado" | "nao_enviado");
+                setAberto(false);
+              }}
+            >
+              {o.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Modal: React.FC<{
+  aberto: boolean;
+  onClose: () => void;
+  relatorio?: DetalhesRelatorio | null;
+  carregando: boolean;
+}> = ({ aberto, onClose, relatorio, carregando }) => {
+  if (!aberto) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 transition-opacity">
+      <div className="bg-white rounded-2xl shadow-2xl w-[90%] max-w-lg p-6 relative">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-xl"
+        >
+          ✕
+        </button>
+
+        {carregando ? (
+          <div className="flex justify-center items-center h-40 text-[#156970] font-semibold">
+            Carregando...
+          </div>
+        ) : relatorio ? (
+          <>
+            <h2 className="text-xl font-semibold text-[#0f5260] mb-4">
+              {relatorio.titulo || "Relatório"}
+            </h2>
+            <p className="text-gray-600 mb-2">
+              <strong>Setor:</strong> {relatorio.setor || "Não informado"}
+            </p>
+            <p className="text-gray-600 mb-2">
+              <strong>Data de Envio:</strong>{" "}
+              {relatorio.dataEnvio || "Não disponível"}
+            </p>
+            <p className="text-gray-600 mb-4">
+              <strong>Status:</strong>{" "}
+              {relatorio.enviado ? "Enviado" : "Não Enviado"}
+            </p>
+            <p className="text-gray-700">
+              {relatorio.descricao || "Sem descrição."}
+            </p>
+          </>
+        ) : (
+          <div className="text-gray-500">Não foi possível carregar o relatório.</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Relatorios: React.FC = () => {
   const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,25 +123,19 @@ const Relatorios: React.FC = () => {
     "todos" | "enviado" | "nao_enviado"
   >("todos");
 
+  const [modalAberto, setModalAberto] = useState(false);
+  const [detalhes, setDetalhes] = useState<DetalhesRelatorio | null>(null);
+  const [carregandoModal, setCarregandoModal] = useState(false);
+
   useEffect(() => {
     const fetchRelatorios = async () => {
       try {
         const res = await axios.get("http://localhost:8080/admin/events/respostas/1");
-
-        console.log("✅ Resposta da API:", res.data);
-
-        const dados = Array.isArray(res.data)
-          ? res.data
-          : res.data?.data || [];
-
+        const dados = Array.isArray(res.data) ? res.data : res.data?.data || [];
         setRelatorios(dados);
-      } catch (err: any) {
-        console.error("Erro ao buscar relatórios:", err);
-        if (axios.isAxiosError(err)) {
-          setErro(err.response?.data?.message || "Erro ao buscar relatórios");
-        } else {
-          setErro("Erro inesperado ao buscar relatórios");
-        }
+      } catch (err) {
+        console.error(err);
+        setErro("Erro ao buscar relatórios");
       } finally {
         setLoading(false);
       }
@@ -45,7 +144,25 @@ const Relatorios: React.FC = () => {
     fetchRelatorios();
   }, []);
 
-  const relatoriosFiltrados = (relatorios || []).filter((r) => {
+  const abrirModal = async (id: number) => {
+    setModalAberto(true);
+    setCarregandoModal(true);
+    setDetalhes(null);
+
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/admin/events/respostas/1?id=${id}`
+      );
+      setDetalhes(res.data);
+    } catch (err) {
+      console.error(err);
+      setDetalhes(null);
+    } finally {
+      setCarregandoModal(false);
+    }
+  };
+
+  const relatoriosFiltrados = relatorios.filter((r) => {
     const nome = r.nome || "";
     const nomeMatch = nome.toLowerCase().includes(busca.toLowerCase());
     const filtroMatch =
@@ -74,49 +191,30 @@ const Relatorios: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-[#eaf5fb]">
+    <div className="flex h-screen bg-[#eaf5fb] relative">
       <Navbar />
 
       <main className="flex-1 p-10 overflow-y-auto">
         <div className="flex flex-wrap gap-4 mb-10">
           <input
-           type="text"
-           placeholder="Pesquisar..."
-           value={busca}
-           onChange={(e) => setBusca(e.target.value)}
-            className="flex-1 min-w-[250px] px-4 py-2 rounded-md border border-[#9aa7ad]
-             bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
-             focus:outline-none focus:ring-2 focus:ring-[#156970] focus:border-transparent
-             transition-colors"
-        />
+            type="text"
+            placeholder="Pesquisar..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="flex-1 min-w-[250px] px-4 py-2 rounded-full border border-[#9aa7ad]
+                       bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
+                       focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
+                       transition-colors"
+          />
 
-          <button
-            onClick={() =>
-              setFiltroEnviado((prev) =>
-                prev === "todos"
-                  ? "enviado"
-                  : prev === "enviado"
-                  ? "nao_enviado"
-                  : "todos"
-              )
-            }
-            className="bg-[#156970] text-white px-4 py-2 rounded-md shadow-sm 
-                       hover:bg-[#0f5260] transition"
-          >
-            {filtroEnviado === "todos"
-              ? "Mostrar: Todos"
-              : filtroEnviado === "enviado"
-              ? "Mostrar: Enviados"
-              : "Mostrar: Não Enviados"}
-          </button>
+          <FiltroDropdown filtro={filtroEnviado} setFiltro={setFiltroEnviado} />
         </div>
 
         <div className="flex flex-col gap-6">
           {relatoriosFiltrados.map((r) => (
             <div
               key={r.id}
-              className="bg-white rounded-lg shadow-md p-6 flex justify-between items-center
-                         border border-gray-200 hover:shadow-lg transition"
+              className="bg-white/90 rounded-xl shadow-md p-6 flex justify-between items-center border border-gray-100 hover:shadow-xl transition-all duration-300"
             >
               <div>
                 <h3 className="text-lg font-semibold text-[#0f5260]">
@@ -126,10 +224,10 @@ const Relatorios: React.FC = () => {
               </div>
 
               <button
-                className="bg-[#156970] text-white px-6 py-2 rounded-md hover:bg-[#0f5260] transition"
-                onClick={() => console.log("Visualizar relatório:", r.id)}
+                onClick={() => abrirModal(r.id)}
+                className="bg-[#0f5260] text-white px-6 py-2 rounded-full hover:bg-[#156970] transition-colors"
               >
-                Visualizar Relatório
+                Visualizar
               </button>
             </div>
           ))}
@@ -141,6 +239,13 @@ const Relatorios: React.FC = () => {
           )}
         </div>
       </main>
+
+      <Modal
+        aberto={modalAberto}
+        onClose={() => setModalAberto(false)}
+        relatorio={detalhes}
+        carregando={carregandoModal}
+      />
     </div>
   );
 };
