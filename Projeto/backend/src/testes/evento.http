@@ -97,14 +97,15 @@ Content-Type: application/json
 }
 
 ### ATUALIZAR UM EVENTO
-PUT http://localhost:8080/admin/events/1
+PUT http://localhost:8080/admin/events/7
 Content-Type: application/json
 
 {
   "titulo": "Treinamento Atualizado",
   "descricao": "Workshop avançado",
   "dataHora": "2025-10-01T15:00:00.000Z",
-  "localizacao": "Auditório Central"
+  "localizacao": "Auditório Central",
+  "convidados": [1]
 }
 
 
@@ -113,15 +114,15 @@ DELETE http://localhost:8080/admin/events/1
 Content-Type: application/json
 
 ### ADICIONAR CONVIDADOS
-POST http://localhost:8080/admin/events/1/convidar
+POST http://localhost:8080/admin/events/4/convidar
 Content-Type: application/json
 
 {
-  "convidados": [5, 6]
+  "convidados": [1,5, 6]
 }
 
 ### CONFIRMAR CONVITE
-PATCH http://localhost:8080/admin/events/7/convidado/1
+PATCH http://localhost:8080/admin/events/7/convidado/5
 Content-Type: application/json
 
 {
@@ -129,7 +130,7 @@ Content-Type: application/json
 }
 
 ### RECUSAR CONVITE (com motivo)
-PATCH http://localhost:8080/admin/events/1/convidado/2
+PATCH http://localhost:8080/admin/events/7/convidado/2
 Content-Type: application/json
 
 {

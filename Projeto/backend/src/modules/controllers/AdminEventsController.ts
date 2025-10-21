@@ -234,7 +234,7 @@ export const atualizaStatusEvento = async (req: Request, res: Response) => {
     if (motivo !== undefined) convite.motivo = motivo;
 
     await conviteRepo().save(convite);
-    return res.json(convite);
+    return res.status(200).json({mensagem: 'Convite confirmado com sucesso.', convite});
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Erro ao atualizar convite' });
