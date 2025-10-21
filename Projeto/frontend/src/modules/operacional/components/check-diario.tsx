@@ -5,7 +5,24 @@ import InputLine from "../../../shared/components/inputLine";
 export default function CheckDiario() {
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const [placaVeiculo,setPlacaVeiculo] = useState("")
+    const [kmInicial,setkmInicial] = useState("")
+    const [cidadeDestino,setcidadeDestino] = useState("")
+    const [kmFinal,setkmFinal] = useState("")
+    const [abastecimento,setAbastecimento] = useState(null)
+    const [comprovanteEnviado,setComprovanteEnviado] = useState(null)
+    const [oleoMotor,setOleoMotor] = useState(null)
+    const [reservatorioAgua,setReservatorioAgua] = useState(null)
+    const [sistemaEletrico,setSistemaEletrico] = useState(null)
+    const [estadoPneus,setEstadoPneus] = useState(null)
+    const [limpeza,setLimpeza] = useState(null)
+    const [macaco,setMacaco] = useState(null)
+    const [chaveroda,setchaveroda] = useState(null)
+    const [documentoVigente,setDocumentoVigente] = useState(null)
+    const [dataHoraEncerramento,setDataHoraEncerramento] = useState("")
+    const [observacoes,setobservacoes] = useState("")
+
+    const enviaForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
 
@@ -19,7 +36,7 @@ export default function CheckDiario() {
         <section>
             <h1 style={{ color: "#000000ff", fontSize: "2.5rem", fontWeight: 700 }}>Checklist Diário - Frota Newe</h1>
         </section>
-            <form action="">
+            <form action="" onSubmit={enviaForm}>
                 {/* <InputLine type="text" placeholder="" id='nome' htmlfor="nome" required>Nome Completo</InputLine> */}
                 <InputLine type="text" placeholder="" id='placa-veiculo' htmlfor="placa-veiculo">Placa do veículo</InputLine>
                 <InputLine type="number" placeholder="" id='km-inicial' htmlfor="km-inicial">KM Inicial</InputLine>
