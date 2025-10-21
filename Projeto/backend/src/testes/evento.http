@@ -150,14 +150,17 @@ Content-Type: application/json
 {}
 
 ### POST RESPOSTA
-POST {{api}}admin/events/respostas
+POST {{api}}admin/respostas/5/participante/1
 Content-Type: application/json
 
 {
-  "eventoId": 5,
-  "usuarioId": 12,
   "titulo_evento": "Feedback do evento de liderança",
-  "data_evento": "2025-10-20",
   "objetivo": "Avaliar aprendizado e engajamento",
   "comentarios": "Foi um evento excelente, ótimas dinâmicas!"
 }
+
+### GET RESPOSTA BY ID
+GET {{api}}admin/respostas/1
+Content-Type: application/json
+
+{}

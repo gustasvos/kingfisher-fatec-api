@@ -309,10 +309,10 @@ export const listEventoRespostas = async (req: Request, res: Response) => {
     const respostas = await respostaRepo().find({
       relations: ['evento', 'usuario'],
       order: { id: 'DESC' }
-    });
+    })
 
     if (!respostas || respostas.length === 0) {
-      return res.status(404).json({ error: 'Nenhuma resposta encontrada' });
+      return res.status(404).json({ error: 'Nenhuma resposta encontrada' })
     }
 
     const respostasFormatadas = respostas.map(r => ({
@@ -332,24 +332,67 @@ export const listEventoRespostas = async (req: Request, res: Response) => {
         dataHora: r.evento.dataHora,
         localizacao: r.evento.localizacao
       } : null
-    }));
+    }))
 
-    return res.json(respostasFormatadas);
+    return res.json(respostasFormatadas)
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Erro ao buscar respostas de eventos' })
+  }
+}
+
+// GET /admin/events/respostas/:id -> pega uma resposta específica pelo ID
+export const getEventoRespostaById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id || isNaN(Number(id))) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    const resposta = await respostaRepo().findOne({
+      where: { id: Number(id) },
+      relations: ['evento', 'usuario']
+    });
+
+    if (!resposta) {
+      return res.status(404).json({ error: 'Resposta de evento não encontrada' });
+    }
+
+    return res.json({
+      id: resposta.id,
+      titulo_evento: resposta.titulo_evento,
+      data_evento: resposta.data_evento,
+      objetivo: resposta.objetivo,
+      comentarios: resposta.comentarios,
+      usuario: {
+        id: resposta.usuario.id,
+        nome: resposta.usuario.nome,
+        cargo: resposta.usuario.cargo
+      },
+      evento: {
+        id: resposta.evento.id,
+        titulo: resposta.evento.titulo,
+        dataHora: resposta.evento.dataHora,
+        localizacao: resposta.evento.localizacao
+      }
+    });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Erro ao buscar respostas de eventos' });
+    return res.status(500).json({ error: 'Erro ao buscar resposta de evento' });
   }
 };
 
 
-// POST /admin/events/respostas -> cria uma nova resposta de evento
+
+// POST /admin/events/respostas/:eventoId/user/:usuarioId -> cria uma nova resposta de evento
 export const createEventoResposta = async (req: Request, res: Response) => {
   try {
-    const { eventoId, usuarioId, titulo_evento, data_evento, objetivo, comentarios } = req.body;
+    const { eventoId, usuarioId } = req.params;
+    const { titulo_evento, objetivo, comentarios } = req.body;
 
-    // Validações básicas
     if (!eventoId || !usuarioId) {
-      return res.status(400).json({ error: 'eventoId e usuarioId são obrigatórios' });
+      return res.status(400).json({ error: 'IDs de evento e usuário são obrigatórios' });
     }
 
     const evento = await eventoRepo().findOneBy({ id: Number(eventoId) });
@@ -360,7 +403,7 @@ export const createEventoResposta = async (req: Request, res: Response) => {
 
     const resposta = respostaRepo().create({
       titulo_evento: titulo_evento ?? evento.titulo,
-      data_evento: data_evento ? new Date(data_evento) : evento.dataHora,
+      data_evento: evento.dataHora, // usa data do evento
       objetivo: objetivo ?? '',
       comentarios: comentarios ?? '',
       evento,
