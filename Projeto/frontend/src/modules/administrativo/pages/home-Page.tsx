@@ -3,6 +3,8 @@ import Navbar from "../../../shared/components/navbar";
 import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
 import axios from "axios";
+import Modal from "../../../shared/components/modal";
+import LocalTrabalho from "../components/localTrabalho";
 
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
@@ -60,6 +62,17 @@ function PreferenceChart({ data }: { data: { labels: string[]; values: number[] 
 }
 
 export default function HomePage() {
+  const [mostrarModal, setMostrarModal] = useState(false)
+
+  // Abre automaticamente se a flag estiver setada no localStorage
+  useEffect(() => {
+    const deveMostrar = localStorage.getItem("mostrarModalLocalTrabalho")
+    if (deveMostrar === "true") {
+      // Dá um pequeno delay pra deixar a transição mais suave
+      setTimeout(() => setMostrarModal(true), 600)
+      localStorage.removeItem("mostrarModalLocalTrabalho") // limpa flag
+    }
+  }, [])
 
   // user
   const [user, setUser] = useState(null)
@@ -214,8 +227,8 @@ export default function HomePage() {
                     <div
                       key={day}
                       className={`calendar-day text-center text-sm cursor-pointer rounded-md ${day === todayDay && currentMonth === todayMonth && currentYear === todayYear
-                          ? "bg-blue-200 font-bold"
-                          : ""
+                        ? "bg-blue-200 font-bold"
+                        : ""
                         }`}
                     >
                       {day}
@@ -260,6 +273,18 @@ export default function HomePage() {
         </section>
 
       </main>
+
+      {/* 🔹 Modal LocalTrabalho abre automaticamente após login */}
+      <Modal
+        aberto={mostrarModal}
+        onFechar={() => setMostrarModal(false)}
+        modalClassName=""
+      >
+        <div className="max-w-[900px] w-[70vw]">
+          <LocalTrabalho onFechar={() => setMostrarModal(false)} />
+        </div>
+      </Modal>
+
     </div>
   );
 }
