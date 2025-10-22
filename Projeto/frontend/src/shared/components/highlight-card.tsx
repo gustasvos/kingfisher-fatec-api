@@ -53,7 +53,7 @@ const HighlightCard: React.FC<HighlightCardProps> = ({
     title,
     value,
     subtitle,
-    icon,
+    icon: Icon,
     variant = 'primary',
     onClick,
 }) => {
@@ -63,7 +63,7 @@ const HighlightCard: React.FC<HighlightCardProps> = ({
     const styles = variantStyles[variant] || variantStyles.primary;
 
     // Classes base e dinâmicas
-    const baseClasses = `p-6 rounded-xl min-w-64 m-2 shadow-lg transition-all duration-200 flex flex-col ${styles.bg}`;
+    const baseClasses = `relative p-6 rounded-xl min-w-64 m-2 shadow-lg transition-all duration-200 flex flex-col ${styles.bg}`;
 
     const clickableClasses = isClickable
         ? `cursor-pointer transform hover:-translate-y-1 ${styles.hover} shadow-md hover:shadow-xl`
@@ -76,7 +76,9 @@ const HighlightCard: React.FC<HighlightCardProps> = ({
                 <h3 className={`text-sm font-medium ${styles.text} uppercase`}>
                     {title}
                 </h3>
-                {icon && <div className={`text-3xl ${styles.icon}`}>{icon}</div>}
+                <div className={`absolute top-4 right-4 text-3xl ${styles.icon}`}>
+                <Icon /> 
+                </div>
             </div>
 
             {/* Body: Valor de Destaque */}

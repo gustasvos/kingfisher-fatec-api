@@ -4,22 +4,14 @@ import { FiDollarSign, FiUsers, FiAlertTriangle, FiPackage, FiInfo } from 'react
 import { FaCarSide } from 'react-icons/fa'
 import Navbar from '../../../shared/components/navbar';
 import PieChart from '../../../shared/components/grafico-setor';
+import Header from '../../../shared/components/header';
 
-// 1. Definição do Tipo para os Dados do Dashboard
-interface DashboardData {
-  totalVendas: number;
-  agregadosAtivos: number;
-  ticketsPendentes: number;
-  estoqueBaixo: number;
-  ultimasInfos: string;
-}
 
 /**
- * Dados de mock para o indicador "Veículos Aptos para Operação"
- **/
+ * mock para o indicador (card) "Veículos Aptos para Operação"
+*/
 const frotaTotal = 120;
 const veiculosAptos = 95;
-const veiculosNaoAptos = frotaTotal - veiculosAptos;
 const percentualAptos = ((veiculosAptos / frotaTotal) * 100).toFixed(1);
 
 const mockVeiculosAptosCard = {
@@ -28,179 +20,105 @@ const mockVeiculosAptosCard = {
   icon: FaCarSide,
 };
 
-// const mockVeiculosAptos = {
-//   title: 'Veículos Aptos para Operação',
-//   labels: [
-//     'Aptos (Óleo, água e elétrica OK)',    // Veículos com Óleo, Água e Elétrica OK
-//     'Em Manutenção (Não Aptos)', // Veículos com alguma pendência
-//   ],
-//   data: [
-//     75, // 75 Veículos Aptos (ou 75% da frota)
-//     25, // 25 Veículos Em Manutenção (ou 25% da frota)
-//   ],
-//   backgroundColors: [
-//     '#28A745',
-//     '#DC3545',
-//   ],
-// };
-
-// 2. Mock de Dados (Simulando a API)
-const mockFetchData = (): Promise<DashboardData> => {
-  return new Promise((resolve) => {
-    // Simula um atraso de rede
-    setTimeout(() => {
-      resolve({
-        totalVendas: 15450.90,
-        agregadosAtivos: 128,
-        ticketsPendentes: 5,
-        estoqueBaixo: 45,
-        ultimasInfos: "Lançamento v2.1 em 10 dias.",
-      });
-    }, 1500); // 1.5 segundos de carregamento
-  });
+/**
+ * mock para o header
+ */
+const mockHeader = {
+  user: {
+    avatarUrl: '../../assets/usuario.svg',
+    name: "NOME_ADMINISTRADOR_OPERACIONAL",
+    role: "Administrador",
+    email: "operacional@email.com",
+  },
 };
 
+/**
+ * mock gráficos setor e barra
+ */
+const mockVeiculosAptos = {
+  title: 'Veículos Aptos para Operação',
+  labels: [
+    'Aptos (Óleo, água e elétrica OK)',    // Veículos com Óleo, Água e Elétrica OK
+    'Em Manutenção (Não Aptos)', // Veículos com alguma pendência
+  ],
+  data: [
+    75, // 75 Veículos Aptos (ou 75% da frota)
+    25, // 25 Veículos Em Manutenção (ou 25% da frota)
+  ],
+  backgroundColors: [
+    '#28A745',
+    '#DC3545',
+  ],
+};
+
+const mockData = {
+  agregadosAtivos: 50,
+};
+
+
 const HomeOpAdminPage: React.FC = () => {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<DashboardData | null>(mockData);
 
 
-  const fetchDashboardData = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const result = await mockFetchData();
-      setData(result);
-    } catch (e) {
-      setError("Falha ao carregar os dados do dashboard. Tente novamente.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, [fetchDashboardData]);
-
-
-  // === 5. Renderização Condicional ===
-  if (error) {
-    return (
-      <div className="p-8 text-red-700 bg-red-100 border border-red-400 rounded-md m-4">
-        <h2 className="text-lg font-semibold">Erro ao Carregar Dashboard</h2>
-        <p>{error}</p>
-        <button
-          onClick={fetchDashboardData}
-          className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-        >
-          Tentar Novamente
-        </button>
-      </div>
-    );
-  }
-
-  // Define um placeholder para o estado de carregamento
-  const LoadingCard = (
-    <div className="animate-pulse p-6 rounded-xl min-w-64 m-2 shadow-lg bg-gray-100 h-32">
-      <div className="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
-      <div className="h-8 bg-gray-300 rounded w-1/2"></div>
-    </div>
-  );
-
-  // Se estiver carregando, mostra o placeholder para todos os 4 cards
-  if (isLoading) {
-    return (
-      <>
-        <Navbar />
-        <div className="p-8">
-          <h1>Dashboard de Métricas</h1>
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-            {LoadingCard}
-            {LoadingCard}
-            {LoadingCard}
-            {LoadingCard}
-          </div> */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-            <PieChart
-              title={mockVeiculosAptos.title}
-              labels={mockVeiculosAptos.labels}
-              data={mockVeiculosAptos.data}
-              backgroundColors={mockVeiculosAptos.backgroundColors}
-            />
-          </div> */}
-        </div>
-      </>
-
-    );
-  }
-
-  // Garante que 'data' não é nulo antes de usá-lo
-  if (!data) return null;
-
-  // Formatador para moeda (A boa prática seria usar um hook ou utilitário)
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-
-  // === 6. Renderização Principal (Após Carregamento) ===
+  // Renderização Principal
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Dashboard de Métricas</h1>
+    <>
+      <Header user={mockHeader.user} placeholderAvatar={mockHeader.user.avatarUrl} />
+      <Navbar />
 
-      {/* Grid de Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-
+      <div className="p-8 grid grid-cols-4 gap-x-4 ml-10">
         <HighlightCard
-            title="Veículos Aptos para Operação"
-            value={mockVeiculosAptosCard.value}
-            subtitle={mockVeiculosAptosCard.subtitle}
-            variant="primary"
-            icon={mockVeiculosAptosCard.icon} 
-            onClick={() => console.log('Navegar para Checklist de Agregados')}
+          title="Agregados ativos"
+          value={mockData.agregadosAtivos}
+          subtitle={mockVeiculosAptosCard.subtitle}
+          variant="primary"
+          icon={FaCarSide}
+          onClick={() => console.log('Navegar para Checklist de Agregados')}
         />
 
         <HighlightCard
-          title="Número de agregados ativos"
-          value={data.agregadosAtivos}
-          subtitle="Total na última semana"
-          variant="secondary"
-          icon={<FiUsers className="text-3xl" />}
+          title="Veículos Aptos para Operação"
+          value={mockVeiculosAptosCard.value}
+          subtitle={mockVeiculosAptosCard.subtitle}
+          variant="primary"
+          icon={FaCarSide}
+          onClick={() => console.log('Navegar para Checklist de Agregados')}
         />
 
         <HighlightCard
-          title="Tickets Pendentes"
-          value={data.ticketsPendentes}
-          subtitle="Urgência alta"
-          variant="danger"
-          icon={<FiAlertTriangle className="text-3xl" />}
+          title="Veículos Aptos para Operação"
+          value={mockVeiculosAptosCard.value}
+          subtitle={mockVeiculosAptosCard.subtitle}
+          variant="primary"
+          icon={FaCarSide}
+          onClick={() => console.log('Navegar para Checklist de Agregados')}
         />
 
         <HighlightCard
-          title="Itens c/ Estoque Baixo"
-          value={data.estoqueBaixo}
-          subtitle="Verificar reposição urgente"
-          variant="warning"
-          icon={<FiPackage className="text-3xl" />}
+          title="Veículos Aptos para Operação"
+          value={mockVeiculosAptosCard.value}
+          subtitle={mockVeiculosAptosCard.subtitle}
+          variant="primary"
+          icon={FaCarSide}
+          onClick={() => console.log('Navegar para Checklist de Agregados')}
         />
+      </div >
 
+      <div className="grid grid-cols-2 gap-x-4 mt-6 ml-10 p-10 rounded-lg">
+        <PieChart
+          title={mockVeiculosAptos.title}
+          labels={mockVeiculosAptos.labels}
+          data={mockVeiculosAptos.data}
+          backgroundColors={mockVeiculosAptos.backgroundColors}
+        />
+        <PieChart
+          title={mockVeiculosAptos.title}
+          labels={mockVeiculosAptos.labels}
+          data={mockVeiculosAptos.data}
+          backgroundColors={mockVeiculosAptos.backgroundColors}
+        />
       </div>
-
-      {/* Exemplo de uso da Info Card */}
-      <div className="mt-8">
-        <HighlightCard
-          title="Informações do Sistema"
-          value="Status: OK"
-          subtitle={data.ultimasInfos}
-          variant="info"
-          icon={<FiInfo className="text-3xl" />}
-        />
-      </div>
-
-      {/* Aqui iriam os gráficos, também gerenciados por seus próprios useStates */}
-
-    </div>
+    </>
   );
 };
 
