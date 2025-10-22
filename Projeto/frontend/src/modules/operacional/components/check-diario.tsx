@@ -2,10 +2,14 @@ import { useState } from "react";
 import BotaoSubmit from "../../../shared/components/botao-submit";
 import InputLine from "../../../shared/components/inputLine";
 
-export default function CheckDiario() {
+type FormAberturaProps = {
+    form: string;
+}
+
+export default function CheckDiario({form}: FormAberturaProps) {
     const [loading, setLoading] = useState(false);
 
-    const [formTitle, setFormTitle] = useState("Checklist Diário - Frota Newe")
+    const [formTitle, setFormTitle] = useState(form)
     const [placaVeiculo,setPlacaVeiculo] = useState("")
     const [kmInicial,setkmInicial] = useState("")
     const [cidadeDestino,setCidadeDestino] = useState("")
