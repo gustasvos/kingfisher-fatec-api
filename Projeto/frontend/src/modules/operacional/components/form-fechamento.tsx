@@ -2,10 +2,14 @@ import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
 import { useState } from "react";
 
-export default function FormFechamento() {
+type FormAberturaProps = {
+    form: string;
+}
+
+export default function FormFechamento({form}: FormAberturaProps) {
     const [loading, setLoading] = useState(false);
 
-    const [formTitle, setFormTitle] = useState("Formulário de fechamento")
+    const [formTitle, setFormTitle] = useState(form)
     const [dataFechamento, setDataFechamento] = useState("")
     const [lixoOrganico,setLixoOrganico] = useState(null)
     const [lixoReciclavel,setLixoReciclavel] = useState(null)

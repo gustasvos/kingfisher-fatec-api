@@ -2,6 +2,6 @@ import FormFechamento from "../components/form-fechamento";
 
 export default function FormFechamentoPage(){
     return(
-        <FormFechamento/>
+        <FormFechamento form="Formulário de fechamento"/>
     )    
 }
