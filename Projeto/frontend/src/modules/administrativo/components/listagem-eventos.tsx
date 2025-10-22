@@ -97,7 +97,6 @@ export default function ListagemEventos() {
     <>
       <Navbar />
       <main className="p-8 min-h-screen bg-[#d8ecf3]">
-        {/* Barra de pesquisa padronizada */}
         <form className="w-full mb-8" onSubmit={(e) => e.preventDefault()}>
       <input
         type="text"
@@ -112,7 +111,6 @@ export default function ListagemEventos() {
         </form>
 
 
-        {/* Cards de eventos */}
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {eventosFiltrados.length > 0 ? (
             eventosFiltrados.map((evento) => (
@@ -121,19 +119,15 @@ export default function ListagemEventos() {
                 className="bg-white rounded-xl shadow-md border border-gray-100 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
               >
                 <div>
-                  {/* Título */}
                   <h2 className="text-xl font-semibold text-gray-800 mb-2">
                     {evento.titulo}
                   </h2>
 
-                  {/* Descrição */}
                   {evento.descricao && (
                     <p className="text-gray-700 mb-4">{evento.descricao}</p>
                   )}
 
-                  {/* Local e Data com ícones */}
                   <div className="flex flex-col gap-2 mt-2">
-                    {/* Local */}
                     <div className="flex items-center gap-2 text-gray-800">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +146,6 @@ export default function ListagemEventos() {
                       <span>{evento.localizacao}</span>
                     </div>
 
-                    {/* Data */}
                     <div className="flex items-center gap-2 text-gray-800">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +166,6 @@ export default function ListagemEventos() {
                   </div>
                 </div>
 
-                {/* Botão Preencher */}
                 <button
                   onClick={() => abrirModalPreencherEvento(evento)}
                   className="mt-6 bg-[#135b78] hover:bg-[#114a5f] text-white px-4 py-2 rounded-lg shadow transition-all duration-200 w-full"
@@ -190,7 +182,6 @@ export default function ListagemEventos() {
         </div>
       </main>
 
-      {/* Modal */}
       <Modal
         aberto={abertoModal}
         onFechar={() => setAbertoModal(false)}
