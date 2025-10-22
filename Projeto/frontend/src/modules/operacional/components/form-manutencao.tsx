@@ -2,11 +2,15 @@ import { useState } from "react"
 import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
 
-export default function FormManutencao() {
+type FormAberturaProps = {
+    form: string;
+}
+
+export default function FormManutencao({form}: FormAberturaProps) {
     const [mostra, setMostra] = useState(false)
     const [loading, setLoading] = useState(false);
 
-    const [formTitle, setFormTitle] = useState("Formulário de manutenção predial")
+    const [formTitle, setFormTitle] = useState(form)
     const [dataVerificacao, setDataVerificacao] = useState("")
     const [condicaoPisoEscritorio, setCondicaoPisoEscritorio] = useState("")
     const [condicaoPisoOperacional, setCondicaoPisoOperacional] = useState("")
