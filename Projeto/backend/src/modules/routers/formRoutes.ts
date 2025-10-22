@@ -1,6 +1,6 @@
 import express, { Request } from "express";
 // 💡 Correção: Garante que listarUploadsBack está importado
-import { handleFormSubmit, listarUploadsBack, listarCSV } from "../controllers/formController"; 
+import { handleFormSubmit, listarUploadsBack, listarCSV, consultaGenerica } from "../controllers/formController"; 
 import { setUploadTimestamp } from "../../middlewares/setUploadTimestamp"
 import { upload } from "../../services/uploadService";
 
@@ -11,5 +11,6 @@ const router = express.Router();
 router.post('/submit', setUploadTimestamp, upload.any(), handleFormSubmit);
 router.get("/listar-uploads", listarUploadsBack)
 router.get("/ver-csv", listarCSV)
+router.get("/consulta/:chave", consultaGenerica);
 
 export default router;
