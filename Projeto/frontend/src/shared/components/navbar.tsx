@@ -8,9 +8,12 @@ import imgUser from './../../assets/imgAddUserMale.png';
 import imgCalendar from './../../assets/imgTearOffCalendar.png';
 import imgNotification from './../../assets/imgDoorbell.png';
 import imgColab from './../../assets/imgTeam.svg';
+import imgAddCliente from './../../assets/imgAddCliente.png';
+import imgListaCliente from './../../assets/imgListaCliente.png'
 import Cadastro from "../../modules/administrativo/pages/PaginaCadastro";
 import Modal from "./modal";
 import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
+import FormTeste from "../../modules/operacional/components/form-teste";
 
 export default function Navbar() {
   const [aberto, setAberto] = useState(false);
@@ -31,6 +34,14 @@ export default function Navbar() {
     setConteudoModal(<EventoDetalhe />)
     setAbertoModal(true)
   }
+
+  const abrirModalCadastroCliente = (e: React.MouseEvent) => {
+    e.preventDefault()
+    /**colocar o componente aqui, igual nos outros */
+    // setConteudoModal(</>)
+    setAbertoModal(true)
+  }
+ 
 
   return (
     <nav className={`${aberto ? "w-[200px]" : "w-[60px]"} bg-[#135b78] flex flex-col items-center min-h-screen text-white py-6 gap-6 fixed top-0`}>
@@ -73,6 +84,16 @@ export default function Navbar() {
         <NavLink to="/colaboradores" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
           <img src={imgColab} alt="Colaboradores" className="w-7 h-7" />
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Colaboradores</p> : null}
+        </NavLink>
+
+        <NavLink to="#" className="rounded-md flex items-center hover:bg-[#1b7091d8]" onClick={abrirModalCadastroCliente}>
+          <img src={imgAddCliente} alt="Colaboradores" className="w-7 h-7" />
+          {aberto ? <p className="pl-2 text-[15px] font-semibold">Adicionar Cliente</p> : null}
+        </NavLink>
+
+        <NavLink to="/listaCliente" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
+          <img src={imgListaCliente} alt="Colaboradores" className="w-7 h-7" />
+          {aberto ? <p className="pl-2 text-[15px] font-semibold">Clientes</p> : null}
         </NavLink>
       </section>
 
