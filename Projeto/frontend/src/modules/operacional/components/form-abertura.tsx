@@ -2,10 +2,14 @@ import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
 import { useState } from "react";
 
-export default function FormAbertura() {
+type FormAberturaProps = {
+    form: string;
+}
+
+export default function FormAbertura({form}:FormAberturaProps) {
     const [loading, setLoading] = useState(false);
 
-    const [formTitle, setFormTitle] = useState("Formulário de abertura")
+    const [formTitle, setFormTitle] = useState(form)
     const [dataAbertura,setDataAbertura] = useState("")
     const [cadeadoFrenteEmp,setCadeadoFrenteEmp] = useState(null)
     const [portaoSocial,setPortaoSocial] = useState(null)
