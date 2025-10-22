@@ -21,6 +21,7 @@ import Navbar from '../../../shared/components/navbar'
 
 function PaginaEventos() {
   const [eventosCalendar, setEventosCalendar] = useState<any[]>([])
+  const [eventosOriginais, setEventosOriginais] = useState<any[]>([]) 
   const [aberto, setAberto] = useState(false)
   const [eventoSelecionado, setEventoSelecionado] = useState<any | null>(null)
   const [abertoModal, setAbertoModal] = useState(false)
@@ -43,6 +44,7 @@ function PaginaEventos() {
           }
         }))
         setEventosCalendar(eventosFormatados)
+        setEventosOriginais(eventosFormatados) 
       })
       .catch((error) => console.error("Erro ao buscar eventos:", error))
   }, [])
@@ -50,6 +52,19 @@ function PaginaEventos() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const termo = e.target.value.trim().toLowerCase()
     console.log('Pesquisar evento:', termo)
+
+    if (!termo) {
+      setEventosCalendar(eventosOriginais)
+      return
+    }
+
+    const filtrados = eventosOriginais.filter((evento) =>
+      evento.title.toLowerCase().includes(termo) ||
+      evento.extendedProps.descricao.toLowerCase().includes(termo) ||
+      evento.extendedProps.localizacao.toLowerCase().includes(termo)
+    )
+
+    setEventosCalendar(filtrados)
   }
 
   const handleEventClick = (info: any) => {
@@ -99,6 +114,7 @@ function PaginaEventos() {
             className="input-search"
             placeholder="Pesquisar evento"
             onInput={handleSearch}
+            style={{ color: '#000' }} 
           />
         </div>
 
@@ -151,7 +167,6 @@ function PaginaEventos() {
       )}
     </div>
   )
-
 }
 
 export default PaginaEventos
