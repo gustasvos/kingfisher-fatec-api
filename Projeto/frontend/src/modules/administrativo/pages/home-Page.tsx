@@ -3,6 +3,7 @@ import Navbar from "../../../shared/components/navbar";
 import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
 import axios from "axios";
+import api from "../../../services/api";
 
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
@@ -66,6 +67,10 @@ export default function HomePage() {
   const userId = localStorage.getItem("userId")
   const token = localStorage.getItem("token")
 
+  const [eventos, setEventos] = useState<any[]>([]);
+  const [statusCounts, setStatusCounts] = useState({ confirmado: 0, recusado: 0, aguardando: 0 });
+
+
   useEffect(() => {
     if (userId) {
       axios
@@ -82,6 +87,39 @@ export default function HomePage() {
         });
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (!token) return;
+
+    api.get('/admin/events', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(response => {
+        const eventos = response.data;
+        setEventos(eventos);
+
+        // Inicializa contadores
+        const counts = { confirmado: 0, recusado: 0, aguardando: 0 };
+
+        eventos.forEach((evento: any) => {
+          evento.participantes.forEach((participante: any) => {
+            const status = participante.status?.toLowerCase();
+
+            if (status === "confirmado") counts.confirmado++;
+            else if (status === "recusado") counts.recusado++;
+            else if (status === "pendente") counts.aguardando++;
+            else counts.aguardando++; // qualquer outro status é considerado aguardando
+          });
+        });
+
+        setStatusCounts(counts);
+      })
+      .catch(err => {
+        console.error("Erro ao buscar eventos:", err);
+      });
+  }, [token]);
+
+
 
   // CALENDARIO
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
@@ -228,15 +266,15 @@ export default function HomePage() {
             <div className="grid grid-cols-3 gap-2">
               <div className="p-3 rounded bg-white text-black text-center">
                 <div className="text-sm">Confirmado</div>
-                <div className="font-bold text-lg">{counts.confirmado}</div>
+                <div className="font-bold text-lg">{statusCounts.confirmado}</div>
               </div>
               <div className="p-3 rounded bg-white text-black text-center">
                 <div className="text-sm">Recusado</div>
-                <div className="font-bold text-lg">{counts.recusado}</div>
+                <div className="font-bold text-lg">{statusCounts.recusado}</div>
               </div>
               <div className="p-3 rounded bg-white text-black text-center">
                 <div className="text-sm">Aguardando</div>
-                <div className="font-bold text-lg">{counts.aguardando}</div>
+                <div className="font-bold text-lg">{statusCounts.aguardando}</div>
               </div>
             </div>
           </div>
