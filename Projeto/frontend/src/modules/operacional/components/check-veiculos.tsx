@@ -7,45 +7,252 @@ export default function CheckVeiculos() {
     const [mostraOutro, setMostraOutro] = useState(false)
     const [respVistoria, setRespVistoria] = useState('')
     const [letraNum, setLetraNum] = useState('')
-    const [erro,setErro] = useState('')
+    const [erro, setErro] = useState('')
+    const [loading, setLoading] = useState(false);
+    
+    const [formTitle, setFormTitle] = useState("Checklist de Veículos Agregados")
+    const [cpf, setCpf] = useState("")
+    const [email, setEmail] = useState("")
+    const [placaVeiculo, setPlacaVeiculo] = useState("")
+    const [tipoVeiculo, setTipoVeiculo] = useState(null)
+    const [nivelOleo, setNivelOleo] = useState(null)
+    const [livreOleo, setLivreOleo] = useState(null)
+    const [nivelAgua, setNivelAgua] = useState(null)
+    const [fotoMotor, setFotoMotor] = useState<File | null>(null)
+    const [etiquetaOleo, setEtiquetaOleo] = useState<File | null>(null)
+    const [pneLisoDesq, setPneLisoDesq] = useState(null)
+    const [pneLisoPte, setPneLisoPte] = useState(null)
+    const [pneLisoPtd, setPneLisoPtd] = useState(null)
+    const [pneLisoPdd, setPneLisoPdd] = useState(null)
+    const [fotoPne, setFotoPne] = useState<File | null>(null)
+    const [fotoPte, setFotoPte] = useState<File | null>(null)
+    const [FotoPtd, setFotoPtd] = useState<File | null>(null)
+    const [FotoPdd, setFotoPdd] = useState<File | null>(null)
+    const [parabrisaPerfEstado, setParabrisaPerfEstado] = useState(null)
+    const [cabineExtLimpa, setCabineExtLimpa] = useState(null)
+    const [veiculoExtLimpa, setVeiculoExtLimpa] = useState(null)
+    const [amassadoFerrugem, setAmassadoFerrugem] = useState(null)
+    const [assoalho, setAssoalho] = useState(null)
+    const [faixaRefletida, setFaixaRefletida] = useState(null)
+    const [parabrisaFunc, setParabrisaFunc] = useState(null)
+    const [buzinaFunc, setBuzinaFunc] = useState(null)
+    const [farolAlto, setFarolAlto] = useState(null)
+    const [farolBaixo, setFarolBaixo] = useState(null)
+    const [setasDianteiras, setSetasDianteiras] = useState(null)
+    const [setasTrazeiras, setSetasTrazeiras] = useState(null)
+    const [piscaAlerta, setPiscaAlerta] = useState(null)
+    const [luzFreio, setLuzFreio] = useState(null)
+    const [luzRe, setLuzRe] = useState(null)
+    const [sirene, setSirene] = useState(null)
+    const [extintor, setExtintor] = useState(null)
+    const [step, setStep] = useState(null)
+    const [triangulo, setTriangulo] = useState(null)
+    const [macaco, setMacaco] = useState(null)
+    const [chaveRoda, setChaveRoda] = useState(null)
+    const [capaceteSeguranca, setCapaceteSeguranca] = useState(null)
+    const [coleteSeguranca, setColeteSeguranca] = useState(null)
+    const [botaSeguranca, setBotaSeguranca] = useState(null)
+    const [frenteVeiculo, setFrenteVeiculo] = useState<File | null>(null)
+    const [lateralDianteira, setLateralDianteira] = useState<File | null>(null)
+    const [lateralEsquerda, setLateralEsquerda] = useState<File | null>(null)
+    const [traseira, setTraseira] = useState<File | null>(null)
+    const [obs, setObs] = useState('')
+    const [responsavelVistoria, setResponsavelVistoria] = useState(null)
+    const [outro, setOutro] = useState('')
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, input: string) {
+        const file = e.target.files?.[0] || null
+        if(input === "fotomotor"){setFotoMotor(file)}
+        else if(input === "etiquetaOleo"){setEtiquetaOleo(file)}
+        else if(input === "fotoPne"){setFotoPne(file)}
+        else if(input === "fotoPte"){setFotoPte(file)}
+        else if(input === "FotoPtd"){setFotoPtd(file)}
+        else if(input === "FotoPdd"){setFotoPdd(file)}
+        else if(input === "frenteVeiculo"){setFrenteVeiculo(file)}
+        else if(input === "lateralDianteira"){setLateralDianteira(file)}
+        else if(input === "lateralEsquerda"){setLateralEsquerda(file)}
+        else if(input === "traseira"){setTraseira(file)}
+    }
+
+    const handleTipoVeiculoChange = (event) => {
+        setTipoVeiculo(event.target.value)
+    }
+
+    const handleNivelOleoChange = (event) => {
+        setNivelOleo(event.target.value)
+    }
+
+    const handleLivreOleoChange = (event) => {
+        setLivreOleo(event.target.value)
+    }
+
+    const handleNivelAguaChange = (event) => {
+        setNivelAgua(event.target.value)
+    }
+
+    const handlePneLisoDesqChange = (event) => {
+        setPneLisoDesq(event.target.value)
+    }
+
+    const handlePneLisoPteChange = (event) => {
+        setPneLisoPte(event.target.value)
+    }
+
+    const handlePneLisoPtdChange = (event) => {
+        setPneLisoPtd(event.target.value)
+    }
+
+    const handlePneLisoPddChange = (event) => {
+        setPneLisoPdd(event.target.value)
+    }
+
+    const handleParabrisaPerfEstadoChange = (event) => {
+        setParabrisaPerfEstado(event.target.value)
+    }
+
+    const handleCabineExtLimpaChange = (event) => {
+        setCabineExtLimpa(event.target.value)
+    }
+
+    const handleVeiculoExtLimpaChange = (event) => {
+        setVeiculoExtLimpa(event.target.value)
+    }
+
+    const handleAmassadoFerrugemChange = (event) => {
+        setAmassadoFerrugem(event.target.value)
+    }
+
+    const handleAssoalhoChange = (event) => {
+        setAssoalho(event.target.value)
+    }
+
+    const handleFaixaRefletidaChange = (event) => {
+        setFaixaRefletida(event.target.value)
+    }
+    
+    const handleParabrisaFuncChange = (event) => {
+        setParabrisaFunc(event.target.value)
+    }
+    
+    const handleBuzinaFuncChange = (event) => {
+        setBuzinaFunc(event.target.value)
+    }
+    
+    const handleFarolAltoChange = (event) => {
+        setFarolAlto(event.target.value)
+    }
+    
+    const handleFarolBaixoChange = (event) => {
+        setFarolBaixo(event.target.value)
+    }
+
+    const handleSetasDianteirasChange = (event) => {
+        setSetasDianteiras(event.target.value)
+    }
+    
+    const handleSetasTrazeirasChange = (event) => {
+        setSetasTrazeiras(event.target.value)
+    }
+    
+    const handlePiscaAlertaChange = (event) => {
+        setPiscaAlerta(event.target.value)
+    }
+    
+    const handleLuzFreioChange = (event) => {
+        setLuzFreio(event.target.value)
+    }
+    
+    const handleLuzReChange = (event) => {
+        setLuzRe(event.target.value)
+    }
+    
+    const handleSireneChange = (event) => {
+        setSirene(event.target.value)
+    }
+    
+    const handleExtintorChange = (event) => {
+        setExtintor(event.target.value)
+    }
+    
+    const handleStepChange = (event) => {
+        setStep(event.target.value)
+    }
+    
+    const handleTrianguloChange = (event) => {
+        setTriangulo(event.target.value)
+    }
+    
+    const handleMacacoChange = (event) => {
+        setMacaco(event.target.value)
+    }
+    
+    const handleChaveRodaChange = (event) => {
+        setChaveRoda(event.target.value)
+    }
+    
+    const handleCapaceteSegurancaChange = (event) => {
+        setCapaceteSeguranca(event.target.value)
+    }
+    
+    const handleColeteSegurancaChange = (event) => {
+        setColeteSeguranca(event.target.value)
+    }
+
+    const handleBotaSegurancaChange = (event) => {
+        setBotaSeguranca(event.target.value)
+    }
+
+    const handleResponsavelVistoriaChange = (event) => {
+        setResponsavelVistoria(event.target.value)
+    }
+
 
     const handlechange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRespVistoria(e.target.value)
         setMostraOutro(e.target.value === 'outro')
         setLetraNum(e.target.value)
 
-        const regex =  /^[a-zA-Z0-9]*$/
+        const regex = /^[a-zA-Z0-9]*$/
 
         if (!regex.test(letraNum)) {
             setErro('Digite apenas letras e números.');
-          } else {
+        } else {
             setErro('');
-          }
+        }
     }
+
+    const enviaForm = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+
+        setTimeout(() => {
+        alert("Formulário enviado!");
+        setLoading(false);
+        }, 2000);
+    };
 
 
     return (
         <section>
-            <form action="">
+            <form action="" onChange={enviaForm}>
                 <p className="text-black">Sessão 1: Dados Cadastrais</p>
                 <section>
-                    <InputLine type="text" placeholder="" id='nome' htmlfor="nome" required>Nome Completo</InputLine>
                     <section className="relative">
-                        <IMaskInput mask={"000.000.000-00"} required maxLength={14} className="w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                        <IMaskInput mask={"000.000.000-00"} id="cpf" required maxLength={14} onAccept={(value: string) => setCpf(value)} className="w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                         <label htmlFor="" className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">CPF</label>
                     </section>
-                    <InputLine type="email" placeholder="" id='email' htmlfor="email" required>E-mail</InputLine>
-                    <InputLine type="text" placeholder="" maxLength={7} id='placa-veiculo' htmlfor="placa-veiculo" onchange={handlechange}>Placa do veículo(apenas os numeros e letras!)</InputLine>
+                    <InputLine type="email" placeholder="" id='email' htmlfor="email" required onChange={(e) => setEmail(e.target.value)}>E-mail</InputLine>
+                    <InputLine type="text" placeholder="" maxLength={7} id='placaVeiculo' htmlfor="placa-veiculo" onChange={(e) => { setPlacaVeiculo(e.target.value); handlechange(e) }}>Placa do veículo(apenas os numeros e letras!)</InputLine>
                     {erro && <p className="text-red-700 text-[12px]">{erro}</p>}
                     <fieldset>
                         <legend className="text-black">tipo veiculo</legend>
-                        <InputLine type="radio" name="tipo-veiculo" value="van" id='van' htmlfor="van" required>van</InputLine>
-                        <InputLine type="radio" name="tipo-veiculo" value="fiorino" id='fiorino' htmlfor="fiorino" required>fiorino</InputLine>
-                        <InputLine type="radio" name="tipo-veiculo" value="vuc" id='vuc' htmlfor="vuc" required>vuc</InputLine>
-                        <InputLine type="radio" name="tipo-veiculo" value="3/4" id='3/4' htmlfor="3/4" required>3/4</InputLine>
-                        <InputLine type="radio" name="tipo-veiculo" value="troco" id='troco' htmlfor="troco" required>troco</InputLine>
-                        <InputLine type="radio" name="tipo-veiculo" value="truck" id='truck' htmlfor="truck" required>truck</InputLine>
-                        <InputLine type="radio" name="tipo-veiculo" value="carreta" id='carreta' htmlfor="carreta" required>carreta</InputLine>
+                        <InputLine type="radio" name="tipoVeiculo" value="van" id='van' htmlfor="van" required checked={tipoVeiculo === 'van'} onChange={handleTipoVeiculoChange}>van</InputLine>
+                        <InputLine type="radio" name="tipoVeiculo" value="fiorino" id='fiorino' htmlfor="fiorino" required checked={tipoVeiculo === 'fiorino'} onChange={handleTipoVeiculoChange}>fiorino</InputLine>
+                        <InputLine type="radio" name="tipoVeiculo" value="vuc" id='vuc' htmlfor="vuc" required checked={tipoVeiculo === 'vuc'} onChange={handleTipoVeiculoChange}>vuc</InputLine>
+                        <InputLine type="radio" name="tipoVeiculo" value="3/4" id='3/4' htmlfor="3/4" required checked={tipoVeiculo === '3/4'} onChange={handleTipoVeiculoChange}>3/4</InputLine>
+                        <InputLine type="radio" name="tipoVeiculo" value="troco" id='troco' htmlfor="troco" required checked={tipoVeiculo === 'troco'} onChange={handleTipoVeiculoChange}>troco</InputLine>
+                        <InputLine type="radio" name="tipoVeiculo" value="truck" id='truck' htmlfor="truck" required checked={tipoVeiculo === 'truck'} onChange={handleTipoVeiculoChange}>truck</InputLine>
+                        <InputLine type="radio" name="tipoVeiculo" value="carreta" id='carreta' htmlfor="carreta" required checked={tipoVeiculo === 'carreta'} onChange={handleTipoVeiculoChange}>carreta</InputLine>
                     </fieldset>
                 </section>
                 <p className="text-black">Sessão 2: Motor - Verificação do vazamentos e nível de óleo e água no motor do veículo</p>
@@ -53,24 +260,24 @@ export default function CheckVeiculos() {
                     <p className="text-black">Vistoria</p>
                     <fieldset>
                         <legend className="text-black">Nível de Óleo está bom?</legend>
-                        <InputLine type="radio" name="nivel-oleo" value="oleo-sim" id="oleo-sim" htmlfor="oleo-sim" required>Sim</InputLine>
-                        <InputLine type="radio" name="nivel-oleo" value="oleo-nao" id="oleo-nao" htmlfor="oleo-nao" required>Não</InputLine>
-                        <InputLine type="radio" name="nivel-oleo" value="oleo-n-a" id="oleo-n-a" htmlfor="oleo-n-a" required>N/A</InputLine>
+                        <InputLine type="radio" name="nivelOleo" value="oleo-sim" id="oleo-sim" htmlfor="oleo-sim" required checked={nivelOleo === 'oleo-sim'} onChange={handleNivelOleoChange}>Sim</InputLine>
+                        <InputLine type="radio" name="nivelOleo" value="oleo-nao" id="oleo-nao" htmlfor="oleo-nao" required checked={nivelOleo === 'oleo-nao'} onChange={handleNivelOleoChange}>Não</InputLine>
+                        <InputLine type="radio" name="nivelOleo" value="oleo-n-a" id="oleo-n-a" htmlfor="oleo-n-a" required checked={nivelOleo === 'oleo-n-a'} onChange={handleNivelOleoChange}>N/A</InputLine>
                     </fieldset>
                     <fieldset>
                         <legend className="text-black">Livre de vazamento de óleo?</legend>
-                        <InputLine type="radio" name="livre-oleo" value="livre-sim" id="livre-sim" htmlfor="livre-sim" required>Sim</InputLine>
-                        <InputLine type="radio" name="livre-oleo" value="livre-nao" id="livre-nao" htmlfor="livre-nao" required>Não</InputLine>
-                        <InputLine type="radio" name="livre-oleo" value="livre-n-a" id="livre-n-a" htmlfor="livre-n-a" required>N/A</InputLine>
+                        <InputLine type="radio" name="livreOleo" value="livre-sim" id="livre-sim" htmlfor="livre-sim" required checked={livreOleo === 'livre-sim'} onChange={handleLivreOleoChange}>Sim</InputLine>
+                        <InputLine type="radio" name="livreOleo" value="livre-nao" id="livre-nao" htmlfor="livre-nao" required checked={livreOleo === 'livre-nao'} onChange={handleLivreOleoChange}>Não</InputLine>
+                        <InputLine type="radio" name="livreOleo" value="livre-n-a" id="livre-n-a" htmlfor="livre-n-a" required checked={livreOleo === 'livre-n-a'} onChange={handleLivreOleoChange}>N/A</InputLine>
                     </fieldset>
                     <fieldset>
                         <legend className="text-black">Nível de ÁGUA reservatório está bom?</legend>
-                        <InputLine type="radio" name="nivel-agua" value="agua-sim" id="agua-sim" htmlfor="agua-sim" required>Sim</InputLine>
-                        <InputLine type="radio" name="nivel-agua" value="agua-nao" id="agua-nao" htmlfor="agua-nao" required>Não</InputLine>
-                        <InputLine type="radio" name="nivel-agua" value="agua-n-a" id="agua-n-a" htmlfor="agua-n-a" required>N/A</InputLine>
+                        <InputLine type="radio" name="nivelAgua" value="agua-sim" id="agua-sim" htmlfor="agua-sim" required checked={nivelAgua === 'agua-sim'} onChange={handleNivelAguaChange}>Sim</InputLine>
+                        <InputLine type="radio" name="nivelAgua" value="agua-nao" id="agua-nao" htmlfor="agua-nao" required checked={nivelAgua === 'agua-nao'} onChange={handleNivelAguaChange}>Não</InputLine>
+                        <InputLine type="radio" name="nivelAgua" value="agua-n-a" id="agua-n-a" htmlfor="agua-n-a" required checked={nivelAgua === 'agua-n-a'} onChange={handleNivelAguaChange}>N/A</InputLine>
                     </fieldset>
-                    <InputLine type="file" id="foto-motor" htmlfor="foto-motor" required>Foto do motor do veículo</InputLine>
-                    <InputLine type="file" id="etiqueta-oleo" htmlfor="etiqueta-oleo">Foto etiqueta da última troca de óleo </InputLine>
+                    <InputLine type="file" id="fotoMotor" htmlfor="foto-motor" required  onChange={(e) => handleFileChange(e, "fotoMotor")}>Foto do motor do veículo</InputLine>
+                    <InputLine type="file" id="etiquetaOleo" htmlfor="etiqueta-oleo" onChange={(e) => handleFileChange(e, "etiquetaOleo")}>Foto etiqueta da última troca de óleo </InputLine>
                 </section>
                 <section>
                     <p className="text-black">Sessão 3: Pneus - Verificação do estado de conservação dos PNEUS do veículo</p>
@@ -78,41 +285,31 @@ export default function CheckVeiculos() {
                         <p className="text-black">Pneus estão lisos?</p>
                         <fieldset>
                             <legend className="text-black">PNE - Pneu Dianteiro Esquerdo</legend>
-                            <InputLine type="radio" name="pne-liso-d-esq" value="liso-sim-d-e" id="liso-sim-d-e" htmlfor="liso-sim-d-e" required>Sim</InputLine>
-                            <InputLine type="radio" name="pne-liso-d-esq" value="liso-nao-d-e" id="liso-nao-d-e" htmlfor="liso-nao-d-e" required>Não</InputLine>
-                        </fieldset>
-                        <fieldset>
-                            <legend className="text-black">PNE - Pneu Dianteiro Esquerdo</legend>
-                            <InputLine type="radio" name="pne-liso-pde" value="pde-sim" id="pde-sim" htmlfor="pde-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="pne-liso-pde" value="pde-nao" id="pde-nao" htmlfor="pde-nao" required>Não</InputLine>
+                            <InputLine type="radio" name="pneLisoDesq" value="liso-sim-d-e" id="liso-sim-d-e" htmlfor="liso-sim-d-e" required checked={pneLisoDesq === 'liso-sim-d-e'} onChange={handlePneLisoDesqChange}>Sim</InputLine>
+                            <InputLine type="radio" name="pneLisoDesq" value="liso-nao-d-e" id="liso-nao-d-e" htmlfor="liso-nao-d-e" required checked={pneLisoDesq === 'liso-nao-d-e'} onChange={handlePneLisoDesqChange}>Não</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">PTE - Pneu Traseiro Esquerdo</legend>
-                            <InputLine type="radio" name="pne-liso-pte" value="pte-sim" id="pte-sim" htmlfor="pte-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="pne-liso-pte" value="pte-nao" id="pte-nao" htmlfor="pte-nao" required>Não</InputLine>
+                            <InputLine type="radio" name="pneLisoPte" value="pte-sim" id="pte-sim" htmlfor="pte-sim" required checked={pneLisoPte === 'pte-sim'} onChange={handlePneLisoPteChange}>Sim</InputLine>
+                            <InputLine type="radio" name="pneLisoPte" value="pte-nao" id="pte-nao" htmlfor="pte-nao" required checked={pneLisoPte === 'pte-nao'} onChange={handlePneLisoPteChange}>Não</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">PTD - Pneu Traseiro Direito</legend>
-                            <InputLine type="radio" name="pne-liso-ptd" value="ptd-sim" id="ptd-sim" htmlfor="ptd-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="pne-liso-ptd" value="ptd-nao" id="ptd-nao" htmlfor="ptd-nao" required>Não</InputLine>
+                            <InputLine type="radio" name="pneLisoPtd" value="ptd-sim" id="ptd-sim" htmlfor="ptd-sim" required checked={pneLisoPtd === 'ptd-sim'} onChange={handlePneLisoPtdChange}>Sim</InputLine>
+                            <InputLine type="radio" name="pneLisoPtd" value="ptd-nao" id="ptd-nao" htmlfor="ptd-nao" required checked={pneLisoPtd === ''} onChange={handlePneLisoPtdChange}>Não</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">PDD - Pneu Dianteiro Direito</legend>
-                            <InputLine type="radio" name="pne-liso-pdd" value="pdd-sim" id="pdd-sim" htmlfor="pdd-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="pne-liso-pdd" value="pdd-nao" id="pdd-nao" htmlfor="pdd-nao" required>Não</InputLine>
-                        </fieldset>
-                        <fieldset>
-                            <legend className="text-black">PDD - Pneu Dianteiro Direito</legend>
-                            <InputLine type="radio" name="pne-liso-pdd" value="pdd-sim" id="pdd-sim" htmlfor="pdd-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="pne-liso-pdd" value="pdd-nao" id="pdd-nao" htmlfor="pdd-nao" required>Não</InputLine>
+                            <InputLine type="radio" name="pneLisoPdd" value="pdd-sim" id="pdd-sim" htmlfor="pdd-sim" required checked={pneLisoPdd === 'pdd-sim'} onChange={handlePneLisoPddChange}>Sim</InputLine>
+                            <InputLine type="radio" name="pneLisoPdd" value="pdd-nao" id="pdd-nao" htmlfor="pdd-nao" required checked={pneLisoPdd === 'pdd-nao'} onChange={handlePneLisoPddChange}>Não</InputLine>
                         </fieldset>
                     </section>
                     <section>
                         <p className="text-black">FOTOS GERAIS - Comprobatórias</p>
-                        <InputLine type="file" id="foto-pne" htmlfor="foto-pne" required>Foto do PNE - Pneu Dianteiro Esquerdo</InputLine>
-                        <InputLine type="file" id="foto-pte" htmlfor="foto-pte" required>Foto do PTE - Pneu Traseiro Esquerdo</InputLine>
-                        <InputLine type="file" id="foto-ptd" htmlfor="foto-ptd" required>Foto do PTD - Pneu Traseiro Direito</InputLine>
-                        <InputLine type="file" id="foto-pdd" htmlfor="foto-pdd" required>Foto do PDD - Pneu Dianteiro Direito</InputLine>
+                        <InputLine type="file" id="fotoPne" htmlfor="foto-pne" required onChange={(e) => handleFileChange(e, "fotoPne")}>Foto do PNE - Pneu Dianteiro Esquerdo</InputLine>
+                        <InputLine type="file" id="fotoPte" htmlfor="foto-pte" required onChange={(e) => handleFileChange(e, "fotoPte")}>Foto do PTE - Pneu Traseiro Esquerdo</InputLine>
+                        <InputLine type="file" id="fotoPtd" htmlfor="fotoPtd" required onChange={(e) => handleFileChange(e, "fotoPtd")}>Foto do PTD - Pneu Traseiro Direito</InputLine>
+                        <InputLine type="file" id="fotoPdd" htmlfor="fotPpdd" required onChange={(e) => handleFileChange(e, "fotPpdd")}>Foto do PDD - Pneu Dianteiro Direito</InputLine>
                     </section>
                 </section>
                 <section>
@@ -121,174 +318,174 @@ export default function CheckVeiculos() {
                         <p className="text-black">Limpeza e Aparência externa do veículo</p>
                         <fieldset>
                             <legend className="text-black">Para-brisa em perfeito estado?</legend>
-                            <InputLine type="radio" name="parabrisa-perf-estado" value="parabrisa-sim" id="parabrisa-sim" htmlfor="parabrisa-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="parabrisa-perf-estado" value="parabrisa-nao" id="parabrisa-nao" htmlfor="parabrisa-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="parabrisa-perf-estado" value="parabrisa-n-a" id="parabrisa-n-a" htmlfor="parabrisa-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="parabrisaPerfEstado" value="parabrisa-sim" id="parabrisa-sim" htmlfor="parabrisa-sim" required checked={parabrisaPerfEstado === 'parabrisa-sim'} onChange={handleParabrisaPerfEstadoChange}>Sim</InputLine>
+                            <InputLine type="radio" name="parabrisaPerfEstado" value="parabrisa-nao" id="parabrisa-nao" htmlfor="parabrisa-nao" required checked={parabrisaPerfEstado === 'parabrisa-nao'} onChange={handleParabrisaPerfEstadoChange}>Não</InputLine>
+                            <InputLine type="radio" name="parabrisaPerfEstado" value="parabrisa-n-a" id="parabrisa-n-a" htmlfor="parabrisa-n-a" required checked={parabrisaPerfEstado === 'parabrisa-n-a'} onChange={handleParabrisaPerfEstadoChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Cabine (externa) está limpa?</legend>
-                            <InputLine type="radio" name="cabine-ext-limpa" value="cabine-ext-sim" id="cabine-ext-sim" htmlfor="cabine-ext-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="cabine-ext-limpa" value="cabine-ext-nao" id="cabine-ext-nao" htmlfor="cabine-ext-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="cabine-ext-limpa" value="cabine-ext-n-a" id="cabine-ext-n-a" htmlfor="cabine-ext-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="cabineExtLimpa" value="cabine-ext-sim" id="cabine-ext-sim" htmlfor="cabine-ext-sim" required checked={cabineExtLimpa === 'cabine-ext-sim'} onChange={handleCabineExtLimpaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="cabineExtLimpa" value="cabine-ext-nao" id="cabine-ext-nao" htmlfor="cabine-ext-nao" required checked={cabineExtLimpa === 'cabine-ext-nao'} onChange={handleCabineExtLimpaChange}>Não</InputLine>
+                            <InputLine type="radio" name="cabineExtLimpa" value="cabine-ext-n-a" id="cabine-ext-n-a" htmlfor="cabine-ext-n-a" required checked={cabineExtLimpa === 'cabine-ext-n-a'} onChange={handleCabineExtLimpaChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Veículo (externo) está limpo?</legend>
-                            <InputLine type="radio" name="veiculo-ext-limpa" value="veiculo-ext-sim" id="veiculo-ext-sim" htmlfor="veiculo-ext-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="veiculo-ext-limpa" value="veiculo-ext-nao" id="veiculo-ext-nao" htmlfor="veiculo-ext-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="veiculo-ext-limpa" value="veiculo-ext-n-a" id="veiculo-ext-n-a" htmlfor="veiculo-ext-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="veiculoExtLimpa" value="veiculo-ext-sim" id="veiculo-ext-sim" htmlfor="veiculo-ext-sim" required checked={veiculoExtLimpa === 'veiculo-ext-sim'} onChange={handleVeiculoExtLimpaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="veiculoExtLimpa" value="veiculo-ext-nao" id="veiculo-ext-nao" htmlfor="veiculo-ext-nao" required checked={veiculoExtLimpa === 'veiculo-ext-nao'} onChange={handleVeiculoExtLimpaChange}>Não</InputLine>
+                            <InputLine type="radio" name="veiculoExtLimpa" value="veiculo-ext-n-a" id="veiculo-ext-n-a" htmlfor="veiculo-ext-n-a" required checked={veiculoExtLimpa === 'veiculo-ext-n-a'} onChange={handleVeiculoExtLimpaChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Livre de amassados/ferrugens?</legend>
-                            <InputLine type="radio" name="amassado-ferrugem" value="amassado-ferrugem-sim" id="amassado-ferrugem-sim" htmlfor="amassado-ferrugem-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="amassado-ferrugem" value="amassado-ferrugem-nao" id="amassado-ferrugem-nao" htmlfor="amassado-ferrugem-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="amassado-ferrugem" value="amassado-ferrugem-n-a" id="amassado-ferrugem-n-a" htmlfor="amassado-ferrugem-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="amassadoFerrugem" value="amassado-ferrugem-sim" id="amassado-ferrugem-sim" htmlfor="amassado-ferrugem-sim" required checked={amassadoFerrugem === 'amassado-ferrugem-sim'} onChange={handleAmassadoFerrugemChange}>Sim</InputLine>
+                            <InputLine type="radio" name="amassadoFerrugem" value="amassado-ferrugem-nao" id="amassado-ferrugem-nao" htmlfor="amassado-ferrugem-nao" required checked={amassadoFerrugem === 'amassado-ferrugem-nao'} onChange={handleAmassadoFerrugemChange}>Não</InputLine>
+                            <InputLine type="radio" name="amassadoFerrugem" value="amassado-ferrugem-n-a" id="amassado-ferrugem-n-a" htmlfor="amassado-ferrugem-n-a" required checked={amassadoFerrugem === 'amassado-ferrugem-n-a'} onChange={handleAmassadoFerrugemChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Assoalho está conversado? Sem ferrugens ou amassados?</legend>
-                            <InputLine type="radio" name="assoalho" value="assoalho-sim" id="assoalho-sim" htmlfor="assoalho-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="assoalho" value="assoalho-nao" id="assoalho-nao" htmlfor="assoalho-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="assoalho" value="assoalho-n-a" id="assoalho-n-a" htmlfor="assoalho-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="assoalho" value="assoalho-sim" id="assoalho-sim" htmlfor="assoalho-sim" checked={assoalho === 'assoalho-sim'} onChange={handleAssoalhoChange} required >Sim</InputLine>
+                            <InputLine type="radio" name="assoalho" value="assoalho-nao" id="assoalho-nao" htmlfor="assoalho-nao" checked={assoalho === 'assoalho-nao'} onChange={handleAssoalhoChange} required >Não</InputLine>
+                            <InputLine type="radio" name="assoalho" value="assoalho-n-a" id="assoalho-n-a" htmlfor="assoalho-n-a" checked={assoalho === 'assoalho-n-a'} onChange={handleAssoalhoChange} required >N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui FAIXAS REFLETIVAS?</legend>
-                            <InputLine type="radio" name="faixa-refletida" value="faixa-refletida-sim" id="faixa-refletida-sim" htmlfor="faixa-refletida-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="faixa-refletida" value="faixa-refletida-nao" id="faixa-refletida-nao" htmlfor="faixa-refletida-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="faixa-refletida" value="faixa-refletida-n-a" id="faixa-refletida-n-a" htmlfor="faixa-refletida-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="faixaRefletida" value="faixa-refletida-sim" id="faixa-refletida-sim" htmlfor="faixa-refletida-sim" required checked={faixaRefletida === 'faixa-refletida-sim'} onChange={handleFaixaRefletidaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="faixaRefletida" value="faixa-refletida-nao" id="faixa-refletida-nao" htmlfor="faixa-refletida-nao" required checked={faixaRefletida === 'faixa-refletida-nao'} onChange={handleFaixaRefletidaChange}>Não</InputLine>
+                            <InputLine type="radio" name="faixaRefletida" value="faixa-refletida-n-a" id="faixa-refletida-n-a" htmlfor="faixa-refletida-n-a" required checked={faixaRefletida === 'faixa-refletida-n-a'} onChange={handleFaixaRefletidaChange}>N/A</InputLine>
                         </fieldset>
                     </section>
                     <section>
                         <p className="text-black">Sistema elétrico</p>
                         <fieldset>
                             <legend className="text-black">Limpador Para-brisa funcionando?</legend>
-                            <InputLine type="radio" name="parabrisa-func" value="parabrisa-func-sim" id="parabrisa-func-sim" htmlfor="parabrisa-func-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="parabrisa-func" value="parabrisa-func-nao" id="parabrisa-func-nao" htmlfor="parabrisa-func-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="parabrisa-func" value="parabrisa-func-n-a" id="parabrisa-func-n-a" htmlfor="parabrisa-func-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="parabrisaFunc" value="parabrisa-func-sim" id="parabrisa-func-sim" htmlfor="parabrisa-func-sim" required checked={parabrisaFunc === 'parabrisa-func-sim'} onChange={handleParabrisaFuncChange}>Sim</InputLine>
+                            <InputLine type="radio" name="parabrisaFunc" value="parabrisa-func-nao" id="parabrisa-func-nao" htmlfor="parabrisa-func-nao" required checked={parabrisaFunc === 'parabrisa-func-nao'} onChange={handleParabrisaFuncChange}>Não</InputLine>
+                            <InputLine type="radio" name="parabrisaFunc" value="parabrisa-func-n-a" id="parabrisa-func-n-a" htmlfor="parabrisa-func-n-a" required checked={parabrisaFunc === 'parabrisa-func-n-a'} onChange={handleParabrisaFuncChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Buzina funciona?</legend>
-                            <InputLine type="radio" name="buzina-func" value="buzina-func-sim" id="buzina-func-sim" htmlfor="buzina-func-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="buzina-func" value="buzina-func-nao" id="buzina-func-nao" htmlfor="buzina-func-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="buzina-func" value="buzina-func-n-a" id="buzina-func-n-a" htmlfor="buzina-func-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="buzinaFunc" value="buzina-func-sim" id="buzina-func-sim" htmlfor="buzina-func-sim" required checked={buzinaFunc === 'buzina-func-sim'} onChange={handleBuzinaFuncChange}>Sim</InputLine>
+                            <InputLine type="radio" name="buzinaFunc" value="buzina-func-nao" id="buzina-func-nao" htmlfor="buzina-func-nao" required checked={buzinaFunc === 'buzina-func-nao'} onChange={handleBuzinaFuncChange}>Não</InputLine>
+                            <InputLine type="radio" name="buzinaFunc" value="buzina-func-n-a" id="buzina-func-n-a" htmlfor="buzina-func-n-a" required checked={buzinaFunc === 'buzina-func-n-a'} onChange={handleBuzinaFuncChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Farol ALTO (dois lados)?</legend>
-                            <InputLine type="radio" name="farol-alto" value="farol-alto-sim" id="farol-alto-sim" htmlfor="farol-alto-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="farol-alto" value="farol-alto-nao" id="farol-alto-nao" htmlfor="farol-alto-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="farol-alto" value="farol-alto-n-a" id="farol-alto-n-a" htmlfor="farol-alto-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="farolAlto" value="farol-alto-sim" id="farol-alto-sim" htmlfor="farol-alto-sim" required checked={farolAlto === 'farol-alto-sim'} onChange={handleFarolAltoChange}>Sim</InputLine>
+                            <InputLine type="radio" name="farolAlto" value="farol-alto-nao" id="farol-alto-nao" htmlfor="farol-alto-nao" required checked={farolAlto === 'farol-alto-nao'} onChange={handleFarolAltoChange}>Não</InputLine>
+                            <InputLine type="radio" name="farolAlto" value="farol-alto-n-a" id="farol-alto-n-a" htmlfor="farol-alto-n-a" required checked={farolAlto === 'farol-alto-n-a'} onChange={handleFarolAltoChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Farol BAIXO (dois lados)?</legend>
-                            <InputLine type="radio" name="farol-baixo" value="farol-baixo-sim" id="farol-baixo-sim" htmlfor="farol-baixo-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="farol-baixo" value="farol-baixo-nao" id="farol-baixo-nao" htmlfor="farol-baixo-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="farol-baixo" value="farol-baixo-n-a" id="farol-baixo-n-a" htmlfor="farol-baixo-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="farolBaixo" value="farol-baixo-sim" id="farol-baixo-sim" htmlfor="farol-baixo-sim" required checked={farolBaixo === 'farol-baixo-sim'} onChange={handleFarolBaixoChange}>Sim</InputLine>
+                            <InputLine type="radio" name="farolBaixo" value="farol-baixo-nao" id="farol-baixo-nao" htmlfor="farol-baixo-nao" required checked={farolBaixo === 'farol-baixo-nao'} onChange={handleFarolBaixoChange}>Não</InputLine>
+                            <InputLine type="radio" name="farolBaixo" value="farol-baixo-n-a" id="farol-baixo-n-a" htmlfor="farol-baixo-n-a" required checked={farolBaixo === 'farol-baixo-n-a'} onChange={handleFaixaRefletidaChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Setas dianteiras (dois lados)?</legend>
-                            <InputLine type="radio" name="setas-dianteiras" value="setas-dianteiras-sim" id="setas-dianteiras-sim" htmlfor="setas-dianteiras-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="setas-dianteiras" value="setas-dianteiras-nao" id="setas-dianteiras-nao" htmlfor="setas-dianteiras-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="setas-dianteiras" value="setas-dianteiras-n-a" id="setas-dianteiras-n-a" htmlfor="setas-dianteiras-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="setasDianteiras" value="setas-dianteiras-sim" id="setas-dianteiras-sim" htmlfor="setas-dianteiras-sim" required checked={setasDianteiras === 'setas-dianteiras-sim'} onChange={handleSetasDianteirasChange}>Sim</InputLine>
+                            <InputLine type="radio" name="setasDianteiras" value="setas-dianteiras-nao" id="setas-dianteiras-nao" htmlfor="setas-dianteiras-nao" required checked={setasDianteiras === 'setas-dianteiras-nao'} onChange={handleSetasDianteirasChange}>Não</InputLine>
+                            <InputLine type="radio" name="setasDianteiras" value="setas-dianteiras-n-a" id="setas-dianteiras-n-a" htmlfor="setas-dianteiras-n-a" required checked={setasDianteiras === 'setas-dianteiras-n-a'} onChange={handleSetasDianteirasChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Setas traseiras (dois lados)?</legend>
-                            <InputLine type="radio" name="setas-trazeiras" value="setas-trazeiras-sim" id="setas-trazeiras-sim" htmlfor="setas-trazeiras-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="setas-trazeiras" value="setas-trazeiras-nao" id="setas-trazeiras-nao" htmlfor="setas-trazeiras-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="setas-trazeiras" value="setas-trazeiras-n-a" id="setas-trazeiras-n-a" htmlfor="setas-trazeiras-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="setasTrazeiras" value="setas-trazeiras-sim" id="setas-trazeiras-sim" htmlfor="setas-trazeiras-sim" required checked={setasTrazeiras === 'setas-trazeiras-sim'} onChange={handleSetasTrazeirasChange}>Sim</InputLine>
+                            <InputLine type="radio" name="setasTrazeiras" value="setas-trazeiras-nao" id="setas-trazeiras-nao" htmlfor="setas-trazeiras-nao" required checked={setasTrazeiras === 'setas-trazeiras-nao'} onChange={handleSetasTrazeirasChange}>Não</InputLine>
+                            <InputLine type="radio" name="setasTrazeiras" value="setas-trazeiras-n-a" id="setas-trazeiras-n-a" htmlfor="setas-trazeiras-n-a" required checked={setasTrazeiras === 'setas-trazeiras-n-a'} onChange={handleSetasTrazeirasChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Pisca-Alerta (dois lados)?</legend>
-                            <InputLine type="radio" name="pisca-alerta" value="pisca-alerta-sim" id="pisca-alerta-sim" htmlfor="pisca-alerta-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="pisca-alerta" value="pisca-alerta-nao" id="pisca-alerta-nao" htmlfor="pisca-alerta-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="pisca-alerta" value="pisca-alerta-n-a" id="pisca-alerta-n-a" htmlfor="pisca-alerta-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="piscaAlerta" value="pisca-alerta-sim" id="pisca-alerta-sim" htmlfor="pisca-alerta-sim" required checked={piscaAlerta === 'pisca-alerta-sim'} onChange={handlePiscaAlertaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="piscaAlerta" value="pisca-alerta-nao" id="pisca-alerta-nao" htmlfor="pisca-alerta-nao" required checked={piscaAlerta === 'pisca-alerta-nao'} onChange={handlePiscaAlertaChange}>Não</InputLine>
+                            <InputLine type="radio" name="piscaAlerta" value="pisca-alerta-n-a" id="pisca-alerta-n-a" htmlfor="pisca-alerta-n-a" required checked={piscaAlerta === 'pisca-alerta-n-a'} onChange={handlePiscaAlertaChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Luz de freio (dois lados)?</legend>
-                            <InputLine type="radio" name="luz-freio" value="luz-freio-sim" id="luz-freio-sim" htmlfor="luz-freio-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="luz-freio" value="luz-freio-nao" id="luz-freio-nao" htmlfor="luz-freio-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="luz-freio" value="luz-freio-n-a" id="luz-freio-n-a" htmlfor="luz-freio-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="luzFreio" value="luz-freio-sim" id="luz-freio-sim" htmlfor="luz-freio-sim" required checked={luzFreio === 'luz-freio-sim'} onChange={handleLuzFreioChange}>Sim</InputLine>
+                            <InputLine type="radio" name="luzFreio" value="luz-freio-nao" id="luz-freio-nao" htmlfor="luz-freio-nao" required checked={luzFreio === 'luz-freio-nao'} onChange={handleLuzFreioChange}>Não</InputLine>
+                            <InputLine type="radio" name="luzFreio" value="luz-freio-n-a" id="luz-freio-n-a" htmlfor="luz-freio-n-a" required checked={luzFreio === 'luz-freio-n-a'} onChange={handleLuzFreioChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Luz de Ré (dois lados)?</legend>
-                            <InputLine type="radio" name="luz-re" value="luz-re-sim" id="luz-re-sim" htmlfor="luz-re-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="luz-re" value="luz-re-nao" id="luz-re-nao" htmlfor="luz-re-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="luz-re" value="luz-re-n-a" id="luz-re-n-a" htmlfor="luz-re-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="luzRe" value="luz-re-sim" id="luz-re-sim" htmlfor="luz-re-sim" required checked={luzRe === 'luz-re-sim'} onChange={handleLuzReChange}>Sim</InputLine>
+                            <InputLine type="radio" name="luzRe" value="luz-re-nao" id="luz-re-nao" htmlfor="luz-re-nao" required checked={luzRe === 'luz-re-nao'} onChange={handleLuzReChange}>Não</InputLine>
+                            <InputLine type="radio" name="luzRe" value="luz-re-n-a" id="luz-re-n-a" htmlfor="luz-re-n-a" required checked={luzRe === 'luz-re-n-a'} onChange={handleLuzReChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Sirene de Ré funciona?</legend>
-                            <InputLine type="radio" name="sirene" value="sirene-sim" id="sirene-sim" htmlfor="sirene-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="sirene" value="sirene-nao" id="sirene-nao" htmlfor="sirene-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="sirene" value="sirene-n-a" id="sirene-n-a" htmlfor="sirene-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="sirene" value="sirene-sim" id="sirene-sim" htmlfor="sirene-sim" required checked={sirene === 'sirene-sim'} onChange={handleSireneChange}>Sim</InputLine>
+                            <InputLine type="radio" name="sirene" value="sirene-nao" id="sirene-nao" htmlfor="sirene-nao" required checked={sirene === 'sirene-nao'} onChange={handleSireneChange}>Não</InputLine>
+                            <InputLine type="radio" name="sirene" value="sirene-n-a" id="sirene-n-a" htmlfor="sirene-n-a" required checked={sirene === 'sirene-n-a'} onChange={handleSireneChange}>N/A</InputLine>
                         </fieldset>
                     </section>
                     <section>
                         <p className="text-black">Itens Obrigatórios e Segurança Individual</p>
                         <fieldset>
                             <legend className="text-black">Possui EXTINTOR?</legend>
-                            <InputLine type="radio" name="extintor" value="extintor-sim" id="extintor-sim" htmlfor="extintor-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="extintor" value="extintor-nao" id="extintor-nao" htmlfor="extintor-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="extintor" value="extintor-n-a" id="extintor-n-a" htmlfor="extintor-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="extintor" value="extintor-sim" id="extintor-sim" htmlfor="extintor-sim" required checked={extintor === 'extintor-sim'} onChange={handleExtintorChange}>Sim</InputLine>
+                            <InputLine type="radio" name="extintor" value="extintor-nao" id="extintor-nao" htmlfor="extintor-nao" required checked={extintor === 'extintor-nao'} onChange={handleExtintorChange}>Não</InputLine>
+                            <InputLine type="radio" name="extintor" value="extintor-n-a" id="extintor-n-a" htmlfor="extintor-n-a" required checked={extintor === 'extintor-n-a'} onChange={handleExtintorChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui STEP?</legend>
-                            <InputLine type="radio" name="step" value="step-sim" id="step-sim" htmlfor="step-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="step" value="step-nao" id="step-nao" htmlfor="step-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="step" value="step-n-a" id="step-n-a" htmlfor="step-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="step" value="step-sim" id="step-sim" htmlfor="step-sim" required checked={step === 'step-sim'} onChange={handleStepChange}>Sim</InputLine>
+                            <InputLine type="radio" name="step" value="step-nao" id="step-nao" htmlfor="step-nao" required checked={step === 'step-nao'} onChange={handleStepChange}>Não</InputLine>
+                            <InputLine type="radio" name="step" value="step-n-a" id="step-n-a" htmlfor="step-n-a" required checked={step === 'step-n-a'} onChange={handleStepChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui TRIANGULO?</legend>
-                            <InputLine type="radio" name="triangulo" value="triangulo-sim" id="triangulo-sim" htmlfor="triangulo-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="triangulo" value="triangulo-nao" id="triangulo-nao" htmlfor="triangulo-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="triangulo" value="triangulo-n-a" id="triangulo-n-a" htmlfor="triangulo-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="triangulo" value="triangulo-sim" id="triangulo-sim" htmlfor="triangulo-sim" required checked={triangulo === 'triangulo-sim'} onChange={handleTrianguloChange}>Sim</InputLine>
+                            <InputLine type="radio" name="triangulo" value="triangulo-nao" id="triangulo-nao" htmlfor="triangulo-nao" required checked={triangulo === 'triangulo-nao'} onChange={handleTrianguloChange}>Não</InputLine>
+                            <InputLine type="radio" name="triangulo" value="triangulo-n-a" id="triangulo-n-a" htmlfor="triangulo-n-a" required checked={triangulo === 'triangulo-n-a'} onChange={handleTrianguloChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui MACACO?</legend>
-                            <InputLine type="radio" name="macaco" value="macaco-sim" id="macaco-sim" htmlfor="macaco-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="macaco" value="macaco-nao" id="macaco-nao" htmlfor="macaco-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="macaco" value="macaco-n-a" id="macaco-n-a" htmlfor="macaco-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="macaco" value="macaco-sim" id="macaco-sim" htmlfor="macaco-sim" required checked={macaco === 'macaco-sim'} onChange={handleMacacoChange}>Sim</InputLine>
+                            <InputLine type="radio" name="macaco" value="macaco-nao" id="macaco-nao" htmlfor="macaco-nao" required checked={macaco === 'macaco-nao'} onChange={handleMacacoChange}>Não</InputLine>
+                            <InputLine type="radio" name="macaco" value="macaco-n-a" id="macaco-n-a" htmlfor="macaco-n-a" required checked={macaco === 'macaco-n-a'} onChange={handleMacacoChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui CHAVE DE RODA?</legend>
-                            <InputLine type="radio" name="chave-roda" value="chave-roda-sim" id="chave-roda-sim" htmlfor="chave-roda-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="chave-roda" value="chave-roda-nao" id="chave-roda-nao" htmlfor="chave-roda-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="chave-roda" value="chave-roda-n-a" id="chave-roda-n-a" htmlfor="chave-roda-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="chaveRoda" value="chave-roda-sim" id="chave-roda-sim" htmlfor="chave-roda-sim" required checked={chaveRoda === 'chave-roda-sim'} onChange={handleChaveRodaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="chaveRoda" value="chave-roda-nao" id="chave-roda-nao" htmlfor="chave-roda-nao" required checked={chaveRoda === 'chave-roda-nao'} onChange={handleChaveRodaChange}>Não</InputLine>
+                            <InputLine type="radio" name="chaveRoda" value="chave-roda-n-a" id="chave-roda-n-a" htmlfor="chave-roda-n-a" required checked={chaveRoda === 'chave-roda-n-a'} onChange={handleChaveRodaChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui CAPACETE SEGURANÇA?</legend>
-                            <InputLine type="radio" name="capacete-seguranca" value="capacete-seguranca-sim" id="capacete-seguranca-sim" htmlfor="capacete-seguranca-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="capacete-seguranca" value="capacete-seguranca-nao" id="capacete-seguranca-nao" htmlfor="capacete-seguranca-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="capacete-seguranca" value="capacete-seguranca-n-a" id="capacete-seguranca-n-a" htmlfor="capacete-seguranca-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="capaceteSeguranca" value="capacete-seguranca-sim" id="capacete-seguranca-sim" htmlfor="capacete-seguranca-sim" required checked={capaceteSeguranca === 'capacete-seguranca-sim'} onChange={handleCapaceteSegurancaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="capaceteSeguranca" value="capacete-seguranca-nao" id="capacete-seguranca-nao" htmlfor="capacete-seguranca-nao" required checked={capaceteSeguranca === 'capacete-seguranca-nao'} onChange={handleCapaceteSegurancaChange}>Não</InputLine>
+                            <InputLine type="radio" name="capaceteSeguranca" value="capacete-seguranca-n-a" id="capacete-seguranca-n-a" htmlfor="capacete-seguranca-n-a" required checked={capaceteSeguranca === 'capacete-seguranca-n-a'} onChange={handleCapaceteSegurancaChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui COLETE SEGURANÇA?</legend>
-                            <InputLine type="radio" name="colete-seguranca" value="colete-seguranca-sim" id="colete-seguranca-sim" htmlfor="colete-seguranca-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="colete-seguranca" value="colete-seguranca-nao" id="colete-seguranca-nao" htmlfor="colete-seguranca-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="colete-seguranca" value="colete-seguranca-n-a" id="colete-seguranca-n-a" htmlfor="colete-seguranca-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="coleteSeguranca" value="colete-seguranca-sim" id="colete-seguranca-sim" htmlfor="colete-seguranca-sim" required checked={coleteSeguranca === 'colete-seguranca-sim'} onChange={handleColeteSegurancaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="coleteSeguranca" value="colete-seguranca-nao" id="colete-seguranca-nao" htmlfor="colete-seguranca-nao" required checked={coleteSeguranca === 'colete-seguranca-nao'} onChange={handleColeteSegurancaChange}>Não</InputLine>
+                            <InputLine type="radio" name="coleteSeguranca" value="colete-seguranca-n-a" id="colete-seguranca-n-a" htmlfor="colete-seguranca-n-a" required checked={coleteSeguranca === 'colete-seguranca-n-a'} onChange={handleColeteSegurancaChange}>N/A</InputLine>
                         </fieldset>
                         <fieldset>
                             <legend className="text-black">Possui BOTA DE SEGURANÇA?</legend>
-                            <InputLine type="radio" name="bota-seguranca" value="bota-seguranca-sim" id="bota-seguranca-sim" htmlfor="bota-seguranca-sim" required>Sim</InputLine>
-                            <InputLine type="radio" name="bota-seguranca" value="bota-seguranca-nao" id="bota-seguranca-nao" htmlfor="bota-seguranca-nao" required>Não</InputLine>
-                            <InputLine type="radio" name="bota-seguranca" value="bota-seguranca-n-a" id="bota-seguranca-n-a" htmlfor="bota-seguranca-n-a" required>N/A</InputLine>
+                            <InputLine type="radio" name="botaSeguranca" value="bota-seguranca-sim" id="bota-seguranca-sim" htmlfor="bota-seguranca-sim" required checked={botaSeguranca === 'bota-seguranca-sim'} onChange={handleBotaSegurancaChange}>Sim</InputLine>
+                            <InputLine type="radio" name="botaSeguranca" value="bota-seguranca-nao" id="bota-seguranca-nao" htmlfor="bota-seguranca-nao" required checked={botaSeguranca === 'bota-seguranca-nao'} onChange={handleBotaSegurancaChange}>Não</InputLine>
+                            <InputLine type="radio" name="botaSeguranca" value="bota-seguranca-n-a" id="bota-seguranca-n-a" htmlfor="bota-seguranca-n-a" required checked={botaSeguranca === 'bota-seguranca-n-a'} onChange={handleBotaSegurancaChange}>N/A</InputLine>
                         </fieldset>
                     </section>
                     <p className="text-black">Fotos gerais - Adicione 4 fotos do veículo</p>
-                    <InputLine type="file" id="frente-veiculo" htmlfor="frente-veiculo" required>Frente do veículo</InputLine>
-                    <InputLine type="file" id="lateral-dianteira" htmlfor="lateral-dianteira" required>Lateral Direita</InputLine>
-                    <InputLine type="file" id="lateral-esquerda" htmlfor="lateral-esquerda" required>Lateral Esquerda</InputLine>
-                    <InputLine type="file" id="traseira" htmlfor="traseira" required>Traseira com a porta aberta</InputLine>
-                    <InputLine type="text" placeholder="" id="obs" htmlfor="obs">Observações sobre o veículo</InputLine>
+                    <InputLine type="file" id="frenteVeiculo" htmlfor="frente-veiculo" required  onChange={(e) => handleFileChange(e, "frenteVeiculo")}>Frente do veículo</InputLine>
+                    <InputLine type="file" id="lateralDianteira" htmlfor="lateral-dianteira" required  onChange={(e) => handleFileChange(e, "lateralDianteira")}>Lateral Direita</InputLine>
+                    <InputLine type="file" id="lateralEsquerda" htmlfor="lateral-esquerda" required  onChange={(e) => handleFileChange(e, "lateralEsquerda")}>Lateral Esquerda</InputLine>
+                    <InputLine type="file" id="traseira" htmlfor="traseira" required  onChange={(e) => handleFileChange(e, "traseira")}>Traseira com a porta aberta</InputLine>
+                    <InputLine type="text" placeholder="" id="obs" htmlfor="obs" onChange={(e) => setObs(e.target.value)}>Observações sobre o veículo</InputLine>
                     <fieldset>
                         <legend className="text-black">Responsável pela vistoria</legend>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Diego-Sávio" id="Diego-Sávio" htmlfor="Diego-Sávio" onchange={handlechange} required>Diego Sávio</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Gabriel-Andrade" id="Gabriel-Andrade" htmlfor="Gabriel-Andrade" onchange={handlechange} required>Gabriel Andrade</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Igor-Carvalho" id="Igor-Carvalho" htmlfor="Igor-Carvalho" onchange={handlechange} required>Igor Carvalho</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Junior-Pereira" id="Junior-Pereira" htmlfor="Junior-Pereira" onchange={handlechange} required>Junior Pereira</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Luis-Oliveira" id="Luis-Oliveira" htmlfor="Luis-Oliveira" onchange={handlechange} required>Luis Oliveira</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Ruan-Hofacher" id="Ruan-Hofacher" htmlfor="Ruan-Hofacher" onchange={handlechange} required>Ruan Hofacher</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Samuel-Lucas" id="Samuel-Lucas" htmlfor="Samuel-Lucas" onchange={handlechange} required>Samuel Lucas</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="Tatiane-Dias" id="Tatiane-Dias" htmlfor="Tatiane-Dias" onchange={handlechange} required>Tatiane Dias</InputLine>
-                        <InputLine type="radio" name="responsavel-vistoria" value="outro" id="outro" htmlfor="outro" onchange={handlechange} required>Outro</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Diego-Sávio" id="Diego-Sávio" htmlfor="Diego-Sávio"  checked={responsavelVistoria === 'Diego-Sávio'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Diego Sávio</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Gabriel-Andrade" id="Gabriel-Andrade" htmlfor="Gabriel-Andrade"  checked={responsavelVistoria === 'Gabriel-Andrade'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Gabriel Andrade</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Igor-Carvalho" id="Igor-Carvalho" htmlfor="Igor-Carvalho" checked={responsavelVistoria === 'Igor-Carvalho'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Igor Carvalho</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Junior-Pereira" id="Junior-Pereira" htmlfor="Junior-Pereira" checked={responsavelVistoria === 'Junior-Pereira'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Junior Pereira</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Luis-Oliveira" id="Luis-Oliveira" htmlfor="Luis-Oliveira" checked={responsavelVistoria === 'Luis-Oliveira'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Luis Oliveira</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Ruan-Hofacher" id="Ruan-Hofacher" htmlfor="Ruan-Hofacher" checked={responsavelVistoria === 'Ruan-Hofacher'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Ruan Hofacher</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Samuel-Lucas" id="Samuel-Lucas" htmlfor="Samuel-Lucas" checked={responsavelVistoria === 'Samuel-Lucas'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Samuel Lucas</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="Tatiane-Dias" id="Tatiane-Dias" htmlfor="Tatiane-Dias" checked={responsavelVistoria === 'Tatiane-Dias'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Tatiane Dias</InputLine>
+                        <InputLine type="radio" name="responsavelVistoria" value="outro" id="outro" htmlfor="outro" checked={responsavelVistoria === 'outro'} onChange={(e) => {handleResponsavelVistoriaChange(e); handlechange(e)}} required>Outro</InputLine>
                         {mostraOutro &&
-                            <InputLine type="text" id="outro" htmlfor="outro">Nome do responsável:</InputLine>
+                            <InputLine type="text" id="outro" htmlfor="outro" onChange={(e) => setOutro(e.target.value)}>Nome do responsável:</InputLine>
                         }
                     </fieldset>
                 </section>
