@@ -3,14 +3,18 @@ import InputLine from "../../../shared/components/inputLine"
 import { IMaskInput } from "react-imask"
 import Botao from "../../../shared/components/botao"
 
-export default function CheckVeiculos() {
+type FormAberturaProps = {
+    form: string;
+}
+
+export default function CheckVeiculos({form}: FormAberturaProps) {
     const [mostraOutro, setMostraOutro] = useState(false)
     const [respVistoria, setRespVistoria] = useState('')
     const [letraNum, setLetraNum] = useState('')
     const [erro, setErro] = useState('')
     const [loading, setLoading] = useState(false);
     
-    const [formTitle, setFormTitle] = useState("Checklist de Veículos Agregados")
+    const [formTitle, setFormTitle] = useState(form)
     const [cpf, setCpf] = useState("")
     const [email, setEmail] = useState("")
     const [placaVeiculo, setPlacaVeiculo] = useState("")
