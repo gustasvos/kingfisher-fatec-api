@@ -122,7 +122,7 @@ Content-Type: application/json
 }
 
 ### CONFIRMAR CONVITE
-PATCH http://localhost:8080/admin/events/7/convidado/5
+PATCH http://localhost:8080/admin/events/7/convidado/1
 Content-Type: application/json
 
 {
@@ -130,7 +130,7 @@ Content-Type: application/json
 }
 
 ### RECUSAR CONVITE (com motivo)
-PATCH http://localhost:8080/admin/events/7/convidado/2
+PATCH http://localhost:8080/admin/events/7/convidado/3
 Content-Type: application/json
 
 {

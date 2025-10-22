@@ -59,7 +59,7 @@ export const listEvento =  async (req: Request, res: Response) => {
     console.error(err);
     return res.status(500).json({ error: 'Erro ao buscar eventos' });
   }
-};
+}
 
 // GET /admin/events/:id -> pega um evento com convidados
 export const listEventoById = async (req: Request, res: Response) => {
