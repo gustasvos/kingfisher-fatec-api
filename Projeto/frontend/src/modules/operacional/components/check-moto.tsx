@@ -3,7 +3,13 @@ import InputLine from "../../../shared/components/inputLine"
 import { useState } from "react"
 import BotaoSubmit from "../../../shared/components/botao-submit"
 
-export default function CheckMoto() {
+type FormAberturaProps = {
+    form: string;
+}
+
+export default function CheckMoto({form}: FormAberturaProps) {
+    const [formTitle, setFormTitle] = useState(form)
+
     // Dados pessoais
     const [nome, setNome] = useState('')
     const [dataNascimento, setDataNasc] = useState('')
