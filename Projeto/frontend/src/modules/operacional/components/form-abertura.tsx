@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function FormAbertura() {
     const [loading, setLoading] = useState(false);
 
+    const [formTitle, setFormTitle] = useState("Formulário de abertura")
     const [dataAbertura,setDataAbertura] = useState("")
     const [cadeadoFrenteEmp,setCadeadoFrenteEmp] = useState(null)
     const [portaoSocial,setPortaoSocial] = useState(null)
