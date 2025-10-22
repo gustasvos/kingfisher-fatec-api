@@ -194,3 +194,184 @@ export const listarCSV = async (req: Request, res: Response) => {
     res.status(500).json({ error: error instanceof Error ? error.message : 'Erro desconhecido' });
   }
 };
+
+const regexCpf = /^\d{11}$/;
+/**
+ * Consulta todos os formulários que contêm um CPF específico.
+ * @param req.params.cpf O CPF a ser pesquisado.
+ */
+export const consultarCpfEmFormularios = async (req: Request, res: Response) => {
+  try {
+      const cpf = req.params.cpf as string;
+ 
+      if (!cpf) {
+          return res.status(400).json({ message: 'O CPF é obrigatório e deve ser fornecido na rota.' });
+      }
+ 
+      // Validação básica do formato do CPF (opcional, mas recomendado)
+      if (!regexCpf.test(cpf)) {
+          return res.status(400).json({ message: 'Formato de CPF inválido. Deve ter 11 dígitos numéricos.' });
+      }
+ 
+      const formTitles = Object.keys(allFormSchemas);
+      const results: Record<string, GenericDataRow[]> = {};
+      let totalRecordsFound = 0;
+ 
+      // Itera por todos os esquemas de formulário cadastrados
+      for (const formTitle of formTitles) {
+          const schema = allFormSchemas[formTitle]!;
+          const currentCsvPath = getFormCsvPath(formTitle);
+          let csvData: GenericDataRow[] = [];
+ 
+          try {
+              // Tenta ler o CSV correspondente
+              csvData = await readCsv(currentCsvPath);
+          } catch (e) {
+              // Ignora se o arquivo CSV não existir
+              continue;
+          }
+ 
+          // 1. Identificar o(s) campo(s) de CPF neste esquema
+          // Verifica se existe algum campo chamado 'cpf' ou que termine com '-cpf'
+          const cpfFields = schema
+              .filter(f => f.name === 'cpf' || f.name.toLowerCase().includes('cpf'))
+              .map(f => f.name);
+ 
+          // 2. Filtrar os dados. Se houver mais de um campo de CPF, verifica em todos.
+          const filteredData = csvData.filter(row => {
+              // Percorre os nomes dos campos de CPF e verifica se algum deles tem o valor correspondente
+              return cpfFields.some(fieldName => row[fieldName] === cpf);
+          });
+ 
+          if (filteredData.length > 0) {
+              // Adiciona os resultados encontrados
+              results[formTitle] = filteredData;
+              totalRecordsFound += filteredData.length;
+          }
+      }
+ 
+      if (totalRecordsFound === 0) {
+          return res.status(404).json({ message: `Nenhum registro encontrado para o CPF: ${cpf}` });
+      }
+ 
+      res.status(200).json({
+          message: `${totalRecordsFound} registro(s) encontrado(s) para o CPF: ${cpf}`,
+          results: results
+      });
+ 
+  } catch (error) {
+      console.error('Erro ao consultar CPF:', error);
+      res.status(500).json({ error: error instanceof Error ? error.message : 'Erro desconhecido ao consultar CPF.' });
+  }
+};
+
+const regexPlaca = /^[A-Z]{3}[0-9][0-9A-Z][0-9]{2}$/i;
+const regexId = /^\d+$/;
+
+const consultarPorPlaca = async (placa: string, res: Response) => {
+  try {
+    const formTitles = Object.keys(allFormSchemas);
+    const results: Record<string, any[]> = {};
+    let total = 0;
+
+    for (const formTitle of formTitles) {
+      const schema = allFormSchemas[formTitle]!;
+      const path = getFormCsvPath(formTitle);
+      const data = await readCsv(path);
+
+      const placaFields = schema
+        .filter(f => f.name.toLowerCase().includes("placa"))
+        .map(f => f.name);
+
+      const found = data.filter(row =>
+        placaFields.some(fieldName => row[fieldName]?.toUpperCase() === placa.toUpperCase())
+      );
+
+      if (found.length > 0) {
+        results[formTitle] = found;
+        total += found.length;
+      }
+    }
+
+    if (total === 0) {
+      return res.status(404).json({ message: `Nenhum registro encontrado para a placa: ${placa}` });
+    }
+
+    return res.status(200).json({ message: `${total} registro(s) encontrado(s) para a placa: ${placa}`, results });
+  } catch (err) {
+    console.error("Erro ao consultar placa:", err);
+    return res.status(500).json({ message: "Erro ao consultar placa." });
+  }
+};
+
+const consultarPorIdUsuario = async (id: string, res: Response) => {
+  try {
+    const formTitles = Object.keys(allFormSchemas);
+    const results: Record<string, any[]> = {};
+    let total = 0;
+
+    for (const formTitle of formTitles) {
+      const path = getFormCsvPath(formTitle);
+      let data: GenericDataRow[] = [];
+
+      try {
+        data = await readCsv(path);
+      } catch (err) {
+        continue;
+      }
+
+      // Aqui procuramos diretamente pelo campo "id" na linha,
+      // sem depender do schema (já que o "id" não está no schema)
+      const encontrados = data.filter(row =>
+        row["id"]?.toString().trim() === id.trim()
+      );
+
+      if (encontrados.length > 0) {
+        results[formTitle] = encontrados;
+        total += encontrados.length;
+      }
+    }
+
+    if (total === 0) {
+      return res.status(404).json({ message: `Nenhum registro encontrado para o ID do usuário: ${id}` });
+    }
+
+    return res.status(200).json({
+      message: `${total} registro(s) encontrado(s) para o ID do usuário: ${id}`,
+      results
+    });
+  } catch (err) {
+    console.error("Erro ao consultar por ID do usuário:", err);
+    return res.status(500).json({ message: "Erro ao consultar por ID do usuário." });
+  }
+};
+
+export const consultaGenerica = async (req: Request, res: Response) => {
+  const { chave } = req.params;
+
+  if (!chave) {
+    return res.status(400).json({ message: "Parâmetro de consulta é obrigatório." });
+  }
+
+  try {
+    if (regexCpf.test(chave)) {
+      // Tratar como CPF
+      return await consultarCpfEmFormularios({ ...req, params: { cpf: chave } } as any, res);
+    }
+
+    if (regexPlaca.test(chave)) {
+      // Tratar como placa
+      return await consultarPorPlaca(chave, res);
+    }
+
+    if (regexId.test(chave)) {
+      // Tratar como ID do usuário
+      return await consultarPorIdUsuario(chave, res);
+    }
+
+    return res.status(400).json({ message: "Parâmetro de consulta inválido." });
+  } catch (error) {
+    console.error("Erro na consulta genérica:", error);
+    return res.status(500).json({ message: "Erro ao realizar a consulta." });
+  }
+};
