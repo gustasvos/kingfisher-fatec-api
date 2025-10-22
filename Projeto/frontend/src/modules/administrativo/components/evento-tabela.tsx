@@ -1,6 +1,7 @@
 import { useState } from "react"
 import RelatorioAproveitamento from "./relatorio-aproveitamento"
 import Modal from "../../../shared/components/modal"
+
 interface Evento {
     titulo: string
     descricao: string
@@ -13,14 +14,11 @@ interface EventoTabelaProps {
     eventos: Evento[]
 }
 
-
 export default function EventoTabela({ eventos }: EventoTabelaProps) {
     const [abertoModal, setAbertoModal] = useState(false);
     const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);
-    const [tituloEventoSelecionado, setTituloEventoSelecionado] = useState<string>("");
 
     const abrirModalPreencherEvento = (evento: Evento) => {
-        setTituloEventoSelecionado(evento.titulo);
         setConteudoModal(
             <RelatorioAproveitamento
                 tituloInicial={evento.titulo}
@@ -48,16 +46,17 @@ export default function EventoTabela({ eventos }: EventoTabelaProps) {
                         >
                             Preencher
                         </button>
-                        <Modal
-                            aberto={abertoModal}
-                            onFechar={() => setAbertoModal(false)}
-                            modalClassName=""
-                            >
-                            {conteudoModal}
-                        </Modal>
                     </div>
                 </div>
             ))}
+
+            <Modal
+                aberto={abertoModal}
+                onFechar={() => setAbertoModal(false)}
+                modalClassName=""
+            >
+                {conteudoModal}
+            </Modal>
         </>
     );
 }
