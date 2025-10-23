@@ -32,7 +32,7 @@ const Graficos: React.FC<GraficosProps> = ({ type, data, options = {} }) => {
 
     // Estrutura básica do componente
     return (
-        <div style={{ position: 'relative', height: '400px', width: '100%' }}>
+        <div style={{ position: 'relative', height: '40vh', width: '90%' }}>
             <ReactChart
                 type={type}
                 data={data as ChartData<ChartType>}

@@ -14,8 +14,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ user, placeholderAvatar }) => {
   return (
-    <header
-      className="card p-8 flex gap-6 items-center bg-[#135b78] rounded-lg overflow-hidden relative left-[10vh] max-w-[90w] w-[90%]"
+    <header className="card p-8 flex gap-6 items-center bg-[#135b78] rounded-lg overflow-hidden ml-10 w-[93%] justify-self-center"
       style={{ color: "#000" }}
     >
       <div
@@ -34,13 +33,13 @@ const Header: React.FC<HeaderProps> = ({ user, placeholderAvatar }) => {
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold tracking-wide text-black">
+        <h1 className="text-2xl font-bold tracking-wide text-white">
           SEJA BEM-VINDO {user.name.toUpperCase()}
         </h1>
-        <p id="cargo" className="mt-4 font-medium text-black">
+        <p id="cargo" className="mt-4 font-medium text-white">
           {user.role}
         </p>
-        <p id="email" className="text-sm opacity-90 text-black">
+        <p id="email" className="text-sm opacity-90 text-white">
           {user.email}
         </p>
       </div>

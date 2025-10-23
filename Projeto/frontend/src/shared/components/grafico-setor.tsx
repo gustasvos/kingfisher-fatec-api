@@ -49,10 +49,10 @@ const PieChart: React.FC<PieChartData> = ({
                 text: title,
                 font: {
                     size: 16,
-                }
+                },
             },
             legend: {
-                position: 'right' as const, 
+                position: 'bottom' as const, 
             },
             tooltip: {
                 callbacks: {
