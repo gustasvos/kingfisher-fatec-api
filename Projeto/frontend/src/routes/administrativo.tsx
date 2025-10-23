@@ -14,7 +14,6 @@ export default function RotasADM(){
         <>
             <Route path="/" element={<LoginPage/>}/>
             <Route path="/cadastrar" element={<Cadastro />} />
-            <Route path="/evento-convite" element={<EventoDetalhe/>}/>
             <Route path="/colaboradores" element={<ListagemColaborador/>}/>
             <Route path="/eventos" element={<PaginaEventos/>}/>
             <Route path="/home" element={<HomePage/>} />
