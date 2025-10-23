@@ -33,6 +33,9 @@ export class User {
     @Column({ type: 'date' })
     data_contratacao: Date
 
+    @Column({ type: 'varchar', length: 30 })
+    setor: string
+
     @Column({ type: 'enum', enum: TipoAcesso, default: 'usuario' })
     role: TipoAcesso
 

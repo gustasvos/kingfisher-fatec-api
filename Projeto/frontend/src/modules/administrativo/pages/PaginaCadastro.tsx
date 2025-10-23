@@ -26,16 +26,18 @@ const formatarDataParaPtBr = (dataIso: string): string => {
 };
 
 export default function Cadastro() {
-  const [nome, setNome] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [data_nascimento, setData_nascimento] = useState("");
-  const [genero, setGenero] = useState("");
-  const [data_admissao, setDataAdmissao] = useState("");
-  const [cargo, setCargo] = useState("");
-  const [setor, setSetor] = useState("");
-  const [erro, setErro] = useState<string | null>(null);
-  const [sucesso, setSucesso] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [nome, setNome] = useState("")
+  const [cpf, setCpf] = useState("")
+  const [data_nascimento, setData_nascimento] = useState("")
+  const [genero, setGenero] = useState("")
+  const [data_contratacao, setDataContratacao] = useState("")
+  const [cargo, setCargo] = useState("")
+  const [setor, setSetor] = useState("")
+  const [role, setRole] = useState("")
+  const [senha, setSenha] = useState("")
+  const [erro, setErro] = useState<string | null>(null)
+  const [sucesso, setSucesso] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleCadastro = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,9 +57,10 @@ export default function Cadastro() {
       cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
       genero: limparTexto(genero),
-      data_admissao,
+      data_contratacao,
       cargo: limparTexto(cargo),
       setor: limparTexto(setor),
+      senha
     };
 
     try {
@@ -69,6 +72,11 @@ export default function Cadastro() {
     } catch (error) {
       setErro("Erro ao cadastrar. Verifique os dados e tente novamente.");
     }
+  };
+
+  const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setRole(value);
   };
 
   return (
@@ -137,10 +145,10 @@ export default function Cadastro() {
             placeholder="DD/MM/AAAA"
             required
             maxLength={10}
-            value={data_admissao ? formatarDataParaPtBr(data_admissao) : ""}
+            value={data_contratacao ? formatarDataParaPtBr(data_contratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
-                setDataAdmissao(dataLimpa(value));
+                setDataContratacao(dataLimpa(value));
               }
             }}
             onPaste={(e) => {
@@ -170,6 +178,43 @@ export default function Cadastro() {
             value={setor}
             onChange={(e) => setSetor(e.target.value)}
           />
+
+          <InputField
+            label="Senha"
+            type="password"
+            placeholder="Digite a senha"
+            required
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            maxLength={50}
+          />
+
+          <div className="role-group pl-1">
+            <label className="role-label">
+              <input
+                type="radio"
+                name="role"
+                value="admin"
+                checked={role === "admin"}
+                onChange={handleRoleChange}
+                className="role-input"
+              />
+              <span className="role-custom"></span>
+              Admin
+            </label>
+            <label className="role-label">
+              <input
+                type="radio"
+                name="role"
+                value="usuario"
+                checked={role === "usuario"}
+                onChange={handleRoleChange}
+                className="role-input"
+              />
+              <span className="role-custom"></span>
+              Usuário
+            </label>
+          </div>
         </div>
 
         <div className="submit-container">
