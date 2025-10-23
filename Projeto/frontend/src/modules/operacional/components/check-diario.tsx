@@ -2,8 +2,8 @@ import { useState, FormEvent, ChangeEvent } from "react";
 import BotaoSubmit from "../../../shared/components/botao-submit";
 import InputLine from "../../../shared/components/inputLine";
 
-type FormAberturaProps = {
-    form: string;
+interface FormAberturaProps {
+  form: string;
 }
 
 export default function CheckDiario({ form }: FormAberturaProps) {
@@ -85,395 +85,119 @@ export default function CheckDiario({ form }: FormAberturaProps) {
         }
     };
 
-    const handleAbastecimentoChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setAbastecimento(event.target.value)
-    }
+  const handleAbastecimentoChange = (e: React.ChangeEvent<HTMLInputElement>) => setAbastecimento(e.target.value);
+  const handleComprovanteChange = (e: React.ChangeEvent<HTMLInputElement>) => setComprovanteEnviado(e.target.value);
+  const handleOleoMotorChange = (e: React.ChangeEvent<HTMLInputElement>) => setOleoMotor(e.target.value);
+  const handleReservatorioAguaChange = (e: React.ChangeEvent<HTMLInputElement>) => setReservatorioAgua(e.target.value);
+  const handleSistemaEletricoChange = (e: React.ChangeEvent<HTMLInputElement>) => setSistemaEletrico(e.target.value);
+  const handleEstadoPneuChange = (e: React.ChangeEvent<HTMLInputElement>) => setEstadoPneus(e.target.value);
+  const handleLimpezaChange = (e: React.ChangeEvent<HTMLInputElement>) => setLimpeza(e.target.value);
+  const handleMacacoChange = (e: React.ChangeEvent<HTMLInputElement>) => setMacaco(e.target.value);
+  const handleChaveRodaChange = (e: React.ChangeEvent<HTMLInputElement>) => setChaveRoda(e.target.value);
+  const handleDocumentoVigenteChange = (e: React.ChangeEvent<HTMLInputElement>) => setDocumentoVigente(e.target.value);
 
-    const handleComprovanteChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setComprovanteEnviado(event.target.value)
-    }
+  return (
+    <div className="w-full flex justify-center mt-8 px-4">
+      <div className="bg-white shadow-lg rounded-3xl w-full max-w-5xl h-[90vh] border border-gray-100 overflow-hidden">
+        <div className="h-full overflow-y-auto p-8
+                        scrollbar-thin scrollbar-thumb-[#17607f] scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
+          
+          <h1 className="text-3xl font-semibold text-[#17607f] mb-8 text-center tracking-tight">
+            Checklist Diário - Frota Newe
+          </h1>
 
-    const handleOleoMotorChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setOleoMotor(event.target.value)
-    }
+          <form onSubmit={enviaForm} className="space-y-8">
 
-    const handleReservatorioAguaChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setReservatorioAgua(event.target.value)
-    }
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <InputLine type="text" id="placa-veiculo" htmlfor="placa-veiculo" onChange={(e) => setPlacaVeiculo(e.target.value)}>
+                Placa do veículo
+              </InputLine>
 
-    const handleSistemaEletricoChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setSistemaEletrico(event.target.value)
-    }
+              <InputLine type="number" id="km-inicial" htmlfor="km-inicial" onChange={(e) => setkmInicial(e.target.value)}>
+                KM Inicial
+              </InputLine>
 
-    const handleEstadoPneusChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setEstadoPneus(event.target.value)
-    }
+              <InputLine type="text" id="cidade-destino" htmlfor="cidade-destino" onChange={(e) => setCidadeDestino(e.target.value)}>
+                Destino
+              </InputLine>
 
-    const handleLimpezaChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setLimpeza(event.target.value)
-    }
+              <InputLine type="number" id="km-final" htmlfor="km-final" onChange={(e) => setkmFinal(e.target.value)}>
+                KM Final
+              </InputLine>
+            </div>
 
-    const handleMacacoChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setMacaco(event.target.value)
-    }
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <fieldset className="border border-gray-200 rounded-xl p-4 hover:border-[#17607f] transition-colors duration-200">
+                <legend className="text-gray-700 font-medium">Teve abastecimento?</legend>
+                <div className="flex flex-col gap-1 mt-2">
+                  <InputLine type="radio" name="abastecimento" value="abastecimento-sim" id="abastecimento-sim"
+                    htmlfor="abastecimento-sim" checked={abastecimento === 'abastecimento-sim'} onChange={handleAbastecimentoChange}>Sim</InputLine>
+                  <InputLine type="radio" name="abastecimento" value="abastecimento-nao" id="abastecimento-nao"
+                    htmlfor="abastecimento-nao" checked={abastecimento === 'abastecimento-nao'} onChange={handleAbastecimentoChange}>Não</InputLine>
+                </div>
+              </fieldset>
 
-    const handleChaveRodaChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setChaveRoda(event.target.value)
-    }
+              <fieldset className="border border-gray-200 rounded-xl p-4 hover:border-[#17607f] transition-colors duration-200">
+                <legend className="text-gray-700 font-medium">Comprovante enviado?</legend>
+                <div className="flex flex-col gap-1 mt-2">
+                  <InputLine type="radio" name="comprovanteEnviado" value="comprovante-enviado-sim" id="comprovante-enviado-sim"
+                    htmlfor="comprovante-enviado-sim" checked={comprovanteEnviado === 'comprovante-enviado-sim'} onChange={handleComprovanteChange}>Sim</InputLine>
+                  <InputLine type="radio" name="comprovanteEnviado" value="comprovante-enviado-nao" id="comprovante-enviado-nao"
+                    htmlfor="comprovante-enviado-nao" checked={comprovanteEnviado === 'comprovante-enviado-nao'} onChange={handleComprovanteChange}>Não</InputLine>
+                </div>
+              </fieldset>
+            </div>
 
-    const handleDocumentoVigenteChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setDocumentoVigente(event.target.value)
-    }
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[["Óleo do motor ok?", "oleoMotor", oleoMotor, handleOleoMotorChange],
+                ["Reservatório de água ok?", "reservatorioAgua", reservatorioAgua, handleReservatorioAguaChange],
+                ["Sistema elétrico ok?", "sistemaEletrico", sistemaEletrico, handleSistemaEletricoChange],
+                ["Estado dos pneus ok?", "estadoPneus", estadoPneus, handleEstadoPneuChange],
+                ["Limpeza baú/sider/cabine ok?", "limpeza", limpeza, handleLimpezaChange],
+                ["Macaco ok?", "macaco", macaco, handleMacacoChange],
+                ["Chave de roda ok?", "chaveRoda", chaveRoda, handleChaveRodaChange],
+                ["Documento vigente ok?", "documentoVigente", documentoVigente, handleDocumentoVigenteChange],
+              ].map(([label, name, value, handler]) => (
+                <fieldset key={name as string} className="border border-gray-200 rounded-xl p-4 hover:border-[#17607f] transition-colors duration-200">
+                  <legend className="text-gray-700 font-medium">{label}</legend>
+                  <div className="flex flex-col gap-1 mt-2">
+                    <InputLine type="radio" name={name as string} value={`${name}-sim`} id={`${name}-sim`}
+                      htmlfor={`${name}-sim`} checked={value === `${name}-sim`} onChange={handler as any}>Sim</InputLine>
+                    <InputLine type="radio" name={name as string} value={`${name}-nao`} id={`${name}-nao`}
+                      htmlfor={`${name}-nao`} checked={value === `${name}-nao`} onChange={handler as any}>Não</InputLine>
+                  </div>
+                </fieldset>
+              ))}
+            </div>
 
-    return (
-        <>
-        <section>
-            <h1 style={{ color: "#000000ff", fontSize: "2.5rem", fontWeight: 700 }}>{form}</h1>
-        </section>
-            <form onSubmit={enviaForm}>
-                <InputLine 
-                    type="text" 
-                    placeholder="" 
-                    id='nome-motorista' 
-                    htmlFor="nome-motorista" 
-                    value={nomeMotorista}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setNomeMotorista(e.target.value)}
-                    required
-                >
-                    Nome do Motorista
-                </InputLine>
-                
-                <InputLine 
-                    type="text" 
-                    placeholder="" 
-                    id='placa-veiculo' 
-                    htmlFor="placa-veiculo" 
-                    value={placaVeiculo}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPlacaVeiculo(e.target.value)}
-                >
-                    Placa do veículo
-                </InputLine>
-                
-                <InputLine 
-                    type="number" 
-                    placeholder="" 
-                    id='km-inicial' 
-                    htmlFor="km-inicial" 
-                    value={kmInicial}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setKmInicial(e.target.value)}
-                >
-                    KM Inicial
-                </InputLine>
-                
-                <InputLine 
-                    type="text" 
-                    placeholder="" 
-                    id='cidade-destino' 
-                    htmlFor="cidade-destino" 
-                    value={cidadeDestino}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setCidadeDestino(e.target.value)}
-                >
-                    Destino
-                </InputLine>
-                
-                <InputLine 
-                    type="number" 
-                    placeholder="" 
-                    id='km-final' 
-                    htmlFor="km-final" 
-                    value={kmFinal}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setKmFinal(e.target.value)}
-                >
-                    KM Final
-                </InputLine>
-                
-                <fieldset>
-                    <legend className="text-black">Teve abastecimento?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="abastecimento" 
-                        value="abastecimento-sim" 
-                        id="abastecimento-sim" 
-                        htmlFor="abastecimento-sim" 
-                        checked={abastecimento==='abastecimento-sim'} 
-                        onChange={handleAbastecimentoChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="abastecimento" 
-                        value="abastecimento-nao" 
-                        id="abastecimento-nao" 
-                        htmlFor="abastecimento-nao" 
-                        checked={abastecimento==='abastecimento-nao'} 
-                        onChange={handleAbastecimentoChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Comprovante de abastecimento enviado para gerência?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="comprovanteEnviado" 
-                        value="comprovante-enviado-sim" 
-                        id="comprovante-enviado-sim" 
-                        htmlFor="comprovante-enviado-sim" 
-                        checked={comprovanteEnviado==='comprovante-enviado-sim'} 
-                        onChange={handleComprovanteChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="comprovanteEnviado" 
-                        value="comprovante-enviado-nao" 
-                        id="comprovante-enviado-nao" 
-                        htmlFor="comprovante-enviado-nao" 
-                        checked={comprovanteEnviado==='comprovante-enviado-nao'} 
-                        onChange={handleComprovanteChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Óleo do motor OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="oleoMotor" 
-                        value="oleo-motor-sim" 
-                        id="oleo-motor-sim" 
-                        htmlFor="oleo-motor-sim" 
-                        checked={oleoMotor==='oleo-motor-sim'} 
-                        onChange={handleOleoMotorChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="oleoMotor" 
-                        value="oleo-motor-nao" 
-                        id="oleo-motor-nao" 
-                        htmlFor="oleo-motor-nao" 
-                        checked={oleoMotor==='oleo-motor-nao'} 
-                        onChange={handleOleoMotorChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Reservatório de água OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="reservatorioAgua" 
-                        value="reservatorio-agua-sim" 
-                        id="reservatorio-agua-sim" 
-                        htmlFor="reservatorio-agua-sim" 
-                        checked={reservatorioAgua==='reservatorio-agua-sim'} 
-                        onChange={handleReservatorioAguaChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="reservatorioAgua" 
-                        value="reservatorio-agua-nao" 
-                        id="reservatorio-agua-nao" 
-                        htmlFor="reservatorio-agua-nao" 
-                        checked={reservatorioAgua==='reservatorio-agua-nao'} 
-                        onChange={handleReservatorioAguaChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Sistema elétrico OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="sistemaEletrico" 
-                        value="sistema-eletrico-sim" 
-                        id="sistema-eletrico-sim" 
-                        htmlFor="sistema-eletrico-sim" 
-                        checked={sistemaEletrico==='sistema-eletrico-sim'} 
-                        onChange={handleSistemaEletricoChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="sistemaEletrico" 
-                        value="sistema-eletrico-nao" 
-                        id="sistema-eletrico-nao" 
-                        htmlFor="sistema-eletrico-nao" 
-                        checked={sistemaEletrico==='sistema-eletrico-nao'} 
-                        onChange={handleSistemaEletricoChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Estado dos pneus OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="estadoPneus" 
-                        value="estado-pneus-sim" 
-                        id="estado-pneus-sim" 
-                        htmlFor="estado-pneus-sim" 
-                        checked={estadoPneus==='estado-pneus-sim'} 
-                        onChange={handleEstadoPneusChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="estadoPneus" 
-                        value="estado-pneus-nao" 
-                        id="estado-pneus-nao" 
-                        htmlFor="estado-pneus-nao" 
-                        checked={estadoPneus==='estado-pneus-nao'} 
-                        onChange={handleEstadoPneusChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Limpeza do baú/sider/cabine OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="limpeza" 
-                        value="limpeza-sim" 
-                        id="limpeza-sim" 
-                        htmlFor="limpeza-sim" 
-                        checked={limpeza==='limpeza-sim'} 
-                        onChange={handleLimpezaChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="limpeza" 
-                        value="limpeza-nao" 
-                        id="limpeza-nao" 
-                        htmlFor="limpeza-nao" 
-                        checked={limpeza==='limpeza-nao'} 
-                        onChange={handleLimpezaChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Macaco OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="macaco" 
-                        value="macaco-sim" 
-                        id="macaco-sim" 
-                        htmlFor="macaco-sim" 
-                        checked={macaco==='macaco-sim'} 
-                        onChange={handleMacacoChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="macaco" 
-                        value="macaco-nao" 
-                        id="macaco-nao" 
-                        htmlFor="macaco-nao" 
-                        checked={macaco==='macaco-nao'} 
-                        onChange={handleMacacoChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Chave de roda OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="chaveRoda" 
-                        value="chave-roda-sim" 
-                        id="chave-roda-sim" 
-                        htmlFor="chave-roda-sim" 
-                        checked={chaveRoda==='chave-roda-sim'} 
-                        onChange={handleChaveRodaChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="chaveRoda" 
-                        value="chave-roda-nao" 
-                        id="chave-roda-nao" 
-                        htmlFor="chave-roda-nao" 
-                        checked={chaveRoda==='chave-roda-nao'} 
-                        onChange={handleChaveRodaChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <fieldset>
-                    <legend className="text-black">Documento vigente OK?</legend>
-                    <InputLine 
-                        type="radio" 
-                        name="documentoVigente" 
-                        value="documento-vigente-sim" 
-                        id="documento-vigente-sim" 
-                        htmlFor="documento-vigente-sim" 
-                        checked={documentoVigente==='documento-vigente-sim'} 
-                        onChange={handleDocumentoVigenteChange}
-                    >
-                        Sim
-                    </InputLine>
-                    <InputLine 
-                        type="radio" 
-                        name="documentoVigente" 
-                        value="documento-vigente-nao" 
-                        id="documento-vigente-nao" 
-                        htmlFor="documento-vigente-nao" 
-                        checked={documentoVigente==='documento-vigente-nao'} 
-                        onChange={handleDocumentoVigenteChange}
-                    >
-                        Não
-                    </InputLine>
-                </fieldset>
-                
-                <InputLine 
-                    type="datetime-local" 
-                    id='data-hora-encerramento' 
-                    htmlFor="data-hora-encerramento" 
-                    required 
-                    value={dataHoraEncerramento}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setDataHoraEncerramento(e.target.value)}
-                >
-                    Data e hora do encerramento da atividade
-                </InputLine>
-                
-                <InputLine 
-                    type="text" 
-                    placeholder="" 
-                    id='observacoes' 
-                    htmlFor="observacoes" 
-                    required 
-                    value={observacoes}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setObservacoes(e.target.value)}
-                >
-                    Observações que sejam pertinentes
-                </InputLine>
-                
-                <section>
-                    <BotaoSubmit loading={loading} label={loading ? "Enviando..." : "Enviar"} type="submit"/>
-                </section>
-            </form>
-        </>
-    )
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <InputLine type="datetime-local" id="data-hora-encerramento" htmlfor="data-hora-encerramento"
+                required onChange={(e) => setDataHoraEncerramento(e.target.value)}>
+                Data e hora do encerramento da atividade
+              </InputLine>
+
+              <InputLine type="text" id="observacoes" htmlfor="observacoes" onChange={(e) => setobservacoes(e.target.value)}>
+                Observações
+              </InputLine>
+            </div>
+
+            <div className="pt-6 flex justify-center">
+              <BotaoSubmit
+                loading={loading}
+                label="Enviar"
+                type="submit"
+                className="bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {showSuccess && (
+        <div className="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+          Formulário enviado com sucesso!
+        </div>
+      )}
+    </div>
+  );
 }
