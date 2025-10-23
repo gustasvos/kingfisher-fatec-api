@@ -4,19 +4,24 @@ import axios from "axios";
 
 type Relatorio = {
   id: number;
-  nome?: string;
+  nome: string;
   setor?: string;
-  enviado?: boolean;
+  enviado: boolean;
+  eventoTitulo?: string;
 };
 
 type DetalhesRelatorio = {
   id: number;
-  titulo?: string;
+  titulo: string;
   descricao?: string;
   dataEnvio?: string;
   setor?: string;
-  enviado?: boolean;
+  enviado: boolean;
+  objetivo?: string;
+  avaliacao?: number;
 };
+
+
 
 const FiltroDropdown: React.FC<{
   filtro: "todos" | "enviado" | "nao_enviado";
@@ -47,9 +52,8 @@ const FiltroDropdown: React.FC<{
           {opcoes.map((o) => (
             <div
               key={o.value}
-              className={`px-4 py-2 cursor-pointer text-white hover:bg-[#156970] ${
-                o.value === filtro ? "font-semibold" : "font-normal"
-              }`}
+              className={`px-4 py-2 cursor-pointer text-white hover:bg-[#156970] ${o.value === filtro ? "font-semibold" : "font-normal"
+                }`}
               onClick={() => {
                 setFiltro(o.value as "todos" | "enviado" | "nao_enviado");
                 setAberto(false);
@@ -89,25 +93,27 @@ const Modal: React.FC<{
         ) : relatorio ? (
           <>
             <h2 className="text-xl font-semibold text-[#0f5260] mb-4">
-              {relatorio.titulo || "Relatório"}
+              {relatorio.titulo}
             </h2>
             <p className="text-gray-600 mb-2">
-              <strong>Setor:</strong> {relatorio.setor || "Não informado"}
+              <strong>Data do Evento:</strong> {relatorio.dataEnvio || "Não disponível"}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Data de Envio:</strong>{" "}
-              {relatorio.dataEnvio || "Não disponível"}
+              <strong>Objetivo:</strong> {relatorio.objetivo || "Não informado"}
+            </p>
+            <p className="text-gray-600 mb-2">
+              <strong>Avaliação:</strong>{" "}
+              {relatorio.avaliacao ? `${relatorio.avaliacao}/5` : "Sem avaliação"}
             </p>
             <p className="text-gray-600 mb-4">
-              <strong>Status:</strong>{" "}
-              {relatorio.enviado ? "Enviado" : "Não Enviado"}
-            </p>
-            <p className="text-gray-700">
-              {relatorio.descricao || "Sem descrição."}
+              <strong>Comentários:</strong> {relatorio.descricao || "Sem comentários."}
             </p>
           </>
+
         ) : (
-          <div className="text-gray-500">Não foi possível carregar o relatório.</div>
+          <div className="text-gray-500">
+            Não foi possível carregar o relatório.
+          </div>
         )}
       </div>
     </div>
@@ -130,9 +136,18 @@ const Relatorios: React.FC = () => {
   useEffect(() => {
     const fetchRelatorios = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/admin/events/respostas/1");
+        const res = await axios.get("http://localhost:8080/admin/events/respostas");
         const dados = Array.isArray(res.data) ? res.data : res.data?.data || [];
-        setRelatorios(dados);
+
+        const mapeados = dados.map((d: any) => ({
+          id: d.id,
+          nome: d.usuario?.nome || "Sem nome",
+          setor: d.usuario?.setor || "Sem setor",
+          eventoTitulo: d.evento?.titulo || "Evento",
+          enviado: d.status === "enviado" || d.enviado === true,
+        }));
+
+        setRelatorios(mapeados);
       } catch (err) {
         console.error(err);
         setErro("Erro ao buscar relatórios");
@@ -151,9 +166,24 @@ const Relatorios: React.FC = () => {
 
     try {
       const res = await axios.get(
-        `http://localhost:8080/admin/events/respostas/1?id=${id}`
+        `http://localhost:8080/admin/events/respostas/${id}`
       );
-      setDetalhes(res.data);
+
+      const d = res.data;
+      const detalhesMapeado: DetalhesRelatorio = {
+        id: d.id,
+        titulo: d.evento?.titulo || d.titulo_evento || "Sem título",
+        descricao: d.comentarios || "Sem comentários.",
+        dataEnvio: d.dataEnvio || d.data_resposta || d.data_evento || "",
+        setor: d.usuario?.setor || "Não informado",
+        enviado: true,
+        objetivo: d.objetivo || "",
+        avaliacao: d.avaliacao || null,
+      };
+
+
+
+      setDetalhes(detalhesMapeado);
     } catch (err) {
       console.error(err);
       setDetalhes(null);
@@ -163,14 +193,14 @@ const Relatorios: React.FC = () => {
   };
 
   const relatoriosFiltrados = relatorios.filter((r) => {
-    const nome = r.nome || "";
-    const nomeMatch = nome.toLowerCase().includes(busca.toLowerCase());
+    const nome = r.nome.toLowerCase();
+    const nomeMatch = nome.includes(busca.toLowerCase());
     const filtroMatch =
       filtroEnviado === "todos"
         ? true
         : filtroEnviado === "enviado"
-        ? r.enviado
-        : !r.enviado;
+          ? r.enviado
+          : !r.enviado;
     return nomeMatch && filtroMatch;
   });
 
@@ -218,9 +248,12 @@ const Relatorios: React.FC = () => {
             >
               <div>
                 <h3 className="text-lg font-semibold text-[#0f5260]">
-                  {r.nome || "Sem nome"}
+                  {r.nome}
                 </h3>
-                <p className="text-[#9aa7ad]">{r.setor || "Sem setor"}</p>
+                <p className="text-[#9aa7ad]">{r.setor}</p>
+                <p className="text-sm text-[#0f5260]">
+                  Evento: {r.eventoTitulo}
+                </p>
               </div>
 
               <button

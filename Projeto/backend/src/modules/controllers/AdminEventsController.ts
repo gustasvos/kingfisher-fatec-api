@@ -306,40 +306,33 @@ export const listConvitesByUser = async (req: Request, res: Response) => {
 // GET /admin/events/respostas -> lista todas as respostas de eventos
 export const listEventoRespostas = async (req: Request, res: Response) => {
   try {
-    const respostas = await respostaRepo().find({
-      relations: ['evento', 'usuario'],
-      order: { id: 'DESC' }
+    const eventoRespostaRepo = AppDataSource.getRepository(EventoResposta)
+
+    const respostas = await eventoRespostaRepo.find({
+      relations: ["usuario", "evento"],
+      order: { id: "DESC" }
     })
 
-    if (!respostas || respostas.length === 0) {
-      return res.status(404).json({ error: 'Nenhuma resposta encontrada' })
-    }
+    // remover campos do usuário
+    const respostasLimpa = respostas.map((r) => {
+      if (r.usuario) {
+        const { senha, genero, role, data_contratacao, data_nascimento, ...usuarioFiltrado } = r.usuario
+        return {
+          ...r,
+          usuario: usuarioFiltrado
+        }
+      }
+      return r
+    })
 
-    const respostasFormatadas = respostas.map(r => ({
-      id: r.id,
-      titulo_evento: r.titulo_evento,
-      data_evento: r.data_evento,
-      objetivo: r.objetivo,
-      comentarios: r.comentarios,
-      usuario: r.usuario ? {
-        id: r.usuario.id,
-        nome: r.usuario.nome,
-        cargo: r.usuario.cargo
-      } : null,
-      evento: r.evento ? {
-        id: r.evento.id,
-        titulo: r.evento.titulo,
-        dataHora: r.evento.dataHora,
-        localizacao: r.evento.localizacao
-      } : null
-    }))
-
-    return res.json(respostasFormatadas)
-  } catch (err) {
-    console.error(err)
-    return res.status(500).json({ error: 'Erro ao buscar respostas de eventos' })
+    return res.status(200).json(respostasLimpa)
+  } catch (error) {
+    console.error("Erro ao buscar evento:", error)
+    return res.status(500).json({ error: "Erro ao buscar evento" })
   }
 }
+
+
 
 // GET /admin/events/respostas/:id -> pega uma resposta específica pelo ID
 export const getEventoRespostaById = async (req: Request, res: Response) => {

@@ -4,6 +4,7 @@ import { Genero, TipoAcesso } from '../../utils/enums/usuarioEnums'
 import { OneToMany } from 'typeorm'
 import { EventoConvidado } from './EventoConvidado'
 import { UsuarioLocal } from './UsuarioLocal'
+import { EventoResposta } from './eventoResposta'
 
 @Entity('usuario')
 export class User {
@@ -45,5 +46,8 @@ export class User {
 
     @OneToMany(() => UsuarioLocal, ul => ul.usuario)
     locais: UsuarioLocal[]
+
+    @OneToMany(() => EventoResposta, er => er.usuario)
+    respostasEvento: EventoResposta[];
 
 }

@@ -81,7 +81,7 @@ Content-Type: application/json
   "descricao": "Imersão prática em desenvolvimento web",
   "dataHora": "2025-10-16T08:30:00.000Z",
   "localizacao": "Auditório Principal",
-  "convidados": [1, 2, 3, 4, 5, 6]
+  "convidados": [1, 2, 3, 4, 5, 6, 11]
 }
 
 ### CRIAR UM NOVO EVENTO
@@ -151,10 +151,10 @@ Content-Type: application/json
 {}
 
 ### GET ALL RESPOSTAS
-GET {{api}}admin/events/respostas
+### Listar todas as respostas de eventos
+GET http://localhost:8080/admin/events/respostas
 Content-Type: application/json
 
-{}
 
 ### GET RESPOSTA BY ID
 GET {{api}}admin/events/respostas/2
@@ -164,12 +164,12 @@ Content-Type: application/json
 
 
 ### POST RESPOSTA
-POST {{api}}admin/events/respostas/5/participante/2
+POST {{api}}admin/events/respostas/10/participante/11
 Content-Type: application/json
 
 {
-  "titulo_evento": "Feedback do evento de liderança",
-  "objetivo": "Avaliar aprendizado e engajamento",
+  "titulo_evento": "Feedback do bootcamp",
+  "objetivo": "Treinar exercicios",
   "comentarios": "Ótimas dinâmicas e aprendizado",
-  "avaliacao": 5
+  "avaliacao": 3
 }

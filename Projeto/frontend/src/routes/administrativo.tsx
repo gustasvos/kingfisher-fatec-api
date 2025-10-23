@@ -20,7 +20,7 @@ export default function RotasADM(){
             <Route path="/home" element={<HomePage/>} />
             <Route path="/eventos-colaborador" element={<ListagemEventos />} />
             <Route path="/local-trabalho" element={<LocalDeTrabalho />} />
-            <Route path="/page-resposta-eventos" element={<RespostaEventos />} />
+            <Route path="/resposta-eventos" element={<RespostaEventos />} />
         </>
     )
 }
