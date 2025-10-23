@@ -1,0 +1,32 @@
+### Cadastrando um Forms de Checklist Diário de Frota
+# Rota: POST http://localhost:8080/submit
+# O campo 'formTitle' é crucial para o backend identificar o esquema de validação.
+POST http://localhost:8080/submit
+Content-Type: application/json
+
+{
+  "formTitle": "Checklist Diário - Frota Newe",
+  "nome-motorista": "Carlos Almeida",
+  "placa-veiculo": "ABC1D23",
+  "km-inicial": 15200,
+  "destino": "Centro de Distribuição - São Paulo",
+  "km-final": 15345,
+  "teve-abastecimento": "Sim",
+  "comprovante-enviado": "Sim",
+  "oleo-motor-ok": "Sim",
+  "reservatorio-agua-ok": "Sim",
+  "sistema-eletrico-ok": "Sim",
+  "estado-pneus-ok": "Não",
+  "limpeza-bau-sider-cabine-ok": "Sim",
+  "lubrificacao-suspensoes-ok": "Sim",
+  "macaco-ok": "Sim",
+  "chave-roda-ok": "Sim",
+  "documento-vigente-ok": "Sim",
+  "data-horario-encerramento": "2025-10-20T18:30:00.000Z",
+  "observacoes": "Pneu traseiro direito com desgaste irregular. Recomendado alinhamento."
+}
+
+### Listar dados salvos no CSV do formulário
+# Para verificar se o dado foi salvo no CSV correto
+GET http://localhost:8080/ver-csv?formTitle=Checklist Diário de Frota Newe
+Content-Type: application/json

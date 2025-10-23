@@ -1,0 +1,213 @@
+### Cadastrando um Veículo (Checklist de Veículos Agregados)
+# Rota: POST http://localhost:8080/submit
+# O Content-Type deve ser multipart/form-data por causa dos arquivos.
+POST http://localhost:8080/submit
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="formTitle"
+
+Checklist de Veículos Agregados
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Diogo Branquinho Ramos
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="cpf-motorista"
+
+74206864507
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="email-motorista"
+
+diogobranquinho@email.com
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="placa-veiculo"
+
+ABC1D23
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="tipo-veiculo"
+
+FIORINO
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="nivel-oleo"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="vazamento-oleo"
+
+NÃO
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="nivel-agua"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="foto-motor"; filename="foto_motor.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/foto-motor.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="etiqueta-oleo"; filename="etiqueta_oleo.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/etiqueta-oleo.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="estado-PDE"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="estado-PTE"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="estado-PTD"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="estado-PDD"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fotos-comprobatorias"; filename="comprobatria.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/comprobatoria.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="foto-PDE"; filename="foto_PDE.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/pneu_dianteiro_esquerdo.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="foto-PTE"; filename="foto_PTE.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/pneu_traseiro_esquerdo.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="foto-PTD"; filename="foto_PTD.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/pneu_traseiro_direito.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="foto-PDD"; filename="foto_PDD.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/pneu_dianteiro_direito.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="para-brisa"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="cabine-externa"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="veiculo-externo"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="amassados-ferrugens"
+
+NÃO
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="estado-assoalho"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="faixas-reflexivas"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="sistema-eletrico"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="limpador-parabrisa"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="estado-buzina"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="farol-alto"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="farol-baixo"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="setas-dianteiras"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="setas-traseiras"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="pisca-alerta"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="luz-freio"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="liz-re"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="sirene-re"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="extintor"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="step"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="triangulo"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="macaco"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="chave-roda"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="capacete-seguranca"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="colete-seguranca"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="bota-seguranca"
+
+SIM
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fotos-gerais"; filename="foto-geral01.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/foto-geral01.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fotos-gerais"; filename="foto-geral02.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/foto-geral02.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="nome-vistor"
+
+Samuel Lucas
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="observacoes"
+
+Veículo em bom estado, nenhuma avaria identificada.
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
