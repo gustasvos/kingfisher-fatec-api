@@ -22,7 +22,8 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
 
     return (
         <>
-            <section className="w-[450px] h-[160px] bg-white rounded-[15px] grid grid-cols-[60%,40%] drop-shadow-lg">
+        {/*      */}
+            <section className="bg-white w-[450px] h-[160px] grid grid-cols-[60%,40%] rounded-[15px] drop-shadow-lg relative z-0">
                 <section className="p-4 space-y-2 mt-4 justify-center items-center">
                     <p className="font-sans text-[22px]">{cliente.nomeFantasia}</p>
                     <p className="font-sans text-[16px]">{cliente.cnpj}</p>
