@@ -3,10 +3,10 @@ import { HighlightCardProps } from '../../types/cardType';
 
 const variantStyles = { // determina cores do card para cada estilo
     primary: {
-        bg: 'bg-blue-100',
-        text: 'text-blue-800',
-        value: 'text-blue-900',
-        icon: 'text-blue-600',
+        bg: 'bg-white',
+        text: 'text-black',
+        value: 'text-azul-principal',
+        icon: 'text-azul-principal',
         hover: 'hover:bg-blue-200',
         shadow: 'shadow-blue-200',
     },

@@ -25,7 +25,7 @@ const mockVeiculosAptosCard = {
  */
 const mockHeader = {
   user: {
-    avatarUrl: '../../assets/usuario.svg',
+    avatarUrl: '../../../../assets/usuario.svg',
     name: "NOME_ADMINISTRADOR_OPERACIONAL",
     role: "Administrador",
     email: "operacional@email.com",
@@ -46,8 +46,8 @@ const mockVeiculosAptos = {
     25, // 25 Veículos Em Manutenção (ou 25% da frota)
   ],
   backgroundColors: [
-    '#28A745',
-    '#DC3545',
+    '#135B78',
+    '#CCCCCC',
   ],
 };
 
@@ -63,8 +63,10 @@ const HomeOpAdminPage: React.FC = () => {
   // Renderização Principal
   return (
     <>
-      <Header user={mockHeader.user} placeholderAvatar={mockHeader.user.avatarUrl} />
       <Navbar />
+      <header>
+        <Header user={mockHeader.user} placeholderAvatar={mockHeader.user.avatarUrl} />
+      </header>
 
       <div className="p-8 grid grid-cols-4 gap-x-4 ml-10">
         <HighlightCard
@@ -95,7 +97,7 @@ const HomeOpAdminPage: React.FC = () => {
         />
 
         <HighlightCard
-          title="Veículos Aptos para Operação"
+          title="Veículos Aptos para Operação" 
           value={mockVeiculosAptosCard.value}
           subtitle={mockVeiculosAptosCard.subtitle}
           variant="primary"
@@ -103,20 +105,23 @@ const HomeOpAdminPage: React.FC = () => {
           onClick={() => console.log('Navegar para Checklist de Agregados')}
         />
       </div >
-
-      <div className="grid grid-cols-2 gap-x-4 mt-6 ml-10 p-10 rounded-lg">
-        <PieChart
-          title={mockVeiculosAptos.title}
-          labels={mockVeiculosAptos.labels}
-          data={mockVeiculosAptos.data}
-          backgroundColors={mockVeiculosAptos.backgroundColors}
-        />
-        <PieChart
-          title={mockVeiculosAptos.title}
-          labels={mockVeiculosAptos.labels}
-          data={mockVeiculosAptos.data}
-          backgroundColors={mockVeiculosAptos.backgroundColors}
-        />
+      <div className='flex justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>
+        <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg">
+          <PieChart
+            title={mockVeiculosAptos.title}
+            labels={mockVeiculosAptos.labels}
+            data={mockVeiculosAptos.data}
+            backgroundColors={mockVeiculosAptos.backgroundColors}
+          />
+        </div>
+        <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg mr-20">
+          <PieChart
+            title={mockVeiculosAptos.title}
+            labels={mockVeiculosAptos.labels}
+            data={mockVeiculosAptos.data}
+            backgroundColors={mockVeiculosAptos.backgroundColors}
+          />
+        </div>
       </div>
     </>
   );
