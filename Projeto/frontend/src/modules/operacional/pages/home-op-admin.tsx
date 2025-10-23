@@ -6,6 +6,20 @@ import Navbar from '../../../shared/components/navbar';
 import PieChart from '../../../shared/components/grafico-setor';
 import Header from '../../../shared/components/header';
 
+// Definição da estrutura de dados esperada do backend
+interface DashboardData {
+    agregadosVeiculosAtivos: number;
+    agregadosMotoAtivos: number;
+    frotaNeweTotal: number;
+    
+    // ... adicione outras métricas se necessário
+    graficoVeiculos: {
+        labels: string[];
+        data: number[];
+        backgroundColors: string[];
+    }
+    // ...
+}
 
 /**
  * mock para o indicador (card) "Veículos Aptos para Operação"
@@ -68,7 +82,7 @@ const HomeOpAdminPage: React.FC = () => {
         <Header user={mockHeader.user} placeholderAvatar={mockHeader.user.avatarUrl} />
       </header>
 
-      <div className="p-8 grid grid-cols-4 gap-x-4 ml-10">
+      <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-10">
         <HighlightCard
           title="Agregados ativos"
           value={mockData.agregadosAtivos}
@@ -105,7 +119,7 @@ const HomeOpAdminPage: React.FC = () => {
           onClick={() => console.log('Navegar para Checklist de Agregados')}
         />
       </div >
-      <div className='flex justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>
+      <div className='flex flex-col lg:flex-row justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>
         <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg">
           <PieChart
             title={mockVeiculosAptos.title}
