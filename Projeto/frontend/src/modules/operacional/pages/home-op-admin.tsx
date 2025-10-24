@@ -65,8 +65,8 @@ const initialState: DashboardData = {
   }
 };
 
-const API_URL = 'http://localhost:3001/api/dashboard-op'; // INSERIR URL DO BACK AQUI
-const USER_API_URL = 'http://localhost:3001/api/user/me'; // EXEMPLO DE ENDPOINT
+const API_URL = 'http://localhost:8080/dashboard-op'; 
+const USER_API_URL = 'http://localhost:8080/user/me';
 
 const HomeOpAdminPage: React.FC = () => {
   const [data, setData] = useState<DashboardData>(initialState); // Inicializa o estado com a estrutura de dados vazia
@@ -192,7 +192,7 @@ const HomeOpAdminPage: React.FC = () => {
           title="Frota Newe Aptos"
           value={veiculosAptosNewe}
           subtitle={subtitleFrotaApta}
-          variant="success"
+          variant="primary"
           icon={FaCheck}
         />
 

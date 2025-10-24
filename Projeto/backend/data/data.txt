@@ -1,2 +1,0 @@
-Criei essa pasta para receber os csvs dos checklist
-dashboard_data.csv é um arquivo de teste!!

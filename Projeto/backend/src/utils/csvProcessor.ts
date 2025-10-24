@@ -34,27 +34,27 @@ const readCsvFile = (filePath: string): Promise<any[]> => {
 
 // normaliza uma linha de Checklist de Veículos Agregados
 const mapAgregadoCarroToDashboardRow = (row: any): DashboardRow | null => {
-  const tipo = String(row['Tipo de veiculo']).toUpperCase();
-  const dataCadastroStr = row['data_envio'];
-  if (!dataCadastroStr || !tipo) return null;
+  const tipo = String(row['tipo_veiculo']).toUpperCase();
+  const timestamp = row['timestamp'];
+  if (!timestamp || !tipo) return null;
   return {
     isAgregado: true,
     isNewe: false,
     tipoVeiculo: tipo,
-    dataCadastro: new Date(dataCadastroStr),
+    dataCadastro: new Date(timestamp),
     isAptoNewe: null,
   };
 };
 
 // normaliza uma linha de Checklist de Agregados (Moto).
 const mapAgregadoMotoToDashboardRow = (row: any): DashboardRow | null => {
-  const dataCadastroStr = row['data_envio'];
-  if (!dataCadastroStr || !row['Marca']) return null;
+  const timestamp = row['timestamp'];
+  if (!timestamp || !row['marca_moto']) return null;
   return {
     isAgregado: true,
     isNewe: false,
     tipoVeiculo: 'MOTO',
-    dataCadastro: new Date(dataCadastroStr),
+    dataCadastro: new Date(timestamp),
     isAptoNewe: null,
   };
 };
@@ -66,15 +66,15 @@ const mapFrotaNeweToDashboardRow = (row: any): DashboardRow | null => {
 
   // Colunas de verificação da aptidão
   const aptidaoFields = [
-    'Oleo do Motor ok?',
-    'Reservatório de Água ok ?',
-    'Sistema Elétrico ok ?',
-    'Estado dos Pneus ok ?',
-    'Limpeza Baú/Sider/Cabine ok ?',
-    'Lubrificação de Suspensões ok ?',
-    'Macaco ok ?',
-    'Chave de Roda ok ?',
-    'Documento Vigente ok?',
+    'oleo_motor_ok',
+    'reservatorio_agua_ok',
+    'sistema_eletrico_ok',
+    'estado_pneus_ok',
+    'limpeza_ok',
+    'lubrificacao_suspensoes_ok',
+    'macaco_ok',
+    'chave_roda_ok',
+    'documento_vigente_ok',
   ];
 
   let isAptoNewe = true;
