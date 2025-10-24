@@ -1,7 +1,7 @@
 import { IsDate, isDate } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 
-@Entity('evento')
+@Entity('Cliente')
 export class Cliente {
     @PrimaryGeneratedColumn()
     id: number
