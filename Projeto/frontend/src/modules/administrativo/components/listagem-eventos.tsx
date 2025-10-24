@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Navbar from "../../../shared/components/navbar";
 import instance from "../../../services/api";
 import Loading from "../../../shared/components/loading";
@@ -8,21 +8,13 @@ import RelatorioAproveitamento from "./relatorio-aproveitamento";
 
 interface Evento {
   id: number;
+  conviteId: number;
   titulo: string;
   descricao?: string;
   localizacao: string;
-  dataHora: string;
-  participantes: {
-    idConvite: number;
-    funcionario: {
-      id: number;
-      nome: string;
-      email: string;
-    };
-    status: string;
-    motivo: string | null;
-    criadoEm: string;
-  }[];
+  dataHora: string; // Manter como string ISO
+  statusConvite?: string;
+  motivo?: string | null;
 }
 
 export default function ListagemEventos() {
@@ -36,20 +28,53 @@ export default function ListagemEventos() {
 
   const userId = localStorage.getItem("userId");
 
-  // Função para abrir o modal conforme o status do convite
-  const abrirModalEvento = async(evento: Evento) => {
-    const convite = evento.participantes.find(
-      (p) => p.funcionario.id === parseInt(userId || "")
-    );
+  // Função para fechar o modal e atualizar a lista
+  const fecharModalEAtualizar = useCallback(() => {
+    setAbertoModal(false);
+    if (userId) {
+      fetchEventos(userId);
+    }
+  }, [userId]);
 
-    if (!convite) return;
+  // Buscar eventos do usuário
+  const fetchEventos = useCallback(async (currentUserId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await instance.get(`/admin/events/convidado/${currentUserId}`);
+      console.log("Convites recebidos da API:", res.data);
 
-    switch (convite.status.toUpperCase()) {
+      // Mapeia os dados recebidos para a interface Evento
+      // NÃO formatar data aqui
+      const eventosMapeados = res.data.map((convite: any) => ({
+        ...convite.evento,
+        conviteId: convite.idConvite,
+        statusConvite: convite.status,
+        motivo: convite.motivo,
+      }));
+
+      setEventos(eventosMapeados);
+    } catch (err) {
+      console.error("Erro ao buscar eventos:", err);
+      setError("Erro ao carregar eventos.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Abrir modal conforme status do convite
+  const abrirModalEvento = (evento: Evento) => {
+    const status = evento.statusConvite?.toUpperCase() || "";
+
+    switch (status) {
       case "PENDENTE":
         setConteudoModal(
           <EventoDetalhe
-            evento={evento}
-            onFechar={() => setAbertoModal(false)}
+            eventoId={evento.id}
+            conviteId={evento.conviteId}
+            onFechar={fecharModalEAtualizar}
+            statusConvite={evento.statusConvite}
+            motivoConvite={evento.motivo}
           />
         );
         break;
@@ -65,35 +90,32 @@ export default function ListagemEventos() {
         );
         break;
 
-      default:
-        // Ignora recusado ou outros
+      case "RECUSADO":
         setConteudoModal(
-          <p className="text-gray-700 p-4">
-            Este evento não está disponível para você.
-          </p>
+          <EventoDetalhe
+            eventoId={evento.id}
+            conviteId={evento.conviteId}
+            onFechar={() => setAbertoModal(false)}
+            statusConvite={evento.statusConvite}
+            motivoConvite={evento.motivo}
+          />
+        );
+        break;
+
+      default:
+        setConteudoModal(
+          <EventoDetalhe
+            eventoId={evento.id}
+            conviteId={evento.conviteId}
+            onFechar={fecharModalEAtualizar}
+            statusConvite={evento.statusConvite}
+            motivoConvite={evento.motivo}
+          />
         );
         break;
     }
 
     setAbertoModal(true);
-  };
-
-  // Buscar eventos e filtrar recusados
-  const fetchEventos = async (userId: string) => {
-    try {
-      const res = await instance.get("/admin/events");
-      const eventosFiltrados = res.data.filter((e: Evento) =>
-        e.participantes.some(
-          (p) => p.funcionario.id === parseInt(userId) && p.status !== "RECUSADO"
-        )
-      );
-      setEventos(eventosFiltrados);
-    } catch (err) {
-      console.error(err);
-      setError("Erro ao carregar eventos.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -103,8 +125,9 @@ export default function ListagemEventos() {
       setError("Usuário não encontrado.");
       setLoading(false);
     }
-  }, [userId]);
+  }, [userId, fetchEventos]);
 
+  // Formata a data para exibição
   const formatarDataHora = (data: string) => {
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -117,16 +140,29 @@ export default function ListagemEventos() {
     return new Date(data).toLocaleString("pt-BR", options);
   };
 
+  // Define cor do status
+  const getStatusColor = (status: string | undefined) => {
+    switch (status?.toUpperCase()) {
+      case "CONFIRMADO":
+      case "APROVADO":
+        return "text-green-600 font-bold";
+      case "RECUSADO":
+        return "text-red-600 font-bold";
+      case "PENDENTE":
+        return "text-yellow-600 font-bold";
+      default:
+        return "text-gray-500";
+    }
+  };
+
   if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
 
-  const eventosFiltrados = eventos
-    .filter(
-      (e) =>
-        e.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        e.localizacao.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .map((e) => ({ ...e, dataHora: formatarDataHora(e.dataHora) }));
+  const eventosFiltrados = eventos.filter(
+    (e) =>
+      e.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      e.localizacao.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
@@ -139,9 +175,9 @@ export default function ListagemEventos() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-6 py-3 rounded-full border border-[#9aa7ad]
-               bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
-               focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
-               transition-colors text-lg"
+              bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
+              focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
+              transition-colors text-lg"
           />
         </form>
 
@@ -167,7 +203,14 @@ export default function ListagemEventos() {
                     </div>
 
                     <div className="flex items-center gap-2 text-gray-800">
-                      <span>{evento.dataHora}</span>
+                      <span>{formatarDataHora(evento.dataHora)}</span>
+                    </div>
+
+                    <div className="mt-2">
+                      <span className="text-sm font-semibold text-gray-700">Status: </span>
+                      <span className={`text-sm ${getStatusColor(evento.statusConvite)}`}>
+                        {evento.statusConvite || "PENDENTE"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -176,7 +219,7 @@ export default function ListagemEventos() {
                   onClick={() => abrirModalEvento(evento)}
                   className="mt-6 bg-[#135b78] hover:bg-[#114a5f] text-white px-4 py-2 rounded-lg shadow transition-all duration-200 w-full"
                 >
-                  Preencher
+                  {evento.statusConvite === 'PENDENTE' ? 'Responder Convite' : 'Ver Detalhes'}
                 </button>
               </div>
             ))
@@ -188,7 +231,7 @@ export default function ListagemEventos() {
         </div>
       </main>
 
-      <Modal aberto={abertoModal} onFechar={() => setAbertoModal(false)}>
+      <Modal aberto={abertoModal} onFechar={fecharModalEAtualizar}>
         {conteudoModal}
       </Modal>
     </>
