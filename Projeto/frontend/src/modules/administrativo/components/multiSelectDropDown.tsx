@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import axios from "axios";
+import instance from "../../../services/api";
 
 export type Opcoes = {
     value: number | string
@@ -16,7 +16,7 @@ const MultiSelectDropdown : React.FC<multiSelectDropDownProps> = ({value, onChan
     const [options, setOptions] = useState<Opcoes[]>([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/usuario/list")
+        instance.get("/usuario/list")
             .then((response) => {
                 const usuarios = response.data
                 console.log(usuarios)
@@ -53,6 +53,7 @@ const MultiSelectDropdown : React.FC<multiSelectDropDownProps> = ({value, onChan
                     maxHeight: "250px",
                     overflowY: "auto"
                 }),
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                 option: (base) => ({
                 ...base,
                 color: "#062846ff"
