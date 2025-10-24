@@ -150,9 +150,8 @@ const HomeOpAdminPage: React.FC = () => {
 
 
   // Cálculo para o Card "novosAgregados"
-  const novosAgregados = data.frotaNewe - data.graficoVeiculosAptos.data[0];
-  const subtitleFrotaNaoApta = `${percentualNaoAptosNewe}% da frota total Newe (${data.frotaNewe} veículos).`;
-
+  const novosAgregados = data.novosAgregados;
+  const subtitleNovosAgregados = `Total de novos agregados nos últimos 30 dias.`;
 
   if (loading) {
     return <div className="p-8 text-black">Carregando dados...</div>;
@@ -199,11 +198,11 @@ const HomeOpAdminPage: React.FC = () => {
 
         {/* Card 4: Motoristas Newe */}
         <HighlightCard
-          title="Frota Newe Não Aptos"
-          value={novosAgregados}
-          subtitle={subtitleFrotaNaoApta}
-          variant="warning"
-          icon={FiAlertTriangle}
+          title="Novos agregados (30 dias)"
+          value={data.novosAgregados}
+          subtitle={subtitleNovosAgregados}
+          variant="info"
+          icon={FiInfo}
         />
       </div >
       <div className='flex flex-col lg:flex-row justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>

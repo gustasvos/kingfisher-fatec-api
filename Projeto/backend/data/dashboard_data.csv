@@ -1,0 +1,6 @@
+id,tipo,isAgregado,isNewe,isApto,dataCadastro
+1,VAN,true,false,true,2024-01-10
+2,TOCO,true,false,false,2024-05-15
+3,MOTO,true,false,true,2024-06-01
+4,VUC,false,true,true,2023-11-20
+5,VAN,false,true,false,2024-07-25

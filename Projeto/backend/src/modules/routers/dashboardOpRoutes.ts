@@ -5,7 +5,7 @@ import { DashboardData } from '../../types/dashboardOp';
 
 const dashboardRouter = Router();
 
-// Rota principal do dashboard
+// Rota principal do dashboard operacional
 dashboardRouter.get('/dashboard-op', async (req: Request, res: Response) => {
   try {
     const data: DashboardData = await processCsvData();

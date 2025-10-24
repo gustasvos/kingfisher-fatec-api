@@ -1,6 +1,6 @@
 // meu-projeto/backend/src/utils/csvProcessor.ts
 import * as fs from 'fs';
-import * as csv from 'csv-parser';
+import csv from 'csv-parser';
 import * as path from 'path';
 import { DashboardData } from '../types/dashboardOp';
 
@@ -74,7 +74,7 @@ export const processCsvData = async (): Promise<DashboardData> => {
   });
 
   // Formata a saída para DashboardData
-  const graficoTipoVeiculosLabels = tiposVeiculoAgregadoPadrao.filter(label => tipoVeiculoCounts[label] > 0);
+  const graficoTipoVeiculosLabels = tiposVeiculoAgregadoPadrao.filter(label => (tipoVeiculoCounts[label] ?? 0) > 0);
   const graficoTipoVeiculosData = graficoTipoVeiculosLabels.map(label => tipoVeiculoCounts[label] || 0);
 
   const dashboardData: DashboardData = {
@@ -86,7 +86,7 @@ export const processCsvData = async (): Promise<DashboardData> => {
     graficoTipoVeiculos: {
       labels: graficoTipoVeiculosLabels.length > 0 ? graficoTipoVeiculosLabels : ['Outros'],
       data: graficoTipoVeiculosData.length > 0 ? graficoTipoVeiculosData : [0],
-      backgroundColors: graficoTipoVeiculosLabels.map((_, index) => backgroundColorsPadrao[index % backgroundColorsPadrao.length]),
+      backgroundColors: graficoTipoVeiculosLabels.map((_, index) => backgroundColorsPadrao[index % backgroundColorsPadrao.length]!),
       title: 'Quantidade de Veículos Agregados Por Categoria'
     },
     
