@@ -34,13 +34,13 @@ const Header: React.FC<HeaderProps> = ({ user, placeholderAvatar }) => {
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold tracking-wide text-black">
+        <h1 className="text-2xl font-bold tracking-wide text-white">
           SEJA BEM-VINDO {user.name.toUpperCase()}
         </h1>
-        <p id="cargo" className="mt-4 font-medium text-black">
+        <p id="cargo" className="mt-4 font-medium text-white">
           {user.role}
         </p>
-        <p id="email" className="text-sm opacity-90 text-black">
+        <p id="email" className="text-sm opacity-90 text-white">
           {user.email}
         </p>
       </div>
