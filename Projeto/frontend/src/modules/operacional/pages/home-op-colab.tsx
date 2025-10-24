@@ -6,6 +6,7 @@ import Header from '../../../shared/components/header';
 import { Link, useNavigate } from 'react-router-dom';
 import { Subtitles } from 'lucide-react';
 import axios from 'axios';
+import { User } from '../../../shared/components/header';
 
 
 /**
@@ -70,6 +71,8 @@ const mockData3 = {
 
 const HomeOpColabPage: React.FC = () => {
 
+  
+  const [user, setUser] = useState<User | null>(null)
   const userId = localStorage.getItem("userId")
   const token = localStorage.getItem("token")
 
@@ -100,70 +103,73 @@ const HomeOpColabPage: React.FC = () => {
 
   useEffect(() => {
     if (!userId || !token) return;
-  
+
     const headers = { Authorization: `Bearer ${token}` };
-  
-    axios
-      .all([
-        axios.get(`http://localhost:8080/admin/events/convidado/${userId}`, { headers }),
-        axios.get(`http://localhost:8080/admin/events/respostas/${userId}`, { headers })
-        .then(res => res)
-        .catch((err) => {
-          // Se a rota de respostas não encontrar nada, retorna array vazio
-          if (err.response?.status === 404) {
-            console.warn("Nenhuma resposta encontrada — retornando lista vazia.");
-            return { data: [] };
-          }
-          // Se for outro tipo de erro, relança para o catch principal
-          throw err;
-        }),
-      ])
-      .then(([resEventos, resFormEvento]) => {
-        const eventos = resEventos.data;
-        setEventos(eventos);
-  
-        const counts = {
-          total: eventos.length,
-          aguardando: 0
-        };
 
-        eventos.forEach((evento: any) => {
-          const status = evento.status?.toLowerCase()
+    Promise.allSettled([
+      axios.get(`http://localhost:8080/admin/events/convidado/${userId}`, { headers }),
+      axios.get(`http://localhost:8080/admin/events/respostas/`, { headers }),
+      axios.get(`http://localhost:8080/usuario/${userId}`,{headers})
+    ])
+      .then(([resEventos, resFormEvento, resUser]) => {
+        if (resEventos.status === "fulfilled") {
+          const eventos = resEventos.value.data || [];
+          setEventos(eventos);
 
-          if (status !== "confirmado" && status !== "recusado") counts.aguardando++
-        });
+          const counts = {
+            total: eventos.length,
+            aguardando: 0
+          };
 
-        setStatusCounts(counts)
-  
-        const respForm = resFormEvento.data
-          setEventoResp(respForm)
+          eventos.forEach((evento: any) => {
+            const status = evento.status?.toLowerCase()
+
+            if (status !== "confirmado" && status !== "recusado") counts.aguardando++
+          });
+
+          setStatusCounts(counts)
+        }
+        if (resFormEvento.status === "fulfilled") {
+          const respForm = resFormEvento.value.data || [];
+          const respostasUsuario = respForm.filter(
+            (r:any) => r.usuario?.id === Number(userId)
+          );
+          setEventoResp(respostasUsuario)
 
           const countsFormEvento = {
-            respondido: respForm.length
+            respondido: respostasUsuario.length
           };
 
           setEventoRespCount(countsFormEvento)
+        }
+        if (resUser.status === "fulfilled"){
+           setUser(resUser.value.data);
+        } else {
+          // Caso 404 ou outro erro
+          setEventoResp([]);
+          setEventoRespCount({ respondido: 0 });
+        }
       })
       .catch((err) => console.error("Erro ao buscar eventos do usuário:", err));
-      
+
   }, [userId, token]);
-  
+
 
   // Renderização Principal
   return (
     <>
-      <Header user={mockHeader.user} placeholderAvatar={mockHeader.user.avatarUrl} />
+      <Header user={user} />
       <Navbar />
 
       <div>
         <h1 className='text-azul-principal ml-[5%] mt-10 text-[30px] font-bold drop-shadow-[5px_5px_3px_rgba(0,0,0,0.3)]'>Verifique as informações dos seus eventos</h1>
-      </div>
-      <div className="p-8  pb-2 grid grid-cols-3 gap-x-5 ml-10">
+      </div> 
+      <div className="p-8  pb-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 ml-10">
 
         <HighlightCard
           title="Ver Eventos"
           value={statusCounts.total}
-          subtitle={mockEventos.subtitle}
+          subtitle={`Não se esqueça, você tem ${statusCounts.total} de eventos marcados`}
           variant="primary"
           icon={FaCalendar}
           onClick={irEventos}
@@ -172,7 +178,7 @@ const HomeOpColabPage: React.FC = () => {
         <HighlightCard
           title="Confirmar presença/preencher"
           value={statusCounts.aguardando}
-          subtitle={mockEventos.subtitle}
+          subtitle={`Não se esqueça de informar se irá no evento, restam ${statusCounts.aguardando}/${statusCounts.total}`}
           variant="primary"
           icon={FaRegEdit}
           onClick={irEventosColaborador}
@@ -181,7 +187,7 @@ const HomeOpColabPage: React.FC = () => {
         <HighlightCard
           title=" Ver formulário de aproveitamento"
           value={eventoRespCount.respondido}
-          subtitle={mockCheckPreenchidos.subtitle}
+          subtitle={`Verifique sua(s) ${eventoRespCount.respondido} respostas dos formulários de aproveitamento`}
           variant="primary"
           icon={FaEye}
           onClick={irRespostaEventos}
@@ -190,7 +196,7 @@ const HomeOpColabPage: React.FC = () => {
       <div>
         <h1 className='text-azul-principal ml-[5%] mt-10 text-[30px] font-bold drop-shadow-[5px_5px_3px_rgba(0,0,0,0.3)]'>Verifique as informações dos seus formulários e checklists</h1>
       </div>
-      <div className="p-8 pt-2 grid grid-cols-3 gap-x-5 ml-10 mt-0">
+      <div className="p-8 pt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 ml-10 mt-0">
         <HighlightCard
           title="Preencher Checklists"
           value={mockData.checkResponder}
