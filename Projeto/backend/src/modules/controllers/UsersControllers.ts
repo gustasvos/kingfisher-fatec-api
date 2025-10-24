@@ -268,22 +268,13 @@ export const addOrUpdateUsuarioLocalById = async (req: Request, res: Response) =
     const { id } = req.params;
     const { local } = req.body;
 
-    // Validar se o id existe na URL
-    if (!id) {
-      return res.status(400).json({ message: "ID do usuário é obrigatório." });
-    }
+    if (!id) return res.status(400).json({ message: "ID do usuário é obrigatório." });
 
     const usuarioId = parseInt(id);
-    if (isNaN(usuarioId)) {
-      return res.status(400).json({ message: "ID do usuário inválido." });
-    }
+    if (isNaN(usuarioId)) return res.status(400).json({ message: "ID do usuário inválido." });
 
-    // Validar se o campo local foi enviado
-    if (!local) {
-      return res.status(400).json({ message: "O campo 'local' é obrigatório." });
-    }
+    if (!local) return res.status(400).json({ message: "O campo 'local' é obrigatório." });
 
-    // Validar se o valor enviado é um enum válido
     if (!Object.values(LocalTrabalho).includes(local)) {
       return res.status(400).json({
         message: `Valor inválido para 'local'. Valores permitidos: ${Object.values(LocalTrabalho).join(", ")}.`,
@@ -293,21 +284,18 @@ export const addOrUpdateUsuarioLocalById = async (req: Request, res: Response) =
     const usuarioRepository = AppDataSource.getRepository(User);
     const usuarioLocalRepository = AppDataSource.getRepository(UsuarioLocal);
 
-    // Verificar se o usuário existe
     const usuario = await usuarioRepository.findOne({ where: { id: usuarioId } });
-    if (!usuario) {
-      return res.status(404).json({ message: "Usuário não encontrado." });
-    }
+    if (!usuario) return res.status(404).json({ message: "Usuário não encontrado." });
 
-    // Verificar se já existe um registro de local para esse usuário
     let usuarioLocal = await usuarioLocalRepository.findOne({
       where: { usuario: { id: usuario.id } },
       relations: ["usuario"],
     });
 
     if (usuarioLocal) {
-      // Atualiza
+      // Atualiza local e data
       usuarioLocal.local = local;
+      usuarioLocal.data = new Date(); // <-- define data atual
       await usuarioLocalRepository.save(usuarioLocal);
 
       return res.status(200).json({
@@ -316,10 +304,11 @@ export const addOrUpdateUsuarioLocalById = async (req: Request, res: Response) =
       });
     }
 
-    // Criar novo registro de local
+    // Criar novo registro de local com data atual
     usuarioLocal = usuarioLocalRepository.create({
       usuario,
       local,
+      data: new Date(), // define data atual
     });
 
     await usuarioLocalRepository.save(usuarioLocal);
@@ -334,5 +323,50 @@ export const addOrUpdateUsuarioLocalById = async (req: Request, res: Response) =
       message: "Erro interno ao adicionar/atualizar local do usuário.",
       error,
     });
+  }
+};
+
+
+// GET /usuario/:id/local/check
+export const checkUsuarioLocalHoje = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const usuarioId = parseInt(id!);
+
+    if (isNaN(usuarioId)) {
+      return res.status(400).json({ message: "ID do usuário inválido." });
+    }
+
+    const usuarioRepository = AppDataSource.getRepository(User);
+    const usuarioLocalRepository = AppDataSource.getRepository(UsuarioLocal);
+
+    // Verifica se o usuário existe
+    const usuario = await usuarioRepository.findOne({ where: { id: usuarioId } });
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    // Busca o último registro de local do usuário
+    const usuarioLocal = await usuarioLocalRepository.findOne({
+      where: { usuario: { id: usuarioId } },
+      order: { data: "DESC" }, // pega o mais recente
+    });
+
+    const hoje = new Date();
+    const hojeStr = `${hoje.getFullYear()}-${hoje.getMonth() + 1}-${hoje.getDate()}`;
+
+    let mostrarModal = true;
+    let ultimaData = null;
+
+    if (usuarioLocal) {
+      ultimaData = `${usuarioLocal.data!.getFullYear()}-${usuarioLocal.data!.getMonth() + 1}-${usuarioLocal.data!.getDate()}`;
+      // Se já tiver registrado hoje, não mostra
+      if (ultimaData === hojeStr) mostrarModal = false;
+    }
+
+    return res.status(200).json({ mostrarModal, ultimaData });
+  } catch (error) {
+    console.error("Erro ao checar modal do usuário:", error);
+    return res.status(500).json({ message: "Erro interno", error });
   }
 };

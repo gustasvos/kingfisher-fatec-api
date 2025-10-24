@@ -96,6 +96,35 @@ export default function HomePage() {
     }
   }, [userId]);
 
+  useEffect(() => {
+    const checkModal = async () => {
+      if (!userId) return;
+
+      try {
+        const resp = await axios.get(
+          `http://localhost:8080/usuario/${userId}/local/check`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const { mostrarModal, ultimaData } = resp.data; // backend deve retornar também a última data
+
+        const hoje = new Date();
+        const hojeStr = `${hoje.getFullYear()}-${hoje.getMonth() + 1}-${hoje.getDate()}`;
+
+        // Mostrar modal só se nunca tiver sido registrado hoje
+        if (mostrarModal && ultimaData !== hojeStr) {
+          setTimeout(() => setMostrarModal(true), 200);
+        }
+      } catch (error) {
+        console.error("Erro ao checar modal:", error);
+      }
+    };
+
+    checkModal();
+  }, [userId]);
+
+
+
   // CALENDARIO
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth() + 1);

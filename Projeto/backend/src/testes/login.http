@@ -147,3 +147,9 @@ Content-Type: application/json
 {
   "local": "REMOTO"
 }
+
+
+### Checar se o modal deve aparecer, se o usuario ja preencheu a coluna de local de trabalho hoje
+GET http://localhost:8080/usuario/2/local/check
+Authorization: Bearer {{token}}
+Content-Type: application/json
