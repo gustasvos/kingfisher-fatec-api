@@ -69,7 +69,7 @@ export default function HomePage() {
     const deveMostrar = localStorage.getItem("mostrarModalLocalTrabalho")
     if (deveMostrar === "true") {
       // Dá um pequeno delay pra deixar a transição mais suave
-      setTimeout(() => setMostrarModal(true), 600)
+      setTimeout(() => setMostrarModal(true), 200)
       localStorage.removeItem("mostrarModalLocalTrabalho") // limpa flag
     }
   }, [])
@@ -274,7 +274,7 @@ export default function HomePage() {
 
       </main>
 
-      {/* 🔹 Modal LocalTrabalho abre automaticamente após login */}
+      {/* Modal LocalTrabalho abre automaticamente após login */}
       <Modal
         aberto={mostrarModal}
         onFechar={() => setMostrarModal(false)}
