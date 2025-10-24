@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import Botao from "../../../shared/components/botao"
 import Container from "../../../shared/components/container"
-import axios from "axios";
+import instance from "../../../services/api"
+import { useAuth } from "../../../contexts/AuthContext";
 
 export default function EventoDetalhe() {
-    const usuarioID = 1
+    const { user } = useAuth(); 
+    const usuarioID = user?.id;
     const [eventos, setEventos] = useState<any>(null);
     const [dataFormatada, setdataFormatada] = useState<string>("");
     const [convidado, setConvidado] = useState<Number>(0);
@@ -16,7 +18,7 @@ export default function EventoDetalhe() {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/admin/events/convidado/${usuarioID}`)
+        instance.get(`admin/events/convidado/${usuarioID}`)
             .then((response) => {
                 const eventos = response.data.map((convite: any) => convite.evento.id);
                 if (eventos.length > 0) {
@@ -28,7 +30,7 @@ export default function EventoDetalhe() {
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/admin/events/${convidado}`)
+        instance.get(`/admin/events/${convidado}`)
             .then((response) => {
                 setEventos(response.data)
                 const data = new Date(response.data.dataHora).toLocaleDateString('pt-BR');

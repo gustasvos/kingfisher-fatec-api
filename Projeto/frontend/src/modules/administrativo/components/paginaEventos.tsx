@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
-import axios from 'axios'
+import instance from "../../../services/api";
+import { useAuth } from "../../../contexts/AuthContext";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -28,10 +29,11 @@ function PaginaEventos() {
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
 
   const calendarRef = useRef<CalendarApi | null>(null)
-  const usuarioID = 1
+  const { user } = useAuth(); // Usar o hook de autenticação
+  const usuarioID = user?.id; // Obter o ID do usuário da sessão
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/admin/events/convidado/${usuarioID}`)
+    instance.get(`/admin/events/convidado/${usuarioID}`)
       .then((response) => {
         const eventosFormatados = response.data.map((convite: any) => ({
           id: convite.evento.id,

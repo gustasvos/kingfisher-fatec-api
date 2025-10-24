@@ -26,6 +26,7 @@ const formatarDataParaPtBr = (dataIso: string): string => {
 };
 
 export default function Cadastro() {
+<<<<<<< HEAD
   const [nome, setNome] = useState("")
   const [cpf, setCpf] = useState("")
   const [data_nascimento, setData_nascimento] = useState("")
@@ -38,20 +39,34 @@ export default function Cadastro() {
   const [erro, setErro] = useState<string | null>(null)
   const [sucesso, setSucesso] = useState<string | null>(null)
   const navigate = useNavigate()
+=======
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [data_nascimento, setData_nascimento] = useState("");
+  const [genero, setGenero] = useState("");
+  const [data_contratacao, setDataContratacao] = useState("");
+  const [cargo, setCargo] = useState("");
+  const [setor, setSetor] = useState("");
+  const [senha, setSenha] = useState("");
+  const [role, setRole] = useState("usuario");
+  const [erro, setErro] = useState<string | null>(null);
+  const [sucesso, setSucesso] = useState<string | null>(null);
+  const navigate = useNavigate();
+>>>>>>> feature/front-integracao-jwt
 
   const handleCadastro = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setErro(null);       // limpa erro anterior
-    setSucesso(null);    // limpa sucesso anterior
+    e.preventDefault();
+    setErro(null);
+    setSucesso(null);
 
     const limparTexto = (texto: string) => {
       return texto
-        // .normalize('NFD')                       // separa acentos
-        .replace(/[^\p{L}\sçÇ]/gu, '')          // remove tudo exceto letras, espaços e ç/Ç
-        .replace(/\s+/g, ' ')                   // troca múltiplos espaços por 1 só
-        .trim();                                // remove espaços no início/fim
+        .replace(/[^\p{L}\sçÇ]/gu, '')
+        .replace(/\s+/g, ' ')
+        .trim();
     };
 
+<<<<<<< HEAD
     const payload = {
       nome: limparTexto(nome),
       cpf: cpf.replace(/\D/g, ""),
@@ -62,6 +77,20 @@ export default function Cadastro() {
       setor: limparTexto(setor),
       senha
     };
+=======
+  const payload = {
+    nome: limparTexto(nome),
+    cpf: cpf.replace(/\D/g, ""),
+    genero: genero.trim().charAt(0).toLowerCase(), // 'Masculino' → 'm'
+    data_nascimento,
+    cargo: limparTexto(cargo),
+    senha: senha,
+    data_contratacao,
+    role: limparTexto(role.toLowerCase()),
+    setor: limparTexto(setor)
+  };
+
+>>>>>>> feature/front-integracao-jwt
 
     try {
       const response = await instance.post("/usuario/create", payload);
@@ -89,6 +118,7 @@ export default function Cadastro() {
 
       <form onSubmit={handleCadastro}>
         <div className="inputs">
+
           <InputField
             label="Nome Completo"
             type="text"
@@ -123,9 +153,7 @@ export default function Cadastro() {
             }}
             onPaste={(e) => {
               const pastedData = e.clipboardData.getData('Text');
-              if (!isValidDataPtBr(pastedData)) {
-                e.preventDefault(); // cancela o paste se não for válido
-              }
+              if (!isValidDataPtBr(pastedData)) e.preventDefault();
             }}
           />
 
@@ -140,7 +168,7 @@ export default function Cadastro() {
           />
 
           <InputMaskField
-            label="Data de Admissão"
+            label="Data de Contratação"
             mask="00/00/0000"
             placeholder="DD/MM/AAAA"
             required
@@ -153,9 +181,7 @@ export default function Cadastro() {
             }}
             onPaste={(e) => {
               const pastedData = e.clipboardData.getData('Text');
-              if (!isValidDataPtBr(pastedData)) {
-                e.preventDefault(); // cancela o paste se não for válido
-              }
+              if (!isValidDataPtBr(pastedData)) e.preventDefault();
             }}
           />
 
@@ -182,6 +208,7 @@ export default function Cadastro() {
           <InputField
             label="Senha"
             type="password"
+<<<<<<< HEAD
             placeholder="Digite a senha"
             required
             value={senha}
@@ -214,6 +241,28 @@ export default function Cadastro() {
               <span className="role-custom"></span>
               Usuário
             </label>
+=======
+            placeholder="Digite uma senha segura"
+            required
+            maxLength={100}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+
+          <div className="input-field">
+            <label htmlFor="role" className="block text-white mb-1">Acesso</label>
+            <select
+              id="role"
+              required
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-4 py-2 rounded-md text-black"
+            >
+              <option value="">Selecione</option>
+              <option value="usuario">Usuário</option>
+              <option value="admin">Administrador</option>
+            </select>
+>>>>>>> feature/front-integracao-jwt
           </div>
         </div>
 

@@ -2,8 +2,12 @@ import React, { useMemo, useState, useEffect } from "react";
 import Navbar from "../../../shared/components/navbar";
 import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
+<<<<<<< HEAD
 import axios from "axios";
 import api from "../../../services/api";
+=======
+import instance from "./../../../services/api";
+>>>>>>> feature/front-integracao-jwt
 
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
@@ -63,8 +67,9 @@ function PreferenceChart({ data }: { data: { labels: string[]; values: number[] 
 export default function HomePage() {
 
   // user
-  const [user, setUser] = useState(null)
-  const userId = localStorage.getItem("userId")
+  const [user, setUser] = useState<User | null>(null);
+  const userString = localStorage.getItem("user");
+  const userId = userString ? JSON.parse(userString).id : null;
   const token = localStorage.getItem("token")
 
   const [eventos, setEventos] = useState<any[]>([]);
@@ -73,8 +78,8 @@ export default function HomePage() {
 
   useEffect(() => {
     if (userId) {
-      axios
-        .get(`http://localhost:8080/usuario/${userId}`, {
+      instance
+        .get(`/usuario/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
