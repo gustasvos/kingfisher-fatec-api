@@ -8,11 +8,11 @@ const router = express.Router()
 //autenticarUsuario, autorizarUsuario(['admin','usuario']),
 router.post('/usuario/create', createUsuario)
 router.post('/login', loginUsuario)
-router.post('/logout', autenticarUsuario, logoutUsuario)
-router.get('/usuario/list', listUsuario);
-router.get('/usuario/:id', listUsuarioById);
-router.put('/usuario/:id', updateUsuario);
-router.delete('/usuario/:id', deleteUsuario);
-router.get("/users/exists", checkIfUsersExist);
+router.post('/logout', logoutUsuario)
+router.get('/usuario/list', autenticarUsuario, autorizarUsuario(['admin']), listUsuario);
+router.get('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','usuario']), listUsuarioById);
+router.put('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','usuario']), updateUsuario);
+router.delete('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin']), deleteUsuario);
+router.get("/users/exists", autenticarUsuario, autorizarUsuario(['admin','comercial','operacional']), checkIfUsersExist);
 
 export default router
