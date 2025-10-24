@@ -26,20 +26,6 @@ const formatarDataParaPtBr = (dataIso: string): string => {
 };
 
 export default function Cadastro() {
-<<<<<<< HEAD
-  const [nome, setNome] = useState("")
-  const [cpf, setCpf] = useState("")
-  const [data_nascimento, setData_nascimento] = useState("")
-  const [genero, setGenero] = useState("")
-  const [data_contratacao, setDataContratacao] = useState("")
-  const [cargo, setCargo] = useState("")
-  const [setor, setSetor] = useState("")
-  const [role, setRole] = useState("")
-  const [senha, setSenha] = useState("")
-  const [erro, setErro] = useState<string | null>(null)
-  const [sucesso, setSucesso] = useState<string | null>(null)
-  const navigate = useNavigate()
-=======
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setData_nascimento] = useState("");
@@ -52,7 +38,6 @@ export default function Cadastro() {
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
->>>>>>> feature/front-integracao-jwt
 
   const handleCadastro = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,18 +51,6 @@ export default function Cadastro() {
         .trim();
     };
 
-<<<<<<< HEAD
-    const payload = {
-      nome: limparTexto(nome),
-      cpf: cpf.replace(/\D/g, ""),
-      data_nascimento,
-      genero: limparTexto(genero),
-      data_contratacao,
-      cargo: limparTexto(cargo),
-      setor: limparTexto(setor),
-      senha
-    };
-=======
   const payload = {
     nome: limparTexto(nome),
     cpf: cpf.replace(/\D/g, ""),
@@ -90,7 +63,6 @@ export default function Cadastro() {
     setor: limparTexto(setor)
   };
 
->>>>>>> feature/front-integracao-jwt
 
     try {
       const response = await instance.post("/usuario/create", payload);
@@ -208,40 +180,6 @@ export default function Cadastro() {
           <InputField
             label="Senha"
             type="password"
-<<<<<<< HEAD
-            placeholder="Digite a senha"
-            required
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            maxLength={50}
-          />
-
-          <div className="role-group pl-1">
-            <label className="role-label">
-              <input
-                type="radio"
-                name="role"
-                value="admin"
-                checked={role === "admin"}
-                onChange={handleRoleChange}
-                className="role-input"
-              />
-              <span className="role-custom"></span>
-              Admin
-            </label>
-            <label className="role-label">
-              <input
-                type="radio"
-                name="role"
-                value="usuario"
-                checked={role === "usuario"}
-                onChange={handleRoleChange}
-                className="role-input"
-              />
-              <span className="role-custom"></span>
-              Usuário
-            </label>
-=======
             placeholder="Digite uma senha segura"
             required
             maxLength={100}
@@ -262,7 +200,6 @@ export default function Cadastro() {
               <option value="usuario">Usuário</option>
               <option value="admin">Administrador</option>
             </select>
->>>>>>> feature/front-integracao-jwt
           </div>
         </div>
 

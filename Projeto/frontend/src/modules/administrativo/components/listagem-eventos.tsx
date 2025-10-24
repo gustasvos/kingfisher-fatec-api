@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import Navbar from "../../../shared/components/navbar"
-import EventoTabela from "./evento-tabela"
+import Navbar from "../../../shared/components/navbar";
 import instance from "../../../services/api";
 import Loading from "../../../shared/components/loading";
 import Modal from "../../../shared/components/modal";
@@ -35,12 +34,6 @@ export default function ListagemEventos() {
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);
 
   const userId = localStorage.getItem("userId");
-    const fetchEventos = async (userId: string) => {
-        try {
-            const res = await instance.get("/admin/events")
-            const eventosFiltrados = res.data.filter((e: Evento) => {
-                return e.participantes.some((participante) => participante.funcionario.id === parseInt(userId))
-            })
 
   const abrirModalPreencherEvento = (evento: Evento) => {
     setConteudoModal(
@@ -54,16 +47,16 @@ export default function ListagemEventos() {
 
   const fetchEventos = async (userId: string) => {
     try {
-      const res = await axios.get("http://localhost:8080/admin/events");
+      const res = await instance.get("/admin/events");
       const eventosFiltrados = res.data.filter((e: Evento) =>
         e.participantes.some(
           (p) => p.funcionario.id === parseInt(userId)
         )
       );
       setEventos(eventosFiltrados);
-      setLoading(false);
     } catch (err) {
       setError("Erro ao carregar eventos.");
+    } finally {
       setLoading(false);
     }
   };
@@ -75,7 +68,7 @@ export default function ListagemEventos() {
       setError("Usuário não encontrado.");
       setLoading(false);
     }
-  }, []);
+  }, [userId]);
 
   const formatarDataHora = (data: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -117,7 +110,6 @@ export default function ListagemEventos() {
       />
         </form>
 
-
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {eventosFiltrados.length > 0 ? (
             eventosFiltrados.map((evento) => (
@@ -136,38 +128,10 @@ export default function ListagemEventos() {
 
                   <div className="flex flex-col gap-2 mt-2">
                     <div className="flex items-center gap-2 text-gray-800">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 text-black"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 0v10m0 0l-4-4m4 4l4-4"
-                        />
-                      </svg>
                       <span>{evento.localizacao}</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-gray-800">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 text-black"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
                       <span>{evento.dataHora}</span>
                     </div>
                   </div>
@@ -189,10 +153,7 @@ export default function ListagemEventos() {
         </div>
       </main>
 
-      <Modal
-        aberto={abertoModal}
-        onFechar={() => setAbertoModal(false)}
-      >
+      <Modal aberto={abertoModal} onFechar={() => setAbertoModal(false)}>
         {conteudoModal}
       </Modal>
     </>

@@ -15,19 +15,13 @@ export default function RotasADM(){
         <>
             <Route path="/" element={<LoginPage/>}/>
             <Route path="/cadastrar" element={<Cadastro />} />
-            <Route path="/evento-convite" element={<EventoDetalhe/>}/>
-            <Route path="/colaboradores" element={<ListagemColaborador/>}/>
-            <Route path="/eventos" element={<PaginaEventos/>}/>
-            <Route path="/home" element={<HomePage/>} />
-            <Route path="/eventos-colaborador" element={<ListagemEventos />} />
-            <Route path="/local-trabalho" element={<LocalDeTrabalho />} />
-            <Route path="/resposta-eventos" element={<RespostaEventos />} />
             <Route path="/evento-convite" element={<PrivateWrapper roles={['admin']}><EventoDetalhe/></PrivateWrapper>}/>
             <Route path="/colaboradores" element={<PrivateWrapper roles={['admin']}><ListagemColaborador/></PrivateWrapper>}/>
             <Route path="/eventos" element={<PrivateWrapper roles={['admin']}><PaginaEventos/></PrivateWrapper>}/>
             <Route path="/home" element={<PrivateWrapper roles={['admin']}><HomePage/></PrivateWrapper>} />
             <Route path="/eventos-colaborador" element={<PrivateWrapper roles={['admin']}><ListagemEventos /></PrivateWrapper>} />
             <Route path="/local-trabalho" element={<PrivateWrapper roles={['admin']}><LocalDeTrabalho /></PrivateWrapper>} />
+            <Route path="/resposta-eventos" element={<RespostaEventos />} />
         </>
     )
 }

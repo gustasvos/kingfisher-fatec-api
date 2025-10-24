@@ -2,12 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import Navbar from "../../../shared/components/navbar";
 import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
-<<<<<<< HEAD
-import axios from "axios";
-import api from "../../../services/api";
-=======
 import instance from "./../../../services/api";
->>>>>>> feature/front-integracao-jwt
 
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
@@ -96,7 +91,7 @@ export default function HomePage() {
   useEffect(() => {
     if (!token) return;
 
-    api.get('/admin/events', {
+    instance.get('/admin/events', {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => {
