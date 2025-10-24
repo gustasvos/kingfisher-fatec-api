@@ -8,18 +8,14 @@ import Header from '../../../shared/components/header';
 
 // Definição da estrutura do usuário
 interface UserData {
-  avatarUrl: string;
   name: string;
   role: string;
-  email: string;
 }
 
 // Estado inicial
 const initialUser: UserData = {
-  avatarUrl: '../../../../assets/usuario.svg',
   name: "Carregando...",
   role: "",
-  email: "",
 };
 // Definição da estrutura de dados esperada do backend
 interface DashboardData {
@@ -165,7 +161,7 @@ const HomeOpAdminPage: React.FC = () => {
     <>
       <Navbar />
       <header>
-        <Header user={user} placeholderAvatar={initialUser.avatarUrl} />
+        <Header user={user} />
       </header>
 
       <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-10">
