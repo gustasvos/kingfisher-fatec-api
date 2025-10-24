@@ -7,4 +7,19 @@ const instance = axios.create({
     }
 })
 
+// Adicionar este Interceptor:
+instance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // O formato esperado pelo backend é "Bearer [token]"
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 export default instance
