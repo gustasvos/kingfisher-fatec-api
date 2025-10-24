@@ -116,18 +116,17 @@ export default function CheckMoto({form}: FormAberturaProps) {
     const labelClasses = "absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
     
     return (
-        <div>
-            <section>
-                <h1 style={{ color: "#000000ff", fontSize: "2.5rem", fontWeight: 700 }}>
-                    Checklist de Cadastro de Agregados - Moto
-                </h1>
-            </section>
-            
-            <section>
-                <form>
-                    <h2 style={{ color: "#0044ffff", fontSize: "1.5rem", fontWeight: 700 }} className="mt-8 mb-4 border-b pb-2">
-                        Sessão 1: Dados Pessoais
-                    </h2>
+        <div className="mx-auto w-full max-w-5xl bg-gradient-to-b from-white to-gray-50 shadow-2xl rounded-3xl p-10 mt-10 border border-gray-200 h-[85vh] overflow-y-auto">
+    <section>
+        <h1 style={{ color: "#000000ff", fontSize: "1.5rem", fontWeight: 700 }}>
+            Checklist de Cadastro de Agregados - Moto 
+        </h1>
+    </section>
+    <section>
+        <form>
+            <h2 style={{ color: "#0044ffff", fontSize: "1.5rem", fontWeight: 700 }} className="mt-8 mb-4 border-b pb-2">
+                Sessão 1: Dados Pessoais
+            </h2>
                     
                     <section id="sessao-1-dados-pessoais" className="space-y-6">
                         <InputLine type="text" placeholder="" id='nome' htmlfor="nome" value={nome} onChange={(e) => setNome(e.target.value)} required>Nome Completo</InputLine>
