@@ -31,10 +31,11 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setData_nascimento] = useState("");
   const [genero, setGenero] = useState("");
-  const [data_admissao, setDataAdmissao] = useState("");
+  const [data_contratacao, setDataContratacao] = useState("");
   const [cargo, setCargo] = useState("");
   const [setor, setSetor] = useState("");
   const [senha, setSenha] = useState("");
+  const [role, setRole] = useState("usuario");
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -42,29 +43,32 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-        const response = await instance.get(`/usuario/${id}`)
-        const usuario = response.data
+        const response = await instance.get(`/usuario/${id}`);
+        const usuario = response.data;
 
         if (!usuario) {
-          setErro("Usuário não encontrado.")
+          setErro("Usuário não encontrado.");
           return
         }
 
-        setNome(usuario.nome)
-        setCpf(usuario.cpf)
-        setData_nascimento(usuario.data_nascimento)
-        setGenero(usuario.genero)
-        setDataAdmissao(usuario.data_contratacao)
-        setCargo(usuario.cargo)
-        setSetor(usuario.setor)
+        setNome(usuario.nome);
+        setCpf(usuario.cpf);
+        setData_nascimento(usuario.data_nascimento);
+        setGenero(usuario.genero);
+        setDataContratacao(usuario.data_contratacao);
+        setCargo(usuario.cargo);
+        setSetor(usuario.setor);
+        setRole(usuario.role || "usuario");
+        console.log('usuario:', usuario)
 
       } catch (error) {
-        setErro("Falha ao carregar dados do usuário, tenta de novo mais tarde.");
+        setErro("Falha ao carregar dados do usuário, tente novamente mais tarde.");
       }
-    };
+    }
 
     fetchUsuario();
   }, [id]);
+  
 
 
   const handleSalvar = async (e: React.FormEvent) => {
@@ -72,29 +76,30 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
     setErro(null);
     setSucesso(null);
 
-    // Remove caracteres que não são letras, espaços ou cedilha e ajeita espaços
     const limparTexto = (texto: string) =>
       texto.replace(/[^\p{L}\sçÇ]/gu, '').replace(/\s+/g, ' ').trim();
-
 
     const payload: {
       nome: string
       cpf: string
       data_nascimento: string
       genero: string
-      data_admissao: string
+      data_contratacao: string
       cargo: string
       setor: string
+      role: string
       senha?: string
     } = {
       nome: limparTexto(nome),
       cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
       genero: limparTexto(genero),
-      data_admissao,
+      data_contratacao,
       cargo: limparTexto(cargo),
       setor: limparTexto(setor),
-    };
+      role: limparTexto(role.toLowerCase()),
+    }
+
 
     // não incluir senha na atualização, a não ser que ela tenha sido alterada
     if (senha) {
@@ -178,10 +183,10 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
             placeholder="DD/MM/AAAA"
             required
             maxLength={10}
-            value={data_admissao ? formatarDataParaPtBr(data_admissao) : ""}
+            value={data_contratacao ? formatarDataParaPtBr(data_contratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
-                setDataAdmissao(dataLimpa(value));
+                setDataContratacao(dataLimpa(value));
               }
             }}
           />
@@ -214,6 +219,21 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
+
+          <div className="input-field">
+            <label htmlFor="role" className="block text-white mb-1">Acesso</label>
+            <select
+              id="role"
+              required
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-4 py-2 rounded-md text-black"
+            >
+              <option value="">Selecione</option>
+              <option value="usuario">Usuário</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
 
         </div>
 
