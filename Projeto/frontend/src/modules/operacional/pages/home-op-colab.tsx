@@ -94,32 +94,23 @@ const irEventosColaborador = () =>{
       <Header user={mockHeader.user} placeholderAvatar={mockHeader.user.avatarUrl} />
       <Navbar />
 
-      <div className="p-8 grid grid-cols-4 gap-x-4 ml-10">
+      <div className="p-8  pb-2 grid grid-cols-3 gap-x-5 ml-10">
         <HighlightCard
-          title="Preencher Checklists"
-          value={mockData.checkResponder}
-          subtitle={mockCheckPreencher.subtitle}
+          title="Confirmar presença/preencher"
+          value={mockData3.eventos}
+          subtitle={mockEventos.subtitle}
           variant="primary"
-          icon={FaRegEdit}
-          onClick={irEventosCOlaborador}
+          icon={FaCalendar}
+          onClick={irEventosColaborador}
         />
 
         <HighlightCard
-          title="Checklists Preenchido"
+          title=" Ver formulário de aproveitamento"
           value={mockData2.checkRespondido}
           subtitle={mockCheckPreenchidos.subtitle}
           variant="primary"
           icon={FaEye}
           onClick={irRespostaEventos}
-        />
-
-        <HighlightCard
-          title="Ver Eventos"
-          value={mockData3.eventos}
-          subtitle={mockEventos.subtitle}
-          variant="primary"
-          icon={FaCalendar}
-          onClick={irEventos}
         />
 
         <HighlightCard
@@ -130,7 +121,27 @@ const irEventosColaborador = () =>{
           icon={FaCalendar}
           onClick={irEventosColaborador}
         />
+      </div>
+      <div className="p-8 pt-2 grid grid-cols-2 gap-x-5 ml-10 mt-0">
+        <HighlightCard
+          title="Preencher Checklists"
+          value={mockData.checkResponder}
+          subtitle={mockCheckPreencher.subtitle}
+          variant="primary"
+          icon={FaRegEdit}
+          onClick={irEventosCOlaborador}
+        />
+
+        <HighlightCard
+          title="Ver Eventos"
+          value={mockData3.eventos}
+          subtitle={mockEventos.subtitle}
+          variant="primary"
+          icon={FaCalendar}
+          onClick={irEventos}
+        />
       </div >
+      
     </>
   );
 };
