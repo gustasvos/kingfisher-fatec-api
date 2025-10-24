@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../../shared/components/navbar"
 import EventoTabela from "./evento-tabela"
-import axios from "axios";
+import instance from "../../../services/api";
 import Loading from "../../../shared/components/loading";
 
 interface Evento {
@@ -33,7 +33,7 @@ export default function ListagemEventos() {
 
     const fetchEventos = async (userId: string) => {
         try {
-            const res = await axios.get("http://localhost:8080/admin/events")
+            const res = await instance.get("/admin/events")
             const eventosFiltrados = res.data.filter((e: Evento) => {
                 return e.participantes.some((participante) => participante.funcionario.id === parseInt(userId))
             })

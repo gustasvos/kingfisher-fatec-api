@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import Navbar from "../../../shared/components/navbar";
 import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
-import axios from "axios";
+import instance from "./../../../services/api";
 
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
@@ -62,14 +62,15 @@ function PreferenceChart({ data }: { data: { labels: string[]; values: number[] 
 export default function HomePage() {
 
   // user
-  const [user, setUser] = useState(null)
-  const userId = localStorage.getItem("userId")
+  const [user, setUser] = useState<User | null>(null);
+  const userString = localStorage.getItem("user");
+  const userId = userString ? JSON.parse(userString).id : null;
   const token = localStorage.getItem("token")
 
   useEffect(() => {
     if (userId) {
-      axios
-        .get(`http://localhost:8080/usuario/${userId}`, {
+      instance
+        .get(`/usuario/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
