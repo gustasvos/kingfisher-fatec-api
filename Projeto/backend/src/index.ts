@@ -8,7 +8,7 @@ const app = express()
 app.use(express.json())
 app.use(cors({
   origin: 'http://localhost:3000', // ou '*' para liberar geral (não recomendado em produção)
-  methods: ['GET','POST','PUT','DELETE'],
+  methods: ['GET','POST','PUT','DELETE', 'PATCH','OPTIONS'],
   credentials: true // se você usa cookies, tokens etc
 }));
 
