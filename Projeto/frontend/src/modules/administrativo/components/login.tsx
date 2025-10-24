@@ -3,7 +3,7 @@ import { IMaskInput } from "react-imask";
 import instance from "../../../services/api";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import { useAuth } from '../../../contexts/AuthContext';
 
 
 export default function Login() {
@@ -13,9 +13,10 @@ export default function Login() {
     const [sucesso, setSucesso] = useState<string | null>(null);
     const navigate = useNavigate(); // hook do react-router-dom
     const [temUsuario, setTemUsuario] = useState<boolean | null>(null);
+    const { login } = useAuth();
 
     useEffect(() => {
-        axios.get("http://localhost:8080/users/exists")
+        instance.get("/users/exists")
             .then(response => {
                 setTemUsuario(response.data.exists);
             })
@@ -31,22 +32,25 @@ export default function Login() {
         setSucesso(null);    // limpa sucesso anterior
         const cpfLimpo = cpf.replace(/\D/g, "");
         try {
-            const response = await instance.post("/login", { cpf: cpfLimpo, senha });
-            const { token, user } = response.data;
+            const response = await instance.post("/login", { cpf: cpfLimpo, senha })
+            const { token, user } = response.data
+
             if (token && user) {
-                localStorage.setItem("token", token);
-                localStorage.setItem("userId", user.id.toString());  // Armazenando o ID do usuário
-                setSucesso("Login realizado com sucesso!");
-                // Aguarda 1 segundo e redireciona
-                setTimeout(() => {
-                    navigate("/home");
-                }, 1000);
+                if (user.role === "admin") {
+                    login(token, user);
+                    setSucesso("Login realizado com sucesso!");
+                    setTimeout(() => {
+                        navigate("/home");
+                    }, 1000);
+                } else {
+                    setErro("Acesso negado: usuário não possui permissão de administrador.");
+                }
             } else {
                 setErro("Token não recebido do servidor");
             }
         } catch (error) {
-            console.error("Erro no login:", error);
-            setErro("Erro ao fazer login");
+            console.error("Erro no login:", error)
+            setErro("Erro ao fazer login")
         }
     }
 
