@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import CadastroCliente from "../modules/comercial/cadastrocliente";
+import CadastroCliente from "../modules/comercial/pages/cadastrocliente";
 
 export default function RotasComercial(){
     return (
