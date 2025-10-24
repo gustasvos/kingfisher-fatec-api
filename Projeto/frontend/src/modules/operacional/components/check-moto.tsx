@@ -116,7 +116,9 @@ export default function CheckMoto({form}: FormAberturaProps) {
     const labelClasses = "absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
     
     return (
-        <div className="mx-auto w-full max-w-5xl bg-gradient-to-b from-white to-gray-50 shadow-2xl rounded-3xl p-10 mt-10 border border-gray-200 h-[85vh] overflow-y-auto">
+        <div className="w-full flex justify-center mt-8 px-4">
+        <div className="bg-white shadow-lg rounded-3xl w-full max-w-5xl h-[90vh] border border-gray-100 overflow-hidden">
+        <div className="h-full overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-[#17607f] scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
     <section>
         <h1 style={{ color: "#44648d", fontSize: "1.7rem", fontWeight: 700 , textAlign: "center"}}>
             Checklist de Cadastro de Agregados - Moto 
@@ -128,10 +130,10 @@ export default function CheckMoto({form}: FormAberturaProps) {
                 Sessão 1: Dados Pessoais
             </h2>
                     
-                    <section id="sessao-1-dados-pessoais" className="grid grid-cols-2 gap-4">
+                    <section id="sessao-1-dados-pessoais" className="flex flex-col gap-6">
                         <InputLine type="text" placeholder="" id='nome' htmlfor="nome" value={nome} onChange={(e) => setNome(e.target.value)} required>Nome Completo</InputLine>
                         
-                        <fieldset className="w-fit border border-gray-300 rounded-md px-2 py-1 bg-gray-50 text-sm"> 
+                        <fieldset className="border border-gray-200 rounded-xl p-4 w-[300px]"> 
                             <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Pessoa Física ou Jurídica</legend>
                             <div className="flex items-center space-x-3 mt-3">
                                 <InputLine 
@@ -247,7 +249,7 @@ export default function CheckMoto({form}: FormAberturaProps) {
                                 UF
                         </InputLine>
                         
-                        <fieldset className="w-fit border border-gray-300 rounded-md px-2 py-1 bg-gray-50 text-sm"> 
+                        <fieldset className="border border-gray-200 rounded-xl p-4 w-[400px]"> 
                             <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Gênero</legend>
                             <div className="flex items-center space-x-3 mt-3">
                                 <InputLine type="radio" name="genero" id='masculino' htmlfor="masculino" required value="masculino"
@@ -280,7 +282,7 @@ export default function CheckMoto({form}: FormAberturaProps) {
                         <InputLine type="text" placeholder="" id='cor' htmlfor="cor" value={cor} required onChange={(e) => setCor(e.target.value)}>Cor</InputLine>
                         <InputLine type="text" placeholder="" id='ano-fabricacao' htmlfor="ano-fabricacao" value={anoFabricacao} required onChange={(e) => setAnoFabricacao(e.target.value)}>Ano fabricação</InputLine>
                         <InputLine type="text" placeholder="" id='cilindrada' htmlfor="cilindrada" value={cilindrada} required onChange={(e) => setCilindrada(e.target.value)}>Cilindrada</InputLine>
-                        <fieldset  className="w-fit border border-gray-300 rounded-md px-2 py-1 bg-gray-50 text-sm ">
+                        <fieldset className="border border-gray-200 rounded-xl p-4">
                             <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Possui báu ou suporte para carga?</legend>
                             <div className="flex items-center space-x-3 mt-3">
                                 <InputLine type="radio" name="bau" value="sim" id='bau-sim' htmlfor="bau-sim" required
@@ -293,7 +295,7 @@ export default function CheckMoto({form}: FormAberturaProps) {
                                     onChange={handleBauChange}>Não</InputLine>
                             </div>
                         </fieldset>
-                        <fieldset  className="w-fit border border-gray-300 rounded-md px-2 py-1 bg-gray-50 text-sm">
+                        <fieldset className="border border-gray-200 rounded-xl p-4">
                             <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Possui seguro?</legend>
                             <div className="flex items-center space-x-3 mt-3">
                                 <InputLine type="radio" name="seguro" id='seguro-sim' htmlfor="seguro-sim"  required value="sim"
@@ -316,7 +318,7 @@ export default function CheckMoto({form}: FormAberturaProps) {
                                 Sessão 3: Dados do Frete</h2>
                         <InputLine type="text" placeholder="" id='valor-saida' htmlfor="valor-saida" value={valorSaida} required onChange={(e) => setValorSaida(e.target.value)}>Qual valor mínimo você cobraria por saída?</InputLine>
                         <InputLine type="text" placeholder="" id='valor-km-rodado' htmlfor="valor-km-rodado" value={valorKmRodado} required onChange={(e) => setKmRodado(e.target.value)}>Qual valor mínimo você cobraria por Km rodado?</InputLine>
-                        <fieldset  className="w-fit border border-gray-300 rounded-md px-2 py-1 bg-gray-50 text-sm">
+                        <fieldset className="border border-gray-200 rounded-xl p-4 w-[300px]">
                             <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Possui curso moto frete?</legend>
                             <div className="flex items-center space-x-3 mt-3">
                                 <InputLine type="radio" name="possui-curso" id='possui-curso-sim' htmlfor="possui-curso-sim" required value="sim"
@@ -333,10 +335,12 @@ export default function CheckMoto({form}: FormAberturaProps) {
                         </fieldset>                        
                     </section>
                       <div className="flex justify-center mt-8">
-                        <BotaoSubmit loading={loading} label="Enviar" type="submit" className="bg-[#44648d] text-white rounded-md px-4 py-2 font-bold"/>
+                        <BotaoSubmit loading={loading} label="Enviar" type="submit" className="bg-[#44648d] text-white rounded-md px-4 py-2 font-bold hover:bg-[#44648d] hover:opacity-100 hover:cursor-default"/>
                       </div>
                 </form>
             </section>
+        </div>
+        </div>
         </div>
     )
 }
