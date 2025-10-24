@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import React, { useState } from "react";
+import { useAuth } from "./../../contexts/AuthContext";
 
 // Imagens importadas igual ao Sidebar
 import imgLogin from './../../assets/imgLoginKey.svg';
@@ -32,6 +33,8 @@ export default function Navbar() {
     setAbertoModal(true)
   }
 
+  const { logout } = useAuth();
+
   return (
     <nav className={`${aberto ? "w-[200px]" : "w-[60px]"} bg-[#135b78] flex flex-col items-center min-h-screen text-white py-6 gap-6 fixed top-0`}>
       <section
@@ -45,10 +48,12 @@ export default function Navbar() {
 
       <section className="flex flex-col space-y-6">
         {/* Aqui usei as rotas que você tem no Sidebar, pode ajustar se quiser */}
-        <NavLink to="/" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-          <img src={imgLogin} alt="Login" className="w-7 h-7" />
-          {aberto ? <p className="pl-2 text-[15px] font-semibold">Login</p> : null}
-        </NavLink>
+        <button onClick={logout} 
+          className="rounded-md flex items-center hover:bg-[#1b7091d8]"
+        >
+          <img src={imgLogin} alt="Logout" className="w-7 h-7" />
+          {aberto ? <p className="pl-2 text-[15px] font-semibold">Sair</p> : null}
+        </button>
 
         <NavLink to="/home" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
           <img src={imgHome} alt="Home" className="w-7 h-7" />
