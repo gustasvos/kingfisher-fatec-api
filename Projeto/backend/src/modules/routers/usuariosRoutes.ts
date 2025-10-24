@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUsuario, listUsuario,listUsuarioById, updateUsuario, deleteUsuario, loginUsuario, logoutUsuario, checkIfUsersExist } from '../controllers/UsersControllers'
+import { createUsuario, listUsuario,listUsuarioById, updateUsuario, deleteUsuario, loginUsuario, logoutUsuario, checkIfUsersExist, addOrUpdateUsuarioLocalById } from '../controllers/UsersControllers'
 import { autenticarUsuario } from '../../middlewares/auth.middleware'
 import { autorizarUsuario } from '../../middlewares/autorizar.middleware'
 
@@ -14,5 +14,7 @@ router.get('/usuario/:id', listUsuarioById);
 router.put('/usuario/:id', updateUsuario);
 router.delete('/usuario/:id', deleteUsuario);
 router.get("/users/exists", checkIfUsersExist);
+router.post("/usuario/:id/local", addOrUpdateUsuarioLocalById);
+
 
 export default router

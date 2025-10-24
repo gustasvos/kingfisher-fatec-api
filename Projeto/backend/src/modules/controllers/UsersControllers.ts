@@ -12,6 +12,8 @@ import { validarTelefone } from '../../utils/validarTelefone'
 import * as dotenv from "dotenv"
 dotenv.config()
 import jwt from 'jsonwebtoken'
+import { UsuarioLocal } from '../models/UsuarioLocal'
+import { LocalTrabalho } from '../../utils/enums/usuarioLocalEnums'
 // Simulando uma blacklist em memória
 export const tokenBlacklist: string[] = [];
 
@@ -259,3 +261,78 @@ export const logoutUsuario = (req: Request, res: Response) => {
         tokenDescartado: token
     });
 }
+
+// POST USUARIO LOCAL
+export const addOrUpdateUsuarioLocalById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { local } = req.body;
+
+    // Validar se o id existe na URL
+    if (!id) {
+      return res.status(400).json({ message: "ID do usuário é obrigatório." });
+    }
+
+    const usuarioId = parseInt(id);
+    if (isNaN(usuarioId)) {
+      return res.status(400).json({ message: "ID do usuário inválido." });
+    }
+
+    // Validar se o campo local foi enviado
+    if (!local) {
+      return res.status(400).json({ message: "O campo 'local' é obrigatório." });
+    }
+
+    // Validar se o valor enviado é um enum válido
+    if (!Object.values(LocalTrabalho).includes(local)) {
+      return res.status(400).json({
+        message: `Valor inválido para 'local'. Valores permitidos: ${Object.values(LocalTrabalho).join(", ")}.`,
+      });
+    }
+
+    const usuarioRepository = AppDataSource.getRepository(User);
+    const usuarioLocalRepository = AppDataSource.getRepository(UsuarioLocal);
+
+    // Verificar se o usuário existe
+    const usuario = await usuarioRepository.findOne({ where: { id: usuarioId } });
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    // Verificar se já existe um registro de local para esse usuário
+    let usuarioLocal = await usuarioLocalRepository.findOne({
+      where: { usuario: { id: usuario.id } },
+      relations: ["usuario"],
+    });
+
+    if (usuarioLocal) {
+      // Atualiza
+      usuarioLocal.local = local;
+      await usuarioLocalRepository.save(usuarioLocal);
+
+      return res.status(200).json({
+        message: "Local de trabalho atualizado com sucesso!",
+        usuarioLocal,
+      });
+    }
+
+    // Criar novo registro de local
+    usuarioLocal = usuarioLocalRepository.create({
+      usuario,
+      local,
+    });
+
+    await usuarioLocalRepository.save(usuarioLocal);
+
+    return res.status(201).json({
+      message: "Local de trabalho adicionado com sucesso ao usuário!",
+      usuarioLocal,
+    });
+  } catch (error) {
+    console.error("Erro ao adicionar/atualizar local:", error);
+    return res.status(500).json({
+      message: "Erro interno ao adicionar/atualizar local do usuário.",
+      error,
+    });
+  }
+};

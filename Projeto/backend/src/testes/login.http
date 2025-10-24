@@ -138,3 +138,12 @@ Authorization: Bearer {{token}}
 Content-Type: application/json 
 
 {}
+
+
+### Adicionar ou atualizar local de trabalho de um usuário
+POST http://localhost:8080/usuario/2/local
+Content-Type: application/json
+
+{
+  "local": "REMOTO"
+}
