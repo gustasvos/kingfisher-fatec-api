@@ -1,11 +1,8 @@
 import { BrowserRouter, Routes } from "react-router-dom";
 import RotasADM from "./administrativo";
-<<<<<<< HEAD
 import RotasComercial from "./comercial";
 import { AuthProvider } from "../contexts/AuthContext"; 
-=======
 import RotasOp from "./operacional";
->>>>>>> feature/front-form-abertura
 
 export default function RotasGerais(){
     return(
