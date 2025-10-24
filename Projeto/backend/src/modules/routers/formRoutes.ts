@@ -12,5 +12,6 @@ router.post('/submit', setUploadTimestamp, upload.any(), handleFormSubmit);
 router.get("/listar-uploads", listarUploadsBack)
 router.get("/ver-csv", listarCSV)
 router.get("/consulta/:chave", consultaGenerica);
+router.post('/submit')
 
 export default router;
