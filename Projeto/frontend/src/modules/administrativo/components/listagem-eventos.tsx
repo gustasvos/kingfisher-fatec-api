@@ -3,6 +3,7 @@ import Navbar from "../../../shared/components/navbar";
 import instance from "../../../services/api";
 import Loading from "../../../shared/components/loading";
 import Modal from "../../../shared/components/modal";
+import EventoDetalhe from "./eventoDetalhe";
 import RelatorioAproveitamento from "./relatorio-aproveitamento";
 
 interface Evento {
@@ -35,26 +36,60 @@ export default function ListagemEventos() {
 
   const userId = localStorage.getItem("userId");
 
-  const abrirModalPreencherEvento = (evento: Evento) => {
-    setConteudoModal(
-      <RelatorioAproveitamento
-        tituloInicial={evento.titulo}
-        onFechar={() => setAbertoModal(false)}
-      />
+  // Função para abrir o modal conforme o status do convite
+  const abrirModalEvento = async(evento: Evento) => {
+    const convite = evento.participantes.find(
+      (p) => p.funcionario.id === parseInt(userId || "")
     );
+
+    if (!convite) return;
+
+    switch (convite.status.toUpperCase()) {
+      case "PENDENTE":
+        setConteudoModal(
+          <EventoDetalhe
+            evento={evento}
+            onFechar={() => setAbertoModal(false)}
+          />
+        );
+        break;
+
+      case "CONFIRMADO":
+      case "APROVADO":
+        setConteudoModal(
+          <RelatorioAproveitamento
+            tituloInicial={evento.titulo}
+            dataInicial={evento.dataHora}
+            onFechar={() => setAbertoModal(false)}
+          />
+        );
+        break;
+
+      default:
+        // Ignora recusado ou outros
+        setConteudoModal(
+          <p className="text-gray-700 p-4">
+            Este evento não está disponível para você.
+          </p>
+        );
+        break;
+    }
+
     setAbertoModal(true);
   };
 
+  // Buscar eventos e filtrar recusados
   const fetchEventos = async (userId: string) => {
     try {
       const res = await instance.get("/admin/events");
       const eventosFiltrados = res.data.filter((e: Evento) =>
         e.participantes.some(
-          (p) => p.funcionario.id === parseInt(userId)
+          (p) => p.funcionario.id === parseInt(userId) && p.status !== "RECUSADO"
         )
       );
       setEventos(eventosFiltrados);
     } catch (err) {
+      console.error(err);
       setError("Erro ao carregar eventos.");
     } finally {
       setLoading(false);
@@ -98,16 +133,16 @@ export default function ListagemEventos() {
       <Navbar />
       <main className="p-8 min-h-screen bg-[#d8ecf3]">
         <form className="w-full mb-8" onSubmit={(e) => e.preventDefault()}>
-      <input
-        type="text"
-        placeholder="Pesquisar evento..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full px-6 py-3 rounded-full border border-[#9aa7ad]
+          <input
+            type="text"
+            placeholder="Pesquisar evento..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-6 py-3 rounded-full border border-[#9aa7ad]
                bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
                focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
                transition-colors text-lg"
-      />
+          />
         </form>
 
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -138,7 +173,7 @@ export default function ListagemEventos() {
                 </div>
 
                 <button
-                  onClick={() => abrirModalPreencherEvento(evento)}
+                  onClick={() => abrirModalEvento(evento)}
                   className="mt-6 bg-[#135b78] hover:bg-[#114a5f] text-white px-4 py-2 rounded-lg shadow transition-all duration-200 w-full"
                 >
                   Preencher
