@@ -8,7 +8,6 @@ import imgUser from './../../assets/imgAddUserMale.png';
 import imgCalendar from './../../assets/imgTearOffCalendar.png';
 import imgNotification from './../../assets/imgDoorbell.png';
 import imgColab from './../../assets/imgTeam.svg';
-import imgRespostaEvento  from './../../assets/imgRespostaEvento.png'
 import Cadastro from "../../modules/administrativo/pages/PaginaCadastro";
 import Modal from "./modal";
 import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
@@ -34,7 +33,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`${aberto ? "w-[200px]" : "w-[60px]"} bg-[#135b78] flex flex-col items-center min-h-screen text-white py-6 gap-6 fixed top-0 z-10`}>
+    <nav className={`${aberto ? "w-[200px]" : "w-[60px]"} bg-[#135b78] flex flex-col items-center min-h-screen text-white py-6 gap-6 fixed top-0`}>
       <section
         className={`${aberto ? "self-start flex flex-col justify-start space-y-1 pl-6" : "flex flex-col justify-start space-y-1"} cursor-pointer`}
         onClick={() => setAberto(!aberto)}
@@ -74,11 +73,6 @@ export default function Navbar() {
         <NavLink to="/colaboradores" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
           <img src={imgColab} alt="Colaboradores" className="w-7 h-7" />
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Colaboradores</p> : null}
-        </NavLink>
-
-        <NavLink to="/resposta-eventos" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-          <img src={imgRespostaEvento} alt="Colaboradores" className="w-7 h-7" />
-          {aberto ? <p className="pl-2 text-[15px] font-semibold">Relatório de Aproveitamento</p> : null}
         </NavLink>
       </section>
 

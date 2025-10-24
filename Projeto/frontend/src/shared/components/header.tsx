@@ -14,8 +14,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ user, placeholderAvatar }) => {
   return (
-    <header
-      className="card p-8 flex gap-6 items-center bg-[#135b78] rounded-lg overflow-hidden relative left-[10vh] max-w-[90w] w-[90%]"
+    <header className="card p-8 flex gap-6 items-center bg-[#135b78] rounded-lg overflow-hidden ml-10 w-[93%] justify-self-center"
       style={{ color: "#000" }}
     >
       <div
