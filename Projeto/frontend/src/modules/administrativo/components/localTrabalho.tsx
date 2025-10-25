@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Home, MapPin } from "lucide-react";
-import axios from "axios";
+import instance from "../../../services/api";
 
 export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
   const [opcao, setOpcao] = useState<string | null>(null);
@@ -9,15 +9,13 @@ export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
 
   const opcoes = [
     { id: "REMOTO", label: "Remoto", icon: Home },
-    { id: "PRESENCIAL", label: "Presencial", icon: MapPin }
+    { id: "PRESENCIAL", label: "Presencial", icon: MapPin },
   ];
 
   const confirmar = async () => {
     if (!opcao) return;
 
     const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
-
     if (!userId) {
       setError("Usuário não encontrado.");
       return;
@@ -26,11 +24,7 @@ export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
     try {
       setLoading(true);
       setError("");
-      await axios.post(
-        `http://localhost:8080/usuario/${userId}/local`,
-        { local: opcao },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await instance.post(`/usuario/${userId}/local`, { local: opcao });
       if (onFechar) onFechar();
     } catch (err) {
       console.error(err);
@@ -53,8 +47,8 @@ export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
             onClick={() => setOpcao(id)}
             className={`flex items-center justify-center gap-2 px-3 py-3 rounded-md transition-colors min-w-[120px]
               ${opcao === id
-                ? "bg-white text-black shadow-md scale-105" 
-                : "bg-white text-black hover:bg-grey-200"}`}
+                ? "bg-white text-black shadow-md scale-110" 
+                : "bg-white text-black hover:bg-grey-200 scale-105"}`}
           >
             <Icon size={20} className="flex-shrink-0" />
             {label}

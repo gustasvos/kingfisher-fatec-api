@@ -5,6 +5,7 @@ import Chart from "chart.js/auto";
 import axios from "axios";
 import Modal from "../../../shared/components/modal";
 import LocalTrabalho from "../components/localTrabalho";
+import instance from "./../../../services/api";
 
 
 type User = { name: string; role: string; email: string; avatarUrl?: string };
@@ -69,48 +70,27 @@ export default function HomePage() {
   const userId = localStorage.getItem("userId")
   const token = localStorage.getItem("token")
 
+  
   useEffect(() => {
-    if (!userId) return;
-
-    axios
-      .get(`http://localhost:8080/usuario/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(res => setUser(res.data))
-      .catch(err => console.error("Erro ao buscar usuário:", err));
-  }, [userId]);
-
-  // Checar se deve mostrar modal (usuário ainda não respondeu hoje)
-  useEffect(() => {
-    const checkModal = async () => {
-      if (!userId) return;
-
-      try {
-        const resp = await axios.get(
-          `http://localhost:8080/usuario/${userId}/local/check`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        const { mostrarModal } = resp.data;
-
-        if (mostrarModal) {
-          // mostra o modal suavemente
-          setTimeout(() => setMostrarModal(true), 200);
-        } else {
-          setMostrarModal(false);
-        }
-      } catch (error) {
-        console.error("Erro ao checar modal:", error);
-      }
-    };
-
-    checkModal();
+    if (userId) {
+      instance
+        .get(`/usuario/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar usuário:", error);
+        });
+    }
   }, [userId]);
 
   const fecharModal = () => {
     setMostrarModal(false);
   };
-
 
 
   // CALENDARIO
