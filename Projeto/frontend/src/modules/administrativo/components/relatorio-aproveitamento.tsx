@@ -8,12 +8,14 @@ interface Evento {
 }
 
 interface RelatorioAproveitamentoProps {
+  eventoId?: number;
   tituloInicial?: string;
   dataInicial?: string;
   onFechar?: () => void;
 }
 
 export default function RelatorioAproveitamento({
+  eventoId,
   tituloInicial,
   dataInicial,
   onFechar,
@@ -32,20 +34,28 @@ export default function RelatorioAproveitamento({
       try {
         const response = await instance.get<Evento[]>("/admin/events");
         if (response.data.length > 0) {
-          const ev = response.data[0]; // pegar primeiro evento como exemplo
-          setEvento(ev);
+          const ev = eventoId
+            ? response.data.find(e => e.id === eventoId)
+            : response.data[0];
+          if (ev) setEvento(ev);
         }
       } catch (error) {
         console.error("Erro ao carregar dados do evento", error);
       }
     }
 
-    if (!tituloInicial || !dataInicial) {
+    if (eventoId) {
+      setEvento({
+        id: eventoId,
+        titulo: tituloInicial ?? "Evento",
+        dataHora: dataInicial ?? new Date().toISOString(),
+      });
+    } else if (!tituloInicial || !dataInicial) {
       fetchEvento();
     } else {
       setEvento({ id: 0, titulo: tituloInicial, dataHora: dataInicial });
     }
-  }, [tituloInicial, dataInicial]);
+  }, [eventoId, tituloInicial, dataInicial]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,9 +163,8 @@ export default function RelatorioAproveitamento({
                 key={star}
                 type="button"
                 onClick={() => setAvaliacao(star)}
-                className={`text-2xl ${
-                  avaliacao >= star ? "text-yellow-400" : "text-gray-300"
-                }`}
+                className={`text-2xl ${avaliacao >= star ? "text-yellow-400" : "text-gray-300"
+                  }`}
               >
                 ★
               </button>
