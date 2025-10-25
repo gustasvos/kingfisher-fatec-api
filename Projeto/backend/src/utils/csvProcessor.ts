@@ -1,4 +1,3 @@
-// meu-projeto/backend/src/utils/csvProcessor.ts
 import * as fs from 'fs';
 import csv from 'csv-parser';
 import * as path from 'path';
@@ -34,27 +33,31 @@ const readCsvFile = (filePath: string): Promise<any[]> => {
 
 // normaliza uma linha de Checklist de Veículos Agregados
 const mapAgregadoCarroToDashboardRow = (row: any): DashboardRow | null => {
-  const tipo = String(row['tipo_veiculo']).toUpperCase();
-  const timestamp = row['timestamp'];
-  if (!timestamp || !tipo) return null;
+  const tipo = String(row['tipo-veiculo']).toUpperCase();
+  const nomeMotorista = row['name'];
+  if (!nomeMotorista || !tipo) return null;
   return {
     isAgregado: true,
     isNewe: false,
     tipoVeiculo: tipo,
-    dataCadastro: new Date(timestamp),
+    dataCadastro: new Date(),
     isAptoNewe: null,
   };
 };
 
 // normaliza uma linha de Checklist de Agregados (Moto).
 const mapAgregadoMotoToDashboardRow = (row: any): DashboardRow | null => {
-  const timestamp = row['timestamp'];
-  if (!timestamp || !row['marca_moto']) return null;
+  const marca = row['marca'];
+  const dataNascimentoStr = row['data-nascimento'];
+
+  if (!dataNascimentoStr || !row['data-nascimento'])
+    return null;
+
   return {
     isAgregado: true,
     isNewe: false,
     tipoVeiculo: 'MOTO',
-    dataCadastro: new Date(timestamp),
+    dataCadastro: new Date(dataNascimentoStr),
     isAptoNewe: null,
   };
 };
@@ -62,42 +65,39 @@ const mapAgregadoMotoToDashboardRow = (row: any): DashboardRow | null => {
 
 // normaliza uma linha de Checklist Diário - Frota Newe, incluindo o cálculo de Aptidão.
 const mapFrotaNeweToDashboardRow = (row: any): DashboardRow | null => {
-  if (!row['Placa do veículo']) return null;
+  const placa = row['placa-veiculo']; 
+  if (!placa) return null;
 
   // Colunas de verificação da aptidão
   const aptidaoFields = [
-    'oleo_motor_ok',
-    'reservatorio_agua_ok',
-    'sistema_eletrico_ok',
-    'estado_pneus_ok',
-    'limpeza_ok',
-    'lubrificacao_suspensoes_ok',
-    'macaco_ok',
-    'chave_roda_ok',
-    'documento_vigente_ok',
+    'oleo-motor-ok',
+    'reservatorio-agua-ok',
+    'sistema-eletrico-ok',
+    'estado-pneus-ok',
+    'limpeza-bau-sider-cabine-ok', 
+    'lubrificacao-suspensoes-ok',
+    'macaco-ok',
+    'chave-roda-ok',
+    'documento-vigente-ok',
   ];
 
   let isAptoNewe = true;
 
-  // Lógica para Aptos/Não Aptos:
-  // APTO: 100% SIM ou N/A.
-  // NÃO APTO: Pelo menos um NÃO
   for (const field of aptidaoFields) {
     const value = String(row[field]).toUpperCase().trim();
-    if (value === 'NÃO' || value === 'N/A') {
-      isAptoNewe = false;
-      break;
-    }
-    if (value !== 'SIM') { // Garante que só "SIM" passa
+    if (value === 'NÃO') {
       isAptoNewe = false;
       break;
     }
   }
+
+  const dataEncerramentoStr = row['data-horario-encerramento'];
+
   return {
     isAgregado: false,
     isNewe: true,
-    tipoVeiculo: String(row['Placa do veículo']), // Usa a placa como ID temporário (não importa para o dashboard)
-    dataCadastro: new Date(), // Não usado para novos agregados, apenas para ter um Date
+    tipoVeiculo: String(placa),
+    dataCadastro: dataEncerramentoStr ? new Date(dataEncerramentoStr) : new Date(),
     isAptoNewe: isAptoNewe,
   };
 };
@@ -116,11 +116,11 @@ export const processCsvData = async (): Promise<DashboardData> => {
       const rawRows = await readCsvFile(filePath);
 
       // Identificação e Mapeamento do Tipo de CSV 
-      if (file.toLowerCase().includes('agregados_carros')) {
+      if (file.toLowerCase().includes('veculos_agregados')) {
         return rawRows.map(mapAgregadoCarroToDashboardRow).filter((r): r is DashboardRow => r !== null);
-      } else if (file.toLowerCase().includes('agregados_moto')) {
+      } else if (file.toLowerCase().includes('agregadosmoto')) {
         return rawRows.map(mapAgregadoMotoToDashboardRow).filter((r): r is DashboardRow => r !== null);
-      } else if (file.toLowerCase().includes('diario_newe')) {
+      } else if (file.toLowerCase().includes('frota_newe')) {
         return rawRows.map(mapFrotaNeweToDashboardRow).filter((r): r is DashboardRow => r !== null);
       }
 
@@ -141,12 +141,12 @@ export const processCsvData = async (): Promise<DashboardData> => {
   let frotaNewe = 0;
   let aptosNeweCount = 0;
   let novosAgregados = 0;
-  
+
   const tipoVeiculoCounts: { [key: string]: number } = {};
-  
+
   const trintaDiasAtras = new Date();
   trintaDiasAtras.setDate(trintaDiasAtras.getDate() - 30);
-  
+
   const tiposVeiculoAgregadoPadrao = ['FIORINO', 'VAN', 'VUC', '3/4', 'TOCO', 'TRUCK', 'CARRETA'];
   const backgroundColorsPadrao = ['#135B78', '#CCCCCC', '#A3D5D5', '#3C7070', '#856A5A', '#D4B996', '#9B5B24'];
 
@@ -159,7 +159,7 @@ export const processCsvData = async (): Promise<DashboardData> => {
         agregadosVeiculosAtivos++;
 
         if (tiposVeiculoAgregadoPadrao.includes(row.tipoVeiculo)) {
-            tipoVeiculoCounts[row.tipoVeiculo] = (tipoVeiculoCounts[row.tipoVeiculo] ?? 0) + 1;
+          tipoVeiculoCounts[row.tipoVeiculo] = (tipoVeiculoCounts[row.tipoVeiculo] ?? 0) + 1;
         }
       }
 
@@ -169,7 +169,7 @@ export const processCsvData = async (): Promise<DashboardData> => {
     }
 
     if (row.isNewe) {
-      frotaNewe++; 
+      frotaNewe++;
       if (row.isAptoNewe === true) {
         aptosNeweCount++; // Contagem de aptos
       }
@@ -178,7 +178,7 @@ export const processCsvData = async (): Promise<DashboardData> => {
 
   // Geração do Objeto DashboardData
   const veiculosNaoAptosNewe = frotaNewe - aptosNeweCount;
-  
+
   const graficoTipoVeiculosLabels = tiposVeiculoAgregadoPadrao.filter(label => (tipoVeiculoCounts[label] ?? 0) > 0);
   const graficoTipoVeiculosData = graficoTipoVeiculosLabels.map(label => tipoVeiculoCounts[label] ?? 0);
 
@@ -187,14 +187,14 @@ export const processCsvData = async (): Promise<DashboardData> => {
     agregadosMotoAtivos,
     frotaNewe,
     novosAgregados,
-    
+
     graficoTipoVeiculos: {
       labels: graficoTipoVeiculosLabels.length > 0 ? graficoTipoVeiculosLabels : ['Outros'],
       data: graficoTipoVeiculosData.length > 0 ? graficoTipoVeiculosData : [0],
       backgroundColors: graficoTipoVeiculosLabels.map((_, index) => backgroundColorsPadrao[index % backgroundColorsPadrao.length]!),
       title: 'Quantidade de Veículos Agregados Por Categoria'
     },
-    
+
     graficoVeiculosAptos: {
       labels: ['Aptos', 'Não Aptos'],
       data: [aptosNeweCount, veiculosNaoAptosNewe],

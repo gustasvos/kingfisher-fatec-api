@@ -61,7 +61,7 @@ const initialState: DashboardData = {
   }
 };
 
-const API_URL = 'http://localhost:8080/dashboard-op'; 
+const API_URL = 'http://localhost:8080/dashboard-op';
 const USER_API_URL = 'http://localhost:8080/user/me';
 
 const HomeOpAdminPage: React.FC = () => {
@@ -94,30 +94,30 @@ const HomeOpAdminPage: React.FC = () => {
   }, []);
 
   // Fetch Dados do Usuário
-    const fetchUser = useCallback(async () => {
-        setUserLoading(true);
-        try {
-            const response = await fetch(USER_API_URL, {
-                headers: {
-                    'Authorization': 'Bearer SEU_TOKEN_AQUI' // Exemplo
-                }
-            });
-            if (!response.ok) {
-                throw new Error('Falha ao carregar dados do usuário.');
-            }
-            const userData: UserData = await response.json();
-            setUser(userData);
-        } catch (err) {
-            console.error("Erro ao buscar dados do usuário:", err);
-        } finally {
-            setUserLoading(false);
+  const fetchUser = useCallback(async () => {
+    setUserLoading(true);
+    try {
+      const response = await fetch(USER_API_URL, {
+        headers: {
+          'Authorization': 'Bearer SEU_TOKEN_AQUI' // Exemplo
         }
-    }, []);
+      });
+      if (!response.ok) {
+        throw new Error('Falha ao carregar dados do usuário.');
+      }
+      const userData: UserData = await response.json();
+      setUser(userData);
+    } catch (err) {
+      console.error("Erro ao buscar dados do usuário:", err);
+    } finally {
+      setUserLoading(false);
+    }
+  }, []);
 
-    useEffect(() => {
-        fetchData(); // Busca dados do dashboard
-        fetchUser(); // Busca dados do usuário
-    }, [fetchData, fetchUser]);
+  useEffect(() => {
+    fetchData(); // Busca dados do dashboard
+    fetchUser(); // Busca dados do usuário
+  }, [fetchData, fetchUser]);
 
   // Cálculos
   // Total de veículos e motos de agregados
@@ -159,64 +159,66 @@ const HomeOpAdminPage: React.FC = () => {
   // Renderização Principal
   return (
     <>
-      <Navbar />
-      <header>
-        <Header user={user} />
-      </header>
+      <div className='max-h-screen'>
+        <Navbar />
+        <header>
+          <Header user={user} />
+        </header>
 
-      <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-10">
-        {/* Card 1: Agregados Veículos Ativos */}
-        <HighlightCard
-          title="Agregados (Carros/Vans)"
-          value={data.agregadosVeiculosAtivos}
-          subtitle={subtitleAgregadosVeiculos}
-          variant="primary"
-          icon={FaCarSide}
-        />
-
-        {/* Card 2: Agregados Motos Ativos */}
-        <HighlightCard
-          title="Agregados (Motos)"
-          value={data.agregadosMotoAtivos}
-          subtitle={subtitleAgregadosMotos}
-          variant="primary"
-          icon={FaMotorcycle}
-        />
-
-        {/* Card 3: Frota Newe Aptos */}
-        <HighlightCard
-          title="Frota Newe Aptos"
-          value={veiculosAptosNewe}
-          subtitle={subtitleFrotaApta}
-          variant="primary"
-          icon={FaCheck}
-        />
-
-        {/* Card 4: Motoristas Newe */}
-        <HighlightCard
-          title="Novos agregados (30 dias)"
-          value={data.novosAgregados}
-          subtitle={subtitleNovosAgregados}
-          variant="info"
-          icon={FiInfo}
-        />
-      </div >
-      <div className='flex flex-col lg:flex-row justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>
-        <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg">
-          <PieChart
-            title={data.graficoTipoVeiculos.title}
-            labels={data.graficoTipoVeiculos.labels}
-            data={data.graficoTipoVeiculos.data}
-            backgroundColors={data.graficoTipoVeiculos.backgroundColors}
+        <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-10">
+          {/* Card 1: Agregados Veículos Ativos */}
+          <HighlightCard
+            title="Agregados (Carros/Vans)"
+            value={data.agregadosVeiculosAtivos}
+            subtitle={subtitleAgregadosVeiculos}
+            variant="primary"
+            icon={FaCarSide}
           />
-        </div>
-        <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg mr-20">
-          <PieChart
-            title={data.graficoVeiculosAptos.title}
-            labels={data.graficoVeiculosAptos.labels}
-            data={data.graficoVeiculosAptos.data}
-            backgroundColors={data.graficoVeiculosAptos.backgroundColors}
+
+          {/* Card 2: Agregados Motos Ativos */}
+          <HighlightCard
+            title="Agregados (Motos)"
+            value={data.agregadosMotoAtivos}
+            subtitle={subtitleAgregadosMotos}
+            variant="primary"
+            icon={FaMotorcycle}
           />
+
+          {/* Card 3: Frota Newe Aptos */}
+          <HighlightCard
+            title="Frota Newe Aptos"
+            value={veiculosAptosNewe}
+            subtitle={subtitleFrotaApta}
+            variant="info"
+            icon={FaCheck}
+          />
+
+          {/* Card 4: Motoristas Newe */}
+          <HighlightCard
+            title="Novos agregados (30 dias)"
+            value={data.novosAgregados}
+            subtitle={subtitleNovosAgregados}
+            variant="success"
+            icon={FiInfo}
+          />
+        </div >
+        <div className='flex flex-col lg:flex-row justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>
+          <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg">
+            <PieChart
+              title={data.graficoTipoVeiculos.title}
+              labels={data.graficoTipoVeiculos.labels}
+              data={data.graficoTipoVeiculos.data}
+              backgroundColors={data.graficoTipoVeiculos.backgroundColors}
+            />
+          </div>
+          <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg mr-20">
+            <PieChart
+              title={data.graficoVeiculosAptos.title}
+              labels={data.graficoVeiculosAptos.labels}
+              data={data.graficoVeiculosAptos.data}
+              backgroundColors={data.graficoVeiculosAptos.backgroundColors}
+            />
+          </div>
         </div>
       </div>
     </>
