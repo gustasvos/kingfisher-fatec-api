@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Subtitles } from 'lucide-react';
 import axios from 'axios';
 import { User } from '../../../shared/components/header';
+import instance from "../../../services/api";
 
 
 /**
@@ -75,6 +76,8 @@ const HomeOpColabPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null)
   const userId = localStorage.getItem("userId")
   const token = localStorage.getItem("token")
+  const [checklistsPreenchidos, setChecklistsPreenchidos] = useState<number | null>(null);
+  const [loadingCheck, setLoadingCheck] = useState(true);
 
   const [eventos, setEventos] = useState<any[]>([])
   const [statusCounts, setStatusCounts] = useState({ total: 0, aguardando: 0 })
@@ -100,6 +103,68 @@ const HomeOpColabPage: React.FC = () => {
   const irCheckColaborador = () => {
     navigate("/lista-check-colaborador")
   }
+
+  const checklistsForms = [
+    "Checklist Diário - Frota Newe",
+    "Checklist, Forms de gestão de coleta",
+    "Formulário de abertura",
+    "Formulário de fechamento,",
+    "Checklist de Cadastro de Agregados(Moto)",
+    "Formulário de manutenção predial"
+  ]
+
+  // para carregar a contagem dos Checklists
+  useEffect(() => {
+    if (!user?.nome) {
+      if (!userId || !token) return;
+      return;
+    }
+
+    const nomeColaborador = user.nome;
+
+    const checklistCount = async () => {
+      setLoadingCheck(true);
+      let totalCount = 0;
+
+      try {
+        // Cria um array de promessas para buscar todos os CSVs de checklist
+        const fetchPromises = checklistsForms.map(async (formTitle) => {
+          // Substituindo o axios direto por 'instance' para usar a rota /ver-csv
+          const response = await instance.get(`/ver-csv-form?formTitle=${encodeURIComponent(formTitle)}`);
+          const jsonArray: any[] = response.data || [];
+
+          const count = jsonArray.filter(item => {
+            // Usa a chave 'nome-motorista' ou 'nome' (ajuste conforme a chave REAL no seu JSON)
+            const nomeNoChecklist = String(
+              item["nome-motorista"] ||
+              item["quem-esta-preenchendo"] ||
+              item["nome-completo-motorista"] ||
+              item["name"] ||
+              item["nome"]
+            ).trim();
+
+            return nomeNoChecklist.toLowerCase() === nomeColaborador.toLowerCase();
+          }).length;
+
+          return count;
+        });
+
+        const resultadoContForm = await Promise.all(fetchPromises);
+        totalCount = resultadoContForm.reduce((sum, count) => sum + count, 0);
+
+        setChecklistsPreenchidos(totalCount);
+
+      } catch (error) {
+        console.error("Erro ao buscar dados dos checklists:", error);
+        setChecklistsPreenchidos(0);
+      } finally {
+        setLoadingCheck(false);
+      }
+    };
+
+    checklistCount();
+  }, [user]);
+
 
   useEffect(() => {
     if (!userId || !token) return;
@@ -206,10 +271,10 @@ const HomeOpColabPage: React.FC = () => {
           onClick={irCheckColaborador}
         />
 
-        <HighlightCard
+         <HighlightCard
           title="Ver checklists preenchidos"
-          value={mockData3.eventos}
-          subtitle={mockEventos.subtitle}
+          value={loadingCheck ? '...' : checklistsPreenchidos ?? 0}
+          subtitle={loadingCheck ? 'Carregando...' : `Veja seus ${checklistsPreenchidos ?? 0} checklists respondidos`}
           variant="primary"
           icon={FaEye}
           onClick={irCheckColaborador}
