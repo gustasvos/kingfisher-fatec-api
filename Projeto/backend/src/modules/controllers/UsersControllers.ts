@@ -13,6 +13,8 @@ import { TipoAcesso } from "./../../utils/enums/usuarioEnums";
 import * as dotenv from "dotenv"
 dotenv.config()
 import jwt from 'jsonwebtoken'
+import { UsuarioLocal } from '../models/UsuarioLocal'
+import { LocalTrabalho } from '../../utils/enums/usuarioLocalEnums'
 // Simulando uma blacklist em memória
 export const tokenBlacklist: string[] = [];
 
@@ -269,3 +271,5 @@ export const logoutUsuario = (req: Request, res: Response) => {
         tokenDescartado: token
     });
 }
+
+

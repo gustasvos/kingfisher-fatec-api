@@ -5,7 +5,7 @@ import EventoDetalhe from "../modules/administrativo/components/eventoDetalhe";
 import PaginaEventos from "../modules/administrativo/components/paginaEventos";
 import ListagemColaborador from "../modules/administrativo/components/listagem-colaborador";
 import HomePage from "../modules/administrativo/pages/home-Page";
-import LocalDeTrabalho from "../modules/administrativo/components/colaboradorLoca";
+import LocalDeTrabalho from "../modules/administrativo/components/localTrabalho";
 import ListagemEventos from "../modules/administrativo/components/listagem-eventos";
 import RespostaEventos from "../modules/administrativo/pages/page-resposta-eventos";
 import PrivateWrapper from "./../shared/components/PrivateWrapper";

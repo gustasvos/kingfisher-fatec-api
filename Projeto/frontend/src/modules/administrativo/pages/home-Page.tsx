@@ -2,6 +2,9 @@ import React, { useMemo, useState, useEffect } from "react";
 import Navbar from "../../../shared/components/navbar";
 import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
+import axios from "axios";
+import Modal from "../../../shared/components/modal";
+import LocalTrabalho from "../components/localTrabalho";
 import instance from "./../../../services/api";
 
 
@@ -60,6 +63,7 @@ function PreferenceChart({ data }: { data: { labels: string[]; values: number[] 
 }
 
 export default function HomePage() {
+  const [mostrarModal, setMostrarModal] = useState(false)
 
   // user
   const [user, setUser] = useState<User | null>(null);
@@ -119,6 +123,11 @@ export default function HomePage() {
       });
   }, [token]);
 
+
+
+  const fecharModal = () => {
+    setMostrarModal(false);
+  };
 
 
   // CALENDARIO
@@ -252,8 +261,8 @@ export default function HomePage() {
                     <div
                       key={day}
                       className={`calendar-day text-center text-sm cursor-pointer rounded-md ${day === todayDay && currentMonth === todayMonth && currentYear === todayYear
-                          ? "bg-blue-200 font-bold"
-                          : ""
+                        ? "bg-blue-200 font-bold"
+                        : ""
                         }`}
                     >
                       {day}
@@ -298,6 +307,18 @@ export default function HomePage() {
         </section>
 
       </main>
+
+      {/* Modal LocalTrabalho abre automaticamente após login */}
+      <Modal
+        aberto={mostrarModal}
+        onFechar={() => setMostrarModal(false)}
+        modalClassName=""
+      >
+        <div className="">
+          <LocalTrabalho onFechar={fecharModal} />
+        </div>
+      </Modal>
+
     </div>
   );
 }

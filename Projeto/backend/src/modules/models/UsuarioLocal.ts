@@ -12,4 +12,7 @@ export class UsuarioLocal {
 
   @ManyToOne(() => User, user => user.locais, { onDelete: 'CASCADE' })
   usuario: User
+
+  @Column({ type: 'date', nullable: true })
+  data: Date | null
 }
