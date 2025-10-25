@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes } from "react-router-dom";
 import RotasADM from "./administrativo";
-import RotasOp from "./operacional";
+import RotasCom from "./comercial";
 
 export default function RotasGerais(){
     return(
         <BrowserRouter>
             <Routes>
                 {RotasADM()}
-                {RotasOp()}
+                {RotasCom()}
             </Routes>
         </BrowserRouter>
     )
