@@ -64,38 +64,23 @@ function PreferenceChart({ data }: { data: { labels: string[]; values: number[] 
 export default function HomePage() {
   const [mostrarModal, setMostrarModal] = useState(false)
 
-  // Abre automaticamente se a flag estiver setada no localStorage
-  useEffect(() => {
-    const deveMostrar = localStorage.getItem("mostrarModalLocalTrabalho")
-    if (deveMostrar === "true") {
-      // Dá um pequeno delay pra deixar a transição mais suave
-      setTimeout(() => setMostrarModal(true), 200)
-      localStorage.removeItem("mostrarModalLocalTrabalho") // limpa flag
-    }
-  }, [])
-
   // user
   const [user, setUser] = useState(null)
   const userId = localStorage.getItem("userId")
   const token = localStorage.getItem("token")
 
   useEffect(() => {
-    if (userId) {
-      axios
-        .get(`http://localhost:8080/usuario/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then((res) => {
-          setUser(res.data);
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar usuário:", error);
-        });
-    }
+    if (!userId) return;
+
+    axios
+      .get(`http://localhost:8080/usuario/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(res => setUser(res.data))
+      .catch(err => console.error("Erro ao buscar usuário:", err));
   }, [userId]);
 
+  // Checar se deve mostrar modal (usuário ainda não respondeu hoje)
   useEffect(() => {
     const checkModal = async () => {
       if (!userId) return;
@@ -106,14 +91,13 @@ export default function HomePage() {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        const { mostrarModal, ultimaData } = resp.data; // backend deve retornar também a última data
+        const { mostrarModal } = resp.data;
 
-        const hoje = new Date();
-        const hojeStr = `${hoje.getFullYear()}-${hoje.getMonth() + 1}-${hoje.getDate()}`;
-
-        // Mostrar modal só se nunca tiver sido registrado hoje
-        if (mostrarModal && ultimaData !== hojeStr) {
+        if (mostrarModal) {
+          // mostra o modal suavemente
           setTimeout(() => setMostrarModal(true), 200);
+        } else {
+          setMostrarModal(false);
         }
       } catch (error) {
         console.error("Erro ao checar modal:", error);
@@ -122,6 +106,10 @@ export default function HomePage() {
 
     checkModal();
   }, [userId]);
+
+  const fecharModal = () => {
+    setMostrarModal(false);
+  };
 
 
 
@@ -309,8 +297,8 @@ export default function HomePage() {
         onFechar={() => setMostrarModal(false)}
         modalClassName=""
       >
-        <div className="max-w-[900px] w-[70vw]">
-          <LocalTrabalho onFechar={() => setMostrarModal(false)} />
+        <div className="">
+          <LocalTrabalho onFechar={fecharModal} />
         </div>
       </Modal>
 

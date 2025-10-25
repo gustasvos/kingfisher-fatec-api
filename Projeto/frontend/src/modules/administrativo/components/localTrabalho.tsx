@@ -31,7 +31,7 @@ export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
         { local: opcao },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (onFechar) onFechar(); // fecha modal se função fornecida
+      if (onFechar) onFechar();
     } catch (err) {
       console.error(err);
       setError("Erro ao salvar local de trabalho.");
@@ -52,7 +52,9 @@ export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
             key={id}
             onClick={() => setOpcao(id)}
             className={`flex items-center justify-center gap-2 px-3 py-3 rounded-md transition-colors min-w-[120px]
-              ${opcao === id ? "bg-white text-black" : "bg-white text-black hover:bg-grey-200"}`}
+              ${opcao === id
+                ? "bg-white text-black shadow-md scale-105" 
+                : "bg-white text-black hover:bg-grey-200"}`}
           >
             <Icon size={20} className="flex-shrink-0" />
             {label}
@@ -66,7 +68,7 @@ export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
         onClick={confirmar}
         disabled={!opcao || loading}
         className={`px-6 py-2 rounded-md font-semibold uppercase transition-colors w-full
-          ${opcao ? "bg-[#135B78] text-white hover:bg-blue-600" : "bg-[#135B78] text-white cursor-not-allowed"}`}
+          ${opcao ? "bg-[#135B78] text-white" : "bg-[#135B78] text-white cursor-not-allowed"}`}
       >
         {loading ? "Salvando..." : "Confirmar"}
       </button>
