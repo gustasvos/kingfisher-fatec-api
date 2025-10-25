@@ -9,7 +9,6 @@ import imgUser from './../../assets/imgAddUserMale.png';
 import imgCalendar from './../../assets/imgTearOffCalendar.png';
 import imgNotification from './../../assets/imgDoorbell.png';
 import imgColab from './../../assets/imgTeam.svg';
-import imgRespostaEvento  from './../../assets/imgRespostaEvento.png'
 import Cadastro from "../../modules/administrativo/pages/PaginaCadastro";
 import Modal from "./modal";
 import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
@@ -79,11 +78,6 @@ export default function Navbar() {
         <NavLink to="/colaboradores" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
           <img src={imgColab} alt="Colaboradores" className="w-7 h-7" />
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Colaboradores</p> : null}
-        </NavLink>
-
-        <NavLink to="/resposta-eventos" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-          <img src={imgRespostaEvento} alt="Colaboradores" className="w-7 h-7" />
-          {aberto ? <p className="pl-2 text-[15px] font-semibold">Relatório de Aproveitamento</p> : null}
         </NavLink>
       </section>
 

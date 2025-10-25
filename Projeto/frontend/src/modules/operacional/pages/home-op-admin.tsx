@@ -1,140 +1,224 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import HighlightCard from '../../../shared/components/highlight-card';
 import { FiDollarSign, FiUsers, FiAlertTriangle, FiPackage, FiInfo } from 'react-icons/fi';
-import { FaCarSide } from 'react-icons/fa'
+import { FaCarSide, FaMotorcycle, FaCheck } from 'react-icons/fa'
 import Navbar from '../../../shared/components/navbar';
 import PieChart from '../../../shared/components/grafico-setor';
 import Header from '../../../shared/components/header';
 
-// Definição da estrutura de dados esperada do backend
-interface DashboardData {
-    agregadosVeiculosAtivos: number;
-    agregadosMotoAtivos: number;
-    frotaNeweTotal: number;
-    
-    // ... adicione outras métricas se necessário
-    graficoVeiculos: {
-        labels: string[];
-        data: number[];
-        backgroundColors: string[];
-    }
-    // ...
+// Definição da estrutura do usuário
+interface UserData {
+  name: string;
+  role: string;
 }
 
-/**
- * mock para o indicador (card) "Veículos Aptos para Operação"
-*/
-const frotaTotal = 120;
-const veiculosAptos = 95;
-const percentualAptos = ((veiculosAptos / frotaTotal) * 100).toFixed(1);
-
-const mockVeiculosAptosCard = {
-  value: veiculosAptos,
-  subtitle: `${percentualAptos}% da frota total (${frotaTotal} veículos).`,
-  icon: FaCarSide,
+// Estado inicial
+const initialUser: UserData = {
+  name: "Carregando...",
+  role: "",
 };
+// Definição da estrutura de dados esperada do backend
+interface DashboardData {
+  agregadosVeiculosAtivos: number;  //número total de agregados (veículos) ativos
+  agregadosMotoAtivos: number;      //número total de agregados (moto) ativos
+  frotaNewe: number;                //número total de veículos da newe
+  novosAgregados: number;           //número total de novos agregados cadastrados nos últimos 30 dias
 
-/**
- * mock para o header
- */
-const mockHeader = {
-  user: {
-    avatarUrl: '../../../../assets/usuario.svg',
-    name: "NOME_ADMINISTRADOR_OPERACIONAL",
-    role: "Administrador",
-    email: "operacional@email.com",
+  graficoTipoVeiculos: {            //gráfico que mostra a quantidade de cada tipo de veículo de agregado
+    labels: string[];
+    data: number[];
+    backgroundColors: string[];
+    title: string;
+  }
+
+  graficoVeiculosAptos: {       //gráfico que mostra a quantidade de veículos aptos da frota newe
+    labels: string[];
+    data: number[];
+    backgroundColors: string[];
+    title: string;
+  }
+}
+
+// estado inicial
+const initialState: DashboardData = {
+  agregadosVeiculosAtivos: 0,
+  agregadosMotoAtivos: 0,
+  frotaNewe: 0,
+  novosAgregados: 0,
+
+  graficoTipoVeiculos: {
+    labels: ['FIORINO', 'VAN', 'VUC', '3/4', 'TOCO', 'TRUCK', 'CARRETA'],
+    data: [0, 0, 0, 0, 0, 0, 0],
+    backgroundColors: ['#135B78', '#CCCCCC'],
+    title: 'Quantidade de Veículos Agregados Por Categoria'
   },
+
+  graficoVeiculosAptos: {
+    labels: ['Aptos', 'Não Aptos'],
+    data: [0, 0],
+    backgroundColors: ['#135B78', '#CCCCCC'],
+    title: 'Veículos Aptos - Frota Newe'
+  }
 };
 
-/**
- * mock gráficos setor e barra
- */
-const mockVeiculosAptos = {
-  title: 'Veículos Aptos para Operação',
-  labels: [
-    'Aptos (Óleo, água e elétrica OK)',    // Veículos com Óleo, Água e Elétrica OK
-    'Em Manutenção (Não Aptos)', // Veículos com alguma pendência
-  ],
-  data: [
-    75, // 75 Veículos Aptos (ou 75% da frota)
-    25, // 25 Veículos Em Manutenção (ou 25% da frota)
-  ],
-  backgroundColors: [
-    '#135B78',
-    '#CCCCCC',
-  ],
-};
-
-const mockData = {
-  agregadosAtivos: 50,
-};
-
+const API_URL = 'http://localhost:8080/dashboard-op';
+const USER_API_URL = 'http://localhost:8080/user/me';
 
 const HomeOpAdminPage: React.FC = () => {
-  const [data, setData] = useState<DashboardData | null>(mockData);
+  const [data, setData] = useState<DashboardData>(initialState); // Inicializa o estado com a estrutura de dados vazia
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<UserData>(initialUser);
+  const [userLoading, setUserLoading] = useState(true);
 
+  // fetch dados do dashboard
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(API_URL);
+
+      if (!response.ok) {
+        throw new Error('Falha ao carregar dados do dashboard.');
+      }
+
+      const result: DashboardData = await response.json();
+      setData(result);
+
+    } catch (err) {
+      console.error("Erro ao buscar dados:", err);
+      setError('Não foi possível carregar os dados. Tente novamente mais tarde.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Fetch Dados do Usuário
+  const fetchUser = useCallback(async () => {
+    setUserLoading(true);
+    try {
+      const response = await fetch(USER_API_URL, {
+        headers: {
+          'Authorization': 'Bearer SEU_TOKEN_AQUI' // Exemplo
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Falha ao carregar dados do usuário.');
+      }
+      const userData: UserData = await response.json();
+      setUser(userData);
+    } catch (err) {
+      console.error("Erro ao buscar dados do usuário:", err);
+    } finally {
+      setUserLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData(); // Busca dados do dashboard
+    fetchUser(); // Busca dados do usuário
+  }, [fetchData, fetchUser]);
+
+  // Cálculos
+  // Total de veículos e motos de agregados
+  const frotaTotalAgregados = data.agregadosVeiculosAtivos + data.agregadosMotoAtivos;
+
+  // Cálculo para o Card "Agregados Veículos Ativos"
+  const percentualVeiculosAgregados = frotaTotalAgregados > 0
+    ? ((data.agregadosVeiculosAtivos / frotaTotalAgregados) * 100).toFixed(1)
+    : '0.0';
+  const subtitleAgregadosVeiculos = `${percentualVeiculosAgregados}% do total de Agregados (${frotaTotalAgregados} ativos).`;
+
+
+  // Cálculo para o Card "Agregados Motos Ativos"
+  const percentualMotosAgregados = frotaTotalAgregados > 0
+    ? ((data.agregadosMotoAtivos / frotaTotalAgregados) * 100).toFixed(1)
+    : '0.0';
+  const subtitleAgregadosMotos = `${percentualMotosAgregados}% do total de Agregados (${frotaTotalAgregados} ativos).`;
+
+
+  // Cálculo para o Card "Frota Newe Aptos"
+  const veiculosAptosNewe = data.graficoVeiculosAptos.data[0];
+  const percentualAptosNewe = data.frotaNewe > 0
+    ? ((veiculosAptosNewe / data.frotaNewe) * 100).toFixed(1)
+    : '0.0';
+  const subtitleFrotaApta = `${percentualAptosNewe}% da frota total Newe (${data.frotaNewe} veículos).`;
+
+
+  // Cálculo para o Card "novosAgregados"
+  const novosAgregados = data.novosAgregados;
+  const subtitleNovosAgregados = `Total de novos agregados nos últimos 30 dias.`;
+
+  if (loading) {
+    return <div className="p-8 text-black">Carregando dados...</div>;
+  }
+  if (error) {
+    return <div className="p-8 text-red-600">Erro: {error}</div>;
+  }
 
   // Renderização Principal
   return (
     <>
-      <Navbar />
-      <header>
-        <Header user={mockHeader.user} placeholderAvatar={mockHeader.user.avatarUrl} />
-      </header>
+      <div className='max-h-screen'>
+        <Navbar />
+        <header>
+          <Header user={user} />
+        </header>
 
-      <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-10">
-        <HighlightCard
-          title="Agregados ativos"
-          value={mockData.agregadosAtivos}
-          subtitle={mockVeiculosAptosCard.subtitle}
-          variant="primary"
-          icon={FaCarSide}
-          onClick={() => console.log('Navegar para Checklist de Agregados')}
-        />
-
-        <HighlightCard
-          title="Veículos Aptos para Operação"
-          value={mockVeiculosAptosCard.value}
-          subtitle={mockVeiculosAptosCard.subtitle}
-          variant="primary"
-          icon={FaCarSide}
-          onClick={() => console.log('Navegar para Checklist de Agregados')}
-        />
-
-        <HighlightCard
-          title="Veículos Aptos para Operação"
-          value={mockVeiculosAptosCard.value}
-          subtitle={mockVeiculosAptosCard.subtitle}
-          variant="primary"
-          icon={FaCarSide}
-          onClick={() => console.log('Navegar para Checklist de Agregados')}
-        />
-
-        <HighlightCard
-          title="Veículos Aptos para Operação" 
-          value={mockVeiculosAptosCard.value}
-          subtitle={mockVeiculosAptosCard.subtitle}
-          variant="primary"
-          icon={FaCarSide}
-          onClick={() => console.log('Navegar para Checklist de Agregados')}
-        />
-      </div >
-      <div className='flex flex-col lg:flex-row justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>
-        <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg">
-          <PieChart
-            title={mockVeiculosAptos.title}
-            labels={mockVeiculosAptos.labels}
-            data={mockVeiculosAptos.data}
-            backgroundColors={mockVeiculosAptos.backgroundColors}
+        <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-10">
+          {/* Card 1: Agregados Veículos Ativos */}
+          <HighlightCard
+            title="Agregados (Carros/Vans)"
+            value={data.agregadosVeiculosAtivos}
+            subtitle={subtitleAgregadosVeiculos}
+            variant="primary"
+            icon={FaCarSide}
           />
-        </div>
-        <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg mr-20">
-          <PieChart
-            title={mockVeiculosAptos.title}
-            labels={mockVeiculosAptos.labels}
-            data={mockVeiculosAptos.data}
-            backgroundColors={mockVeiculosAptos.backgroundColors}
+
+          {/* Card 2: Agregados Motos Ativos */}
+          <HighlightCard
+            title="Agregados (Motos)"
+            value={data.agregadosMotoAtivos}
+            subtitle={subtitleAgregadosMotos}
+            variant="primary"
+            icon={FaMotorcycle}
           />
+
+          {/* Card 3: Frota Newe Aptos */}
+          <HighlightCard
+            title="Frota Newe Aptos"
+            value={veiculosAptosNewe}
+            subtitle={subtitleFrotaApta}
+            variant="info"
+            icon={FaCheck}
+          />
+
+          {/* Card 4: Motoristas Newe */}
+          <HighlightCard
+            title="Novos agregados (30 dias)"
+            value={data.novosAgregados}
+            subtitle={subtitleNovosAgregados}
+            variant="success"
+            icon={FiInfo}
+          />
+        </div >
+        <div className='flex flex-col lg:flex-row justify-center gap-10 mt-0 mb-6 ml-20 w-[97.5%]'>
+          <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg">
+            <PieChart
+              title={data.graficoTipoVeiculos.title}
+              labels={data.graficoTipoVeiculos.labels}
+              data={data.graficoTipoVeiculos.data}
+              backgroundColors={data.graficoTipoVeiculos.backgroundColors}
+            />
+          </div>
+          <div className="p-8 w-[90%] rounded-lg bg-white drop-shadow-lg mr-20">
+            <PieChart
+              title={data.graficoVeiculosAptos.title}
+              labels={data.graficoVeiculosAptos.labels}
+              data={data.graficoVeiculosAptos.data}
+              backgroundColors={data.graficoVeiculosAptos.backgroundColors}
+            />
+          </div>
         </div>
       </div>
     </>

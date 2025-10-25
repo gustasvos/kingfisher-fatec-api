@@ -2,6 +2,7 @@
 import express, {Request, Response} from 'express'
 import usuariosRoutes from './modules/routers/usuariosRoutes';
 import EventoRoutes from './modules/routers/EventoRoutes';
+import dashboardOpRoutes from './modules/routers/dashboardOpRoutes';
 import formRoutes from './modules/routers/formRoutes'
 import path from 'path';
 import { uploadsDir,dataDir } from './config/paths'
@@ -26,6 +27,7 @@ app.use("/", formRoutes);
 app.get('/', (req:Request, res:Response) =>{
     res.send('Bem Vindo')
 })
+app.use('/', dashboardOpRoutes);
 
 app.listen(8080, ()=>{
     console.log('Servidor porta 8080: http://localhost:8080')
