@@ -8,6 +8,7 @@ Content-Type: application/json
   "genero": "M",
   "data_nascimento": "1985-04-20",
   "cargo": "Product Owner",
+  "setor": "Desenvolvimento",
   "senha": "Thiago@PO2025",
   "data_contratacao": "2025-09-01",
   "role": "admin"
