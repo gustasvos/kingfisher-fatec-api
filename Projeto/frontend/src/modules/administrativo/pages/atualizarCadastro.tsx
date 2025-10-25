@@ -22,6 +22,20 @@ const formatarDataParaPtBr = (dataIso: string): string => {
   return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
 };
 
+const generoCompleto = (letra: string) => {
+  switch (letra.toUpperCase()) {
+    case 'M':
+      return 'Masculino';
+    case 'F':
+      return 'Feminino';
+    case 'O':
+      return 'Outro';
+    default:
+      return '';
+  }
+}
+
+
 interface AtualizarCadastroProps {
   id: number
 }
@@ -41,6 +55,9 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchUsuario();
+  }, [id]);
+
     const fetchUsuario = async () => {
       try {
         const response = await instance.get(`/usuario/${id}`);
@@ -66,9 +83,6 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
       }
     }
 
-    fetchUsuario();
-  }, [id]);
-  
 
 
   const handleSalvar = async (e: React.FormEvent) => {
@@ -93,7 +107,7 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
       nome: limparTexto(nome),
       cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
-      genero: limparTexto(genero),
+      genero: genero.trim().charAt(0).toLowerCase(),
       data_contratacao,
       cargo: limparTexto(cargo),
       setor: limparTexto(setor),
@@ -120,7 +134,10 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
   };
 
   const handleDescartar = () => {
-    navigate("/colaboradores");
+    fetchUsuario();
+    setSenha("");
+    setErro(null);
+    setSucesso(null);
   };
 
   return (
@@ -173,7 +190,7 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
             placeholder="Ex: Masculino, Feminino, Outro"
             required
             maxLength={20}
-            value={genero}
+            value={generoCompleto(genero)}
             onChange={(e) => setGenero(e.target.value)}
           />
 

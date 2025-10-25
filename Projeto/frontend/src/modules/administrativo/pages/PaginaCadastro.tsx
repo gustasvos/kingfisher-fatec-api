@@ -54,12 +54,12 @@ export default function Cadastro() {
   const payload = {
     nome: limparTexto(nome),
     cpf: cpf.replace(/\D/g, ""),
-    genero: genero.trim().charAt(0).toLowerCase(), // 'Masculino' → 'm'
+    genero: genero.trim().charAt(0).toUpperCase(),
     data_nascimento,
     cargo: limparTexto(cargo),
-    senha: senha,
+    senha,
     data_contratacao,
-    role: limparTexto(role.toLowerCase()),
+    role,
     setor: limparTexto(setor)
   };
 
@@ -68,7 +68,7 @@ export default function Cadastro() {
       const response = await instance.post("/usuario/create", payload);
       setSucesso(`Cadastro realizado com sucesso! ID: ${response.data.id}`);
       setTimeout(() => {
-        navigate("/");
+        navigate(-1);
       }, 1000);
     } catch (error) {
       setErro("Erro ao cadastrar. Verifique os dados e tente novamente.");
