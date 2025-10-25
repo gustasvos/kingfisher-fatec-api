@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../../services/api";
+import instance from "../../../services/api";
 
 interface Evento {
   id: number;
@@ -30,7 +30,7 @@ export default function RelatorioAproveitamento({
   useEffect(() => {
     async function fetchEvento() {
       try {
-        const response = await api.get<Evento[]>("/admin/events");
+        const response = await instance.get<Evento[]>("/admin/events");
         if (response.data.length > 0) {
           const ev = response.data[0]; // pegar primeiro evento como exemplo
           setEvento(ev);
@@ -71,7 +71,7 @@ export default function RelatorioAproveitamento({
     }
 
     try {
-      await api.post(
+      await instance.post(
         `/admin/events/respostas/${evento.id}/participante/${userId}`,
         {
           titulo_evento: evento.titulo,

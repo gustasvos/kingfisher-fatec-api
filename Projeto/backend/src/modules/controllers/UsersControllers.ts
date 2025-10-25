@@ -217,7 +217,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
 
         // GERAR O TOKEN 
         const token = jwt.sign(
-            { id: user.id, cpf: user.cpf }, // payload
+            { id: user.id, nome: user.nome, cpf: user.cpf, role: user.role, cargo: user.cargo, }, // payload
             process.env.JWT_SECRET as string,   // chave secreta
             { expiresIn: process.env.JWT_EXPIRES_IN} // expiração
         );
@@ -229,7 +229,9 @@ export const loginUsuario = async (req: Request, res: Response) => {
             user: {
                 id: user.id,
                 nome: user.nome,
-                cpf: user.cpf
+                cpf: user.cpf,
+                role: user.role,
+                cargo: user.cargo,
             }
         });
 
@@ -251,6 +253,12 @@ export const logoutUsuario = (req: Request, res: Response) => {
         return res.status(400).json({ message: 'Token não fornecido.' });
     }
 
+    if (tokenBlacklist.includes(token)) {
+        return res.status(200).json({
+        message: 'Token já está inválido (logout já efetuado anteriormente).',
+        tokenDescartado: token
+        });
+    }
     tokenBlacklist.push(token!);
     console.log(`Token adicionado à blacklist: ${token}`);
 

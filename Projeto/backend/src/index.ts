@@ -13,8 +13,8 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET','POST','PUT','DELETE'],
+  origin: 'http://localhost:3000', // ou '*' para liberar geral (não recomendado em produção)
+  methods: ['GET','POST','PUT','DELETE', 'PATCH','OPTIONS'],
   credentials: true // se você usa cookies, tokens etc
 }));
 
