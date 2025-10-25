@@ -1,8 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import Navbar from "../../../shared/components/navbar";
-import usuarioIcon from "../../../assets/usuario.svg";
 import Chart from "chart.js/auto";
-import axios from "axios";
 import Modal from "../../../shared/components/modal";
 import LocalTrabalho from "../components/localTrabalho";
 import instance from "./../../../services/api";
@@ -93,6 +91,23 @@ export default function HomePage() {
   }, [userId]);
 
   useEffect(() => {
+    const checkModal = async () => {
+      if (!userId) return
+      try {
+        const resp = await instance.get(`/usuario/${userId}/local/check`)
+        if (resp.data?.mostrarModal) {
+          setTimeout(() => setMostrarModal(true), 200)
+        } else {
+          setMostrarModal(false)
+        }
+      } catch (error) {
+        console.error("Erro ao checar modal:", error)
+      }
+    }
+    checkModal()
+  }, [userId])
+
+  useEffect(() => {
     if (!token) return;
 
     instance.get('/admin/events', {
@@ -122,8 +137,6 @@ export default function HomePage() {
         console.error("Erro ao buscar eventos:", err);
       });
   }, [token]);
-
-
 
   const fecharModal = () => {
     setMostrarModal(false);

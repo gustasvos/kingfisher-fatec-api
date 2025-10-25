@@ -47,7 +47,7 @@ export default function Login() {
                         navigate("/home");
                     }, 1000);
                 } else {
-                    setErro("Acesso negado: usuário não possui permissão de administrador.");
+                    setErro("Acesso negado: usuário não possui permissão de admnistrador.");
                 }
             } else {
                 setErro("Token não recebido do servidor");
@@ -57,14 +57,14 @@ export default function Login() {
             setErro("Erro ao fazer login")
         }
     }
-    
+
     return (
         <div className="grid grid-cols-[50%_50%]">
             {/* --- LADO ESQUERDO --- */}
             <div>
                 <img src={imgLogin} alt="login" className="w-full object-cover h-screen" />
             </div>
-    
+
             {/* --- LADO DIREITO --- */}
             <div className="bg-[#EAF7FF] flex justify-center items-center">
                 <div className="bg-[#015084] w-[280px] md:w-[400px] h-[350px] md:h-[500px] p-4 rounded-[10px] flex justify-center drop-shadow-[2px_2px_3px_rgba(1,80,132,0.8)]">
@@ -75,7 +75,7 @@ export default function Login() {
                         <p className="text-[25px] md:text-[45px] font-sans text-[#5AA9E6] leading-[0.5] drop-shadow-[10px_0px_3px_rgba(0,0,0,0.3)]">
                             NEWE
                         </p>
-    
+
                         {/* CPF */}
                         <p className="pt-8 text-[15px] md:text-[25px] text-white font-medium pb-1">CPF</p>
                         <IMaskInput
@@ -86,7 +86,7 @@ export default function Login() {
                             onAccept={(value: any) => setCpf(value)}
                             className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black"
                         />
-    
+
                         {/* SENHA */}
                         <p className="pt-6 text-[15px] md:text-[25px] text-white font-medium pb-1">Senha</p>
                         <input
@@ -97,7 +97,7 @@ export default function Login() {
                             onChange={(e) => setSenha(e.target.value)}
                             className="w-[200px] md:w-[300px] h-[25px] md:h-[45px] rounded-[10px] pl-3 shadow-[4px_4px_4px_rgba(0,0,0,0.4)] outline-[#053657] text-black"
                         />
-    
+
                         {/* BOTÃO ENTRAR */}
                         <div className="pt-10 flex justify-center">
                             <input
@@ -106,7 +106,7 @@ export default function Login() {
                                 className="bg-white w-[100px] md:w-[200px] p-2 rounded-[15px] text-[#053657] text-[12px] md:text-[20px] font-medium shadow-[4px_4px_4px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-[#053657] hover:text-white"
                             />
                         </div>
-    
+
                         {/* Link de cadastro */}
                         {temUsuario === false && (
                             <div className="mt-4 text-center">
@@ -115,7 +115,7 @@ export default function Login() {
                                 </a>
                             </div>
                         )}
-    
+
                         {/* Mensagens */}
                         {sucesso && (
                             <div className="pt-4 text-green-600 text-center text-[14px] md:text-[18px]">
@@ -130,7 +130,7 @@ export default function Login() {
                     </form>
                 </div>
             </div>
-    
+
             {/* --- MODAL GLOBAL --- */}
             {/* <Modal
                     aberto={abertoModal}
