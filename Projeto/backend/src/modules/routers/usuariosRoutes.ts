@@ -13,6 +13,6 @@ router.get('/usuario/list', autenticarUsuario, autorizarUsuario(['admin']), list
 router.get('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','usuario']), listUsuarioById);
 router.put('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','usuario']), updateUsuario);
 router.delete('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin']), deleteUsuario);
-router.get("/users/exists", autenticarUsuario, autorizarUsuario(['admin','comercial','operacional']), checkIfUsersExist);
+router.get("/users/exists", checkIfUsersExist);
 
 export default router
