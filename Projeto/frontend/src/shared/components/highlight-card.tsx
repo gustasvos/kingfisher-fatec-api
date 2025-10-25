@@ -72,7 +72,7 @@ const HighlightCard: React.FC<HighlightCardProps> = ({
     const CardContent = (
         <>
             {/* Header: Título e Ícone */}
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-4 w-[99%]">
                 <h3 className={`text-sm font-medium ${styles.text} uppercase`}>
                     {title}
                 </h3>
