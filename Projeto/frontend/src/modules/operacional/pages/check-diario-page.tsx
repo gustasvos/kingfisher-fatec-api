@@ -2,6 +2,6 @@ import CheckDiario from "../components/check-diario";
 
 export default function CheckDiarioPage(){
     return(
-        <CheckDiario/>
+        <CheckDiario form="Checklist Diário - Frota Newe"/>
     )
 }

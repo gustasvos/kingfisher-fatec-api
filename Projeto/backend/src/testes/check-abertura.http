@@ -1,0 +1,34 @@
+### Cadastrando um Forms de Checklist de Abertura da Empresa
+# Rota: POST http://localhost:8080/submit
+# O campo 'formTitle' é crucial para o backend identificar o esquema de validação.
+POST http://localhost:8080/submit
+Content-Type: application/json
+
+{
+  "formTitle": "Formulário de abertura",
+  "quem-esta-preenchendo": "Mariana Oliveira",
+  "data-abertura-empresa": "2025-10-21T06:00:00.000Z",
+  "abriu-cadeado-correntes-frente": "Sim",
+  "abriu-portao-social": "Sim",
+  "abriu-porta-rolante-armazem": "Sim",
+  "desbloqueou-alarme": "Sim",
+  "apagou-luzes-armazem": "Não",
+  "acendeu-luzes-operacional": "Sim",
+  "ligou-ar-condicionado": "Não",
+  "ligou-tv-cameras": "Sim",
+  "ligou-tv-dashboard": "Sim",
+  "coletou-chaves-internas-chaveiro": "Sim",
+  "abriu-porta-banheiro": "Sim",
+  "removeu-cadeado-portao-1": "Não",
+  "removeu-cadeado-portao-2": "Não",
+  "posicionou-cone-estacionamento-pcd": "Sim",
+  "ligou-tomada-retirou-plastico-bebedouro": "Sim",
+  "colocou-tapetes-devidos-lugares": "Não",
+  "fez-cafe-dia": "Sim",
+  "situacao-atipica": "Nenhuma ocorrência fora do previsto."
+}
+
+### Listar dados salvos no CSV do formulário
+# Para verificar se o dado foi salvo no CSV correto
+GET http://localhost:8080/ver-csv?formTitle=Checklist de Abertura da Empresa NEWE LOG
+Content-Type: application/json

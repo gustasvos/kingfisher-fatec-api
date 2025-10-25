@@ -1,0 +1,38 @@
+### Cadastrando um Forms de Checklist de Fechamento da Empresa
+# Rota: POST http://localhost:8080/submit
+# O campo 'formTitle' é crucial para o backend identificar o esquema de validação.
+POST http://localhost:8080/submit
+Content-Type: application/json
+
+{
+  "formTitle": "Formulário de fechamento",
+  "quem-esta-preenchendo": "Rafael Costa",
+  "data-fechamento-empresa": "2025-10-21T18:00:00.000Z",
+  "tirou-lixo-organico-cozinha": "Sim",
+  "colocou-lixo-reciclavel-sexta": "Não",
+  "cozinha-organizada": "Sim",
+  "apagou-luzes-fechou-porta-cozinha": "Sim",
+  "trancou-cadeado-portao-2": "Sim",
+  "trancou-cadeado-portao-1": "Sim",
+  "verificou-torneiras-mictorio": "Sim",
+  "tirou-lixo-banheiro": "Sim",
+  "trancou-porta-banheiro": "Sim",
+  "desligou-tomada-colocou-plastico-bebedouro": "Sim",
+  "deixou-chaves-internas-chaveiro": "Sim",
+  "desligou-tv-cameras": "Sim",
+  "desligou-tv-dashboard": "Sim",
+  "desligou-ar-condicionado": "Sim",
+  "desligou-luzes-escritorio-operacional": "Sim",
+  "acendeu-luzes-armazem": "Sim",
+  "retirou-cone-estacionamento-pcd": "Sim",
+  "acionou-alarme": "Sim",
+  "fechou-porta-entrada-armazem": "Sim",
+  "trancou-cadeado-correntes": "Sim",
+  "portoes-apresentam-ruido-travamento": "Não",
+  "situacao-atipica": "Tudo conforme o checklist, nenhum problema detectado."
+}
+
+### Listar dados salvos no CSV do formulário
+# Para verificar se o dado foi salvo no CSV correto
+GET http://localhost:8080/ver-csv?formTitle=Checklist de Fechamento da Empresa NEWE LOG
+Content-Type: application/json
