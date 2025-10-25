@@ -1,6 +1,6 @@
 import Navbar from "../../../shared/components/navbar"
 import { useState, useEffect } from "react"
-import axios from "axios";
+import instance from "../../../services/api";
 import CardColaborador from "./cardColaborador"
 import { Colaborador } from "../../../types/colaborador";
 import Loading from "../../../shared/components/loading";
@@ -11,7 +11,7 @@ export default function ListagemColaborador() {
     const [pesquisa, setPesquisa] = useState("")
 
     useEffect(() => {
-        axios.get<Colaborador[]>("http://localhost:8080/usuario/list")
+        instance.get<Colaborador[]>("/usuario/list")
             .then((response: any) => {
                 setColaborador(response.data)
             })
@@ -25,14 +25,12 @@ export default function ListagemColaborador() {
 
     const excluirColaborador = async(id:number) => {
         if(window.confirm("Tem certeza que deseja excluir esse colborador?")){
-            // colocar o nosso http, esse foi só para eu testar
-            await fetch(`http://localhost:8080/usuario/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            })
-            setColaborador((prev) => prev.filter((colabo) => colabo.id !== id))
+            try {
+                await instance.delete(`/usuario/${id}`);
+                setColaborador((prev) => prev.filter((colabo) => colabo.id !== id));
+            } catch (error) {
+                console.error("Erro ao excluir colaborador:", error);
+            }
         }
     }
 

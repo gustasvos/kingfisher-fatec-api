@@ -1,0 +1,26 @@
+### Cadastrando um Forms de Gestão de Coleta
+# Rota: POST http://localhost:8080/submit
+# O campo 'formTitle' é crucial para o backend identificar o esquema de validação.
+POST http://localhost:8080/submit
+Content-Type: application/json
+
+{
+  "formTitle": "Checklist, Forms de gestão de coleta",
+  "email": "solicitante@newe.com",
+  "qual-cliente": "Cliente Alfa Logística",
+  "quem-solicita": "Felipe Souza",
+  "oc-pedido-nf": "OC-45678 / NF-123456",
+  "data-horario-coleta": "2025-10-25T10:00:00.000Z",
+  "local-coleta": "Rua das Coletas, 100 - Bairro Industrial, São Paulo - SP",
+  "data-hora-entrega": "2025-10-26T14:30:00.000Z",
+  "local-entrega": "Avenida das Entregas, 500 - Centro, Campinas - SP",
+  "peso-estimado": 1500.50,
+  "tipo-veiculo-coleta": "TOCO",
+  "valor-frete-cobrado": 850.75,
+  "observacoes-equipe-adicional": "Carga sensível, manusear com cuidado. Coletar antes das 11h."
+}
+
+### Listar dados salvos no CSV do formulário
+# Para verificar se o dado foi salvo no CSV correto
+GET http://localhost:8080/ver-csv?formTitle=Checklist, Forms de gestão de coleta
+Content-Type: application/json

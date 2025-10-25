@@ -40,3 +40,5 @@ Thumbs.db
 
 # Ignorar a pasta dist/
 dist/
+uploads/
+data/

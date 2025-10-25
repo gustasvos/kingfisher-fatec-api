@@ -98,7 +98,7 @@ export default function NovoEvento({ onFechar }: { onFechar: () => void }) {
       const response = await instance.post("/admin/events", payload);
       setSucesso("Evento cadastrado com sucesso!");
       setTimeout(() => {
-        navigate("/")
+        navigate("/eventos")
         onFechar()
       }, 2000);
     }

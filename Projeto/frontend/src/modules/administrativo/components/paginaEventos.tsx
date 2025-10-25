@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
-import axios from 'axios'
+import instance from "../../../services/api";
+import { useAuth } from "../../../contexts/AuthContext";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -21,17 +22,20 @@ import Navbar from '../../../shared/components/navbar'
 
 function PaginaEventos() {
   const [eventosCalendar, setEventosCalendar] = useState<any[]>([])
-  const [eventosOriginais, setEventosOriginais] = useState<any[]>([]) 
+  const [eventosOriginais, setEventosOriginais] = useState<any[]>([])
   const [aberto, setAberto] = useState(false)
   const [eventoSelecionado, setEventoSelecionado] = useState<any | null>(null)
   const [abertoModal, setAbertoModal] = useState(false)
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
+  const [eventosFiltrados, setEventosFiltrados] = useState<any[]>([]);
+  const [indiceAtual, setIndiceAtual] = useState(0);
 
   const calendarRef = useRef<CalendarApi | null>(null)
-  const usuarioID = 1
+  const { user } = useAuth(); // Usar o hook de autenticação
+  const usuarioID = user?.id; // Obter o ID do usuário da sessão
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/admin/events/convidado/${usuarioID}`)
+    instance.get(`/admin/events/convidado/${usuarioID}`)
       .then((response) => {
         const eventosFormatados = response.data.map((convite: any) => ({
           id: convite.evento.id,
@@ -44,28 +48,52 @@ function PaginaEventos() {
           }
         }))
         setEventosCalendar(eventosFormatados)
-        setEventosOriginais(eventosFormatados) 
+        setEventosOriginais(eventosFormatados)
       })
       .catch((error) => console.error("Erro ao buscar eventos:", error))
   }, [])
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const termo = e.target.value.trim().toLowerCase()
-    console.log('Pesquisar evento:', termo)
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const termo = (e.target as HTMLInputElement).value.trim().toLowerCase();
 
+    // Navegar pelos resultados ao apertar Enter
+    if (e.key === "Enter") {
+      if (eventosFiltrados.length > 0) {
+        const proximoIndice = (indiceAtual + 1) % eventosFiltrados.length;
+        setIndiceAtual(proximoIndice);
+        const evento = eventosFiltrados[proximoIndice];
+        if (calendarRef.current) {
+          calendarRef.current.gotoDate(new Date(evento.start));
+        }
+      }
+      return;
+    }
+
+    // Filtrar eventos normalmente
     if (!termo) {
-      setEventosCalendar(eventosOriginais)
-      return
+      setEventosCalendar(eventosOriginais);
+      setEventosFiltrados(eventosOriginais);
+      setIndiceAtual(0);
+      return;
     }
 
     const filtrados = eventosOriginais.filter((evento) =>
       evento.title.toLowerCase().includes(termo) ||
       evento.extendedProps.descricao.toLowerCase().includes(termo) ||
       evento.extendedProps.localizacao.toLowerCase().includes(termo)
-    )
+    );
 
-    setEventosCalendar(filtrados)
-  }
+    setEventosCalendar(filtrados);
+    setEventosFiltrados(filtrados);
+    setIndiceAtual(0);
+
+    // Ir para o primeiro evento filtrado
+    if (filtrados.length > 0 && calendarRef.current) {
+      const primeiraData = new Date(filtrados[0].start);
+      calendarRef.current.gotoDate(primeiraData);
+    }
+  };
+
 
   const handleEventClick = (info: any) => {
     setEventoSelecionado({
@@ -113,8 +141,8 @@ function PaginaEventos() {
             id="searchInput"
             className="input-search"
             placeholder="Pesquisar evento"
-            onInput={handleSearch}
-            style={{ color: '#000' }} 
+            onKeyDown={handleSearch}
+            style={{ color: '#000' }}
           />
         </div>
 

@@ -2,7 +2,7 @@ import React from "react"
 
 type propriedadeBota = {
      className?: string
-     onClick?: () => void
+     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
      children: React.ReactNode
 }
 

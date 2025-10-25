@@ -8,6 +8,7 @@ import { validarCPF } from '../../utils/validarCPF'
 import { validarEmail } from '../../utils/validarEmail'
 import { validarSenha } from '../../utils/validarSenha'
 import { validarTelefone } from '../../utils/validarTelefone'
+import { TipoAcesso } from "./../../utils/enums/usuarioEnums";
 //dotenv permite ler variáveis do .env
 import * as dotenv from "dotenv"
 dotenv.config()
@@ -18,10 +19,11 @@ export const tokenBlacklist: string[] = [];
 export const checkIfUsersExist = async (req: Request, res: Response) => {
   try {
     const userRepository = AppDataSource.getRepository(User);
-    const count = await userRepository.count();
+    const adminCount = await userRepository.count({ where: { role: TipoAcesso.admin  } });
+  res.json({ exists: adminCount > 0 });
 
-    // Se count for 0, não tem usuários ainda
-    const exists = count > 0;
+    // Se adminCount for 0, não tem usuários administradores ainda
+    const exists = adminCount > 0;
 
     res.status(200).json({ exists });
   } catch (error) {
@@ -112,60 +114,60 @@ export const listUsuarioById = async (req: Request, res: Response) => {
     }
 }
 export const updateUsuario = async (req: Request, res: Response) => {
-    try{
-        const {id} = req.params
-        const data = req.body
+    try {
+        const { id } = req.params;
+        const data = req.body;
 
-        if(!validarCPF(data.cpf)){
-            res.status(400).json({
-                mesage:'CPF inválido!'
-            })
-            return
+        if (!validarCPF(data.cpf)) {
+            return res.status(400).json({ message: 'CPF inválido!' });
         }
 
-        if (!validarSenha(data.senha)) {
-            res.status(400).json({
-                message: 'Senha inválida! A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.'
-            })
-            return
-        }
-        const userRepository = AppDataSource.getRepository(User)
-        const user = await userRepository.findOneBy({id: parseInt(id!)})
-        if(!user){
-            res.status(404).json({message:'Usuário não encontrado!'})
-            return
+        const userRepository = AppDataSource.getRepository(User);
+        const user = await userRepository.findOneBy({ id: parseInt(id!) });
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado!' });
         }
 
-       data.cpf = data.cpf.replace(/\D/g, '')//removendo caracteres não numéricos
+        // Removendo caracteres não numéricos do CPF
+        data.cpf = data.cpf.replace(/\D/g, '');
+
         const existingUser = await userRepository.findOne({
             where: {
                 id: Not(parseInt(id!)),
                 cpf: data.cpf
             }
-        })
-        if(existingUser){
-            res.status(400).json({
-                message:'Já existe usuário cadastrado com esse email ou cpf!'
-            })
-        return
+        });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Já existe usuário cadastrado com esse CPF!' });
         }
-        
-        const saltRounds = Number(process.env.SALT_ROUNDS)
-        const senha = data.senha
-        const hash = await bcrypt.hash(senha, saltRounds)
-        data.senha = hash //inserindo a hash
 
-        userRepository.merge(user, data)
-        const results = await userRepository.save(user)
-        res.status(200).json({
-            message:'Usuário atualizado com sucesso!',
+        // Só validar e gerar hash se a senha foi enviada
+        if (data.senha) {
+            if (!validarSenha(data.senha)) {
+                return res.status(400).json({
+                    message: 'Senha inválida! A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.'
+                });
+            }
+
+            const saltRounds = Number(process.env.SALT_ROUNDS);
+            data.senha = await bcrypt.hash(data.senha, saltRounds);
+        } else {
+            // Se não enviar senha, mantemos a senha atual do banco
+            delete data.senha;
+        }
+
+        userRepository.merge(user, data);
+        const results = await userRepository.save(user);
+
+        return res.status(200).json({
+            message: 'Usuário atualizado com sucesso!',
             user: results
-        })
-        return
-    }catch(error){ 
-        res.status(500).json({ message:"Erro ao editar o usuário!" }) 
+        });
+
+    } catch (error) {
+        return res.status(500).json({ message: "Erro ao editar o usuário!", error });
     }
-}
+};
 
 export const deleteUsuario = async (req: Request, res: Response) => {
     try{
@@ -217,7 +219,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
 
         // GERAR O TOKEN 
         const token = jwt.sign(
-            { id: user.id, cpf: user.cpf }, // payload
+            { id: user.id, nome: user.nome, cpf: user.cpf, role: user.role, cargo: user.cargo, }, // payload
             process.env.JWT_SECRET as string,   // chave secreta
             { expiresIn: process.env.JWT_EXPIRES_IN} // expiração
         );
@@ -229,7 +231,9 @@ export const loginUsuario = async (req: Request, res: Response) => {
             user: {
                 id: user.id,
                 nome: user.nome,
-                cpf: user.cpf
+                cpf: user.cpf,
+                role: user.role,
+                cargo: user.cargo,
             }
         });
 
@@ -251,6 +255,12 @@ export const logoutUsuario = (req: Request, res: Response) => {
         return res.status(400).json({ message: 'Token não fornecido.' });
     }
 
+    if (tokenBlacklist.includes(token)) {
+        return res.status(200).json({
+        message: 'Token já está inválido (logout já efetuado anteriormente).',
+        tokenDescartado: token
+        });
+    }
     tokenBlacklist.push(token!);
     console.log(`Token adicionado à blacklist: ${token}`);
 
