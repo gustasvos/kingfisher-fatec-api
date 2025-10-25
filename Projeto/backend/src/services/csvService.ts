@@ -20,7 +20,7 @@ export async function writeDataRow(
     path: filePath,
     header: schema.map((field) => ({
       id: field.name,
-      title: capitalizeFirstLetter(field.name),
+      title:(field.name),
     })),
     append: fileExists,
   });
@@ -42,7 +42,4 @@ export async function readCsv(filePath: string): Promise<GenericDataRow[]> {
   }
 }
 
-//Capitaliza a primeira letra do título da coluna.
-function capitalizeFirstLetter(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
+
