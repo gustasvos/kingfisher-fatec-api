@@ -8,6 +8,7 @@ Content-Type: application/json
   "genero": "F",
   "data_nascimento": "1990-05-15",
   "cargo": "Desenvolvedora",
+  "setor": "Tecnologia",
   "senha": "Larissa@2025",
   "data_contratacao": "2024-07-01",
   "role": "usuario"
@@ -23,6 +24,7 @@ Content-Type: application/json
   "genero": "M",
   "data_nascimento": "1988-03-22",
   "cargo": "Analista de Dados",
+  "setor": "Dados",
   "senha": "Rafa@2025",
   "data_contratacao": "2024-08-15",
   "role": "usuario"
@@ -39,6 +41,7 @@ Content-Type: application/json
   "genero": "F",
   "data_nascimento": "1992-11-05",
   "cargo": "Gerente de Projetos",
+  "setor": "Gestão de Projetos",
   "senha": "JuCosta@123",
   "data_contratacao": "2023-11-20",
   "role": "usuario"
@@ -55,6 +58,7 @@ Content-Type: application/json
   "genero": "M",
   "data_nascimento": "1985-07-19",
   "cargo": "Engenheiro de Software",
+  "setor": "Engenharia de Software",
   "senha": "Carlos@Dev2024",
   "data_contratacao": "2025-01-05",
   "role": "usuario"
@@ -71,6 +75,7 @@ Content-Type: application/json
   "genero": "F",
   "data_nascimento": "1994-12-30",
   "cargo": "UX Designer",
+  "setor": "Design",
   "senha": "Amanda@2024",
   "data_contratacao": "2024-04-10",
   "role": "usuario"
@@ -86,6 +91,7 @@ Content-Type: application/json
   "genero": "F",
   "data_nascimento": "1994-07-07",
   "cargo": "Operadora",
+  "setor": "Operações",
   "senha": "CamilaR#2025",
   "data_contratacao": "2025-08-01",
   "role": "usuario",
@@ -104,6 +110,7 @@ Content-Type: application/json
   "genero": "M",
   "data_nascimento": "1986-01-11",
   "cargo": "Coordenador",
+  "setor": "Coordenação",
   "senha": "Eduardo!Coord25",
   "data_contratacao": "2025-06-01",
   "role": "usuario",
