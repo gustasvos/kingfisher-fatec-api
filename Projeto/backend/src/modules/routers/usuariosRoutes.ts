@@ -10,7 +10,7 @@ router.post('/usuario/create', createUsuario)
 router.post('/login', loginUsuario)
 router.post('/logout', autenticarUsuario, logoutUsuario)
 router.get('/usuario/list', listUsuario);
-router.get('/usuario/:id', autenticarUsuario, listUsuarioById);
+router.get('/usuario/:id', listUsuarioById);
 router.put('/usuario/:id', updateUsuario);
 router.delete('/usuario/:id', deleteUsuario);
 router.get("/users/exists", checkIfUsersExist);

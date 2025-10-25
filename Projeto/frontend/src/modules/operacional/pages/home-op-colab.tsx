@@ -7,7 +7,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Subtitles } from 'lucide-react';
 import axios from 'axios';
 import { User } from '../../../shared/components/header';
-import instance from "../../../services/api";
 
 
 /**
@@ -44,6 +43,18 @@ const mockEventos = {
   icon: FaCalendar
 }
 
+/**
+ * mock para o header
+ */
+const mockHeader = {
+  user: {
+    avatarUrl: '../../assets/usuario.svg',
+    name: "NOME_COLABORADOR_OPERACIONAL",
+    role: "Colaborador",
+    email: "operacionalColab@email.com",
+  },
+};
+
 
 const mockData = {
   checkResponder: 1,
@@ -60,12 +71,10 @@ const mockData3 = {
 
 const HomeOpColabPage: React.FC = () => {
 
-
+  
   const [user, setUser] = useState<User | null>(null)
   const userId = localStorage.getItem("userId")
   const token = localStorage.getItem("token")
-  const [checklistsPreenchidos, setChecklistsPreenchidos] = useState<number | null>(null);
-  const [loadingCheck, setLoadingCheck] = useState(true);
 
   const [eventos, setEventos] = useState<any[]>([])
   const [statusCounts, setStatusCounts] = useState({ total: 0, aguardando: 0 })
@@ -92,67 +101,6 @@ const HomeOpColabPage: React.FC = () => {
     navigate("/lista-check-colaborador")
   }
 
-  const checklistsForms = [
-    "Checklist Diário - Frota Newe",
-    "Checklist, Forms de gestão de coleta",
-    "Formulário de abertura",
-    "Formulário de fechamento,",
-    "Checklist de Cadastro de Agregados(Moto)",
-    "Formulário de manutenção predial"
-  ]
-
-  // para carregar a contagem dos Checklists
-  useEffect(() => {
-    if (!user?.nome) {
-      if (!userId || !token) return;
-      return;
-    }
-
-    const nomeColaborador = user.nome;
-
-    const checklistCount = async () => {
-      setLoadingCheck(true);
-      let totalCount = 0;
-
-      try {
-        // Cria um array de promessas para buscar todos os CSVs de checklist
-        const fetchPromises = checklistsForms.map(async (formTitle) => {
-          // Substituindo o axios direto por 'instance' para usar a rota /ver-csv
-          const response = await instance.get(`/ver-csv-form?formTitle=${encodeURIComponent(formTitle)}`);
-          const jsonArray: any[] = response.data || [];
-
-          const count = jsonArray.filter(item => {
-            // Usa a chave 'nome-motorista' ou 'nome' (ajuste conforme a chave REAL no seu JSON)
-            const nomeNoChecklist = String(
-              item["nome-motorista"] ||
-              item["quem-esta-preenchendo"] ||
-              item["nome-completo-motorista"] ||
-              item["name"] ||
-              item["nome"]
-            ).trim();
-
-            return nomeNoChecklist.toLowerCase() === nomeColaborador.toLowerCase();
-          }).length;
-
-          return count;
-        });
-
-        const resultadoContForm = await Promise.all(fetchPromises);
-        totalCount = resultadoContForm.reduce((sum, count) => sum + count, 0);
-
-        setChecklistsPreenchidos(totalCount);
-
-      } catch (error) {
-        console.error("Erro ao buscar dados dos checklists:", error);
-        setChecklistsPreenchidos(0);
-      } finally {
-        setLoadingCheck(false);
-      }
-    };
-
-    checklistCount();
-  }, [user]);
-
   useEffect(() => {
     if (!userId || !token) return;
 
@@ -161,7 +109,7 @@ const HomeOpColabPage: React.FC = () => {
     Promise.allSettled([
       axios.get(`http://localhost:8080/admin/events/convidado/${userId}`, { headers }),
       axios.get(`http://localhost:8080/admin/events/respostas/`, { headers }),
-      axios.get(`http://localhost:8080/usuario/${userId}`, { headers })
+      axios.get(`http://localhost:8080/usuario/${userId}`,{headers})
     ])
       .then(([resEventos, resFormEvento, resUser]) => {
         if (resEventos.status === "fulfilled") {
@@ -184,7 +132,7 @@ const HomeOpColabPage: React.FC = () => {
         if (resFormEvento.status === "fulfilled") {
           const respForm = resFormEvento.value.data || [];
           const respostasUsuario = respForm.filter(
-            (r: any) => r.usuario?.id === Number(userId)
+            (r:any) => r.usuario?.id === Number(userId)
           );
           setEventoResp(respostasUsuario)
 
@@ -194,8 +142,8 @@ const HomeOpColabPage: React.FC = () => {
 
           setEventoRespCount(countsFormEvento)
         }
-        if (resUser.status === "fulfilled") {
-          setUser(resUser.value.data);
+        if (resUser.status === "fulfilled"){
+           setUser(resUser.value.data);
         } else {
           // Caso 404 ou outro erro
           setEventoResp([]);
@@ -215,7 +163,7 @@ const HomeOpColabPage: React.FC = () => {
 
       <div>
         <h1 className='text-azul-principal ml-[5%] mt-10 text-[30px] font-bold drop-shadow-[5px_5px_3px_rgba(0,0,0,0.3)]'>Verifique as informações dos seus eventos</h1>
-      </div>
+      </div> 
       <div className="p-8  pb-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 ml-10">
 
         <HighlightCard
@@ -260,8 +208,8 @@ const HomeOpColabPage: React.FC = () => {
 
         <HighlightCard
           title="Ver checklists preenchidos"
-          value={loadingCheck ? '...' : checklistsPreenchidos ?? 0}
-          subtitle={loadingCheck ? 'Carregando...' : `Veja seus ${checklistsPreenchidos ?? 0} checklists respondidos`}
+          value={mockData3.eventos}
+          subtitle={mockEventos.subtitle}
           variant="primary"
           icon={FaEye}
           onClick={irCheckColaborador}
