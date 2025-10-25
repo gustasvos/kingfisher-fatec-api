@@ -10,12 +10,10 @@ export default function RotasGerais(){
             <AuthProvider>
                 <Routes>
                     {RotasADM()}
+                    {RotasComercial()}
+                    {RotasOp()}
                 </Routes>
             </AuthProvider>
-//            <Routes>
-//                {RotasADM()}
-//                {RotasOp()}
-//            </Routes>
         </BrowserRouter>
     )
 }
