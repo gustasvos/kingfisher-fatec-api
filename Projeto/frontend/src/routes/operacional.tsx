@@ -14,6 +14,8 @@ export default function RotasOp(){
             <Route path="/check-moto" element={<CheckMotoPage/>}/>
             <Route path="/form-abertura" element={<FormAberturaPage/>}/>
             <Route path="/home-op-admin" element={<HomeOpAdminPage/>}/>
+            <Route path="/home-colab" element={<HomeOpAdminPage />}/>
         </>
     )
 }
+
