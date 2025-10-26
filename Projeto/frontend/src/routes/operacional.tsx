@@ -6,7 +6,6 @@ import FormAberturaPage from "../modules/operacional/pages/form-abertura-page"
 import HomeOpAdminPage from "../modules/operacional/pages/home-op-admin"
 import FormFechamentoPage from "../modules/operacional/pages/form-fechamento-page"
 
-
 export default function RotasOp(){
     return(
         <>
@@ -17,7 +16,7 @@ export default function RotasOp(){
             <Route path="/home-op-admin" element={<HomeOpAdminPage/>}/>
             <Route path="/home-colab" element={<HomeOpAdminPage />}/>
             <Route path="/form-fechamento" element={<FormFechamentoPage />}/>
+            <Route path="/check-veiculo" element={<CheckVeiculosPage/>}/>
         </>
     )
 }
-
