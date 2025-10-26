@@ -15,6 +15,7 @@ import Cadastro from "../../modules/administrativo/pages/PaginaCadastro";
 import Modal from "./modal";
 import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
 import FormTeste from "../../modules/operacional/components/form-teste";
+import CadastroCliente from "../../modules/comercial/pages/cadastrocliente";
 
 export default function Navbar() {
   const [aberto, setAberto] = useState(false);
@@ -41,8 +42,7 @@ export default function Navbar() {
 
   const abrirModalCadastroCliente = (e: React.MouseEvent) => {
     e.preventDefault()
-    /**colocar o componente aqui, igual nos outros */
-    // setConteudoModal(</>)
+    setConteudoModal(<CadastroCliente/>)
     setAbertoModal(true)
   }
 
