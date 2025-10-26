@@ -6,7 +6,7 @@ import { Between } from 'typeorm'
 // POST /usuario/:usuarioId/local
 export const registrarLocalTrabalho = async (req: Request, res: Response) => {
   try {
-    const usuarioId = Number(req.params.id)
+    const { id } = req.params;
     const { local } = req.body
 
     if (!local) {
@@ -23,7 +23,7 @@ export const registrarLocalTrabalho = async (req: Request, res: Response) => {
     // Verifica se já existe registro no dia
     const registroExistente = await usuarioLocalRepository.findOne({
       where: {
-        usuario: { id: usuarioId },
+        usuario: { id: Number(id) },
         data: Between(inicioDia, fimDia),
       },
     })
@@ -37,7 +37,7 @@ export const registrarLocalTrabalho = async (req: Request, res: Response) => {
     const novoRegistro = usuarioLocalRepository.create({
       local,
       data: new Date(),
-      usuario: { id: usuarioId },
+      usuario: { id: Number(id) },
     })
 
     await usuarioLocalRepository.save(novoRegistro)

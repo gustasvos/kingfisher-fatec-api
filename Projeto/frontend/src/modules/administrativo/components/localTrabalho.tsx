@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { Home, MapPin } from "lucide-react";
 import instance from "../../../services/api";
+import { useAuth } from "../../../contexts/AuthContext";
+
+
+function getUserId(): number | null {
+  const storedUser = localStorage.getItem('user');
+  if (!storedUser) return null;
+
+  const user = JSON.parse(storedUser);
+  return user?.id || null;
+}
 
 export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
   const [opcao, setOpcao] = useState<string | null>(null);
@@ -15,7 +25,7 @@ export default function LocalTrabalho({ onFechar }: { onFechar?: () => void }) {
   const confirmar = async () => {
     if (!opcao) return;
 
-    const userId = localStorage.getItem("userId");
+    const userId = getUserId()
     if (!userId) {
       setError("Usuário não encontrado.");
       return;
