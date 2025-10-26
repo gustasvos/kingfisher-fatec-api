@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
 import { Cliente } from "../../../types/cliente"
-import axios from "axios";
 import Navbar from "../../../shared/components/navbar"
 import Loading from "../../../shared/components/loading";
 import CardCliente from "../components/card-cliente";
+import instance from "../../../services/api";
 
 export default function ListaCliente() {
     const [cliente, setCliente] = useState<Cliente[]>([])
@@ -11,8 +11,7 @@ export default function ListaCliente() {
     const [pesquisa, setPesquisa] = useState("")
 
     useEffect(() => {
-        // colocar o nosso http, esse foi só para eu testar
-        axios.get<Cliente[]>("http://localhost:8080/clientes")
+        instance.get<Cliente[]>("/cliente/list")
             .then((response: any) => {
                 setCliente(response.data)
             })
@@ -26,8 +25,7 @@ export default function ListaCliente() {
 
     const excluirCliente = async (id: number) => {
         if (window.confirm("Tem certeza que deseja excluir esse cliente?")) {
-            // colocar o nosso http, esse foi só para eu testar
-            await fetch(`http://localhost:8080/clientes/${id}`, {
+            await instance.delete(`/cliente/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -39,7 +37,7 @@ export default function ListaCliente() {
 
     // filtra os cliente pelo nome
     const clienteFiltrados = cliente.filter(c =>
-        c.nomeFantasia.toLowerCase().includes(pesquisa.toLowerCase())
+        c.NomeFantasia.toLowerCase().includes(pesquisa.toLowerCase())
     )
 
     if (carregando) {
@@ -58,7 +56,7 @@ export default function ListaCliente() {
                     <div className="mb-4">
                         <input
                             type="text"
-                            placeholder="Buscar colaborador..."
+                            placeholder="Buscar clientes..."
                             value={pesquisa}
                             onChange={(e) => setPesquisa(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded"
