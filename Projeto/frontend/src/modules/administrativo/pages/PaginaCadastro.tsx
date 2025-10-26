@@ -199,6 +199,8 @@ export default function Cadastro() {
               <option value="">Selecione</option>
               <option value="usuario">Usuário</option>
               <option value="admin">Administrador</option>
+              <option value="comercial">Comercial</option>
+              <option value="operacional">Operacional</option>
             </select>
           </div>
         </div>

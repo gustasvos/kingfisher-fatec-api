@@ -40,7 +40,7 @@ export default function PrivateWrapper({ children, roles }: PrivateWrapperProps)
   }
   if (roles && user?.role && !roles.includes(user.role)) {
     console.warn(`Acesso negado para o role: ${user.role}`)
-    return <Navigate to="/home" replace />
+    return <Navigate to="/" replace />
   }
 
   return <>{children}</>

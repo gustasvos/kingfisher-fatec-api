@@ -40,14 +40,13 @@ export default function Login() {
             const { token, user } = response.data
 
             if (token && user) {
-                if (user.role === "admin") {
-                    login(token, user);
-                    setSucesso("Login realizado com sucesso!");
-                    setTimeout(() => {
-                        navigate("/home");
-                    }, 1000);
-                } else {
-                    setErro("Acesso negado: usuário não possui permissão de admnistrador.");
+                login(token, user);
+                setSucesso("Login realizado com sucesso!");
+                if (user.role === "admin") setTimeout(() => navigate("/home"), 1000);
+                else if (user.role === "operacional") setTimeout(() => navigate("/home-op-admin"), 1000);
+                else if (user.role === "comercial") setTimeout(() => navigate("/listaCliente"), 1000);
+                else {
+                    setErro("Acesso negado: usuário não possui permissão para se logar.");
                 }
             } else {
                 setErro("Token não recebido do servidor");
