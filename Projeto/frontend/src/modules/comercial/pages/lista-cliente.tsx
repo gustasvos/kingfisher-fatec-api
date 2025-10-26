@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Cliente } from "../../../types/cliente"
 import Navbar from "../../../shared/components/navbar"
 import Loading from "../../../shared/components/loading";
-import CardCliente from "../components/card-cliente";
+import CardCliente from "../../operacional/components/card-cliente";
 import instance from "../../../services/api";
 
 export default function ListaCliente() {

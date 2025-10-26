@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
 import CadastroCliente from "../modules/comercial/pages/cadastrocliente";
-import ListaCliente from "../modules/operacional/pages/lista-cliente"
+import ListaCliente from "../modules/comercial/pages/lista-cliente"
 import PrivateWrapper from "./../shared/components/PrivateWrapper";
 
 export default function RotasComercial(){
