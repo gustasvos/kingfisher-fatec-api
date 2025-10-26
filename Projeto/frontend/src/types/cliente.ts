@@ -1,6 +1,8 @@
 export type Cliente = {
     id: number
-    cnpj: string
-    nomeFantasia: string
-    email: string
+    CNPJ: string
+    NomeFantasia: string
+    PrazoFaturamento: string
+    ContatoResponsavel: string
+    EmailResponsavel: string
 }
