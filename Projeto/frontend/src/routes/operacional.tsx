@@ -4,6 +4,7 @@ import CheckDiarioPage from "../modules/operacional/pages/check-diario-page"
 import CheckMotoPage from "../modules/operacional/pages/check-moto-page"
 import FormAberturaPage from "../modules/operacional/pages/form-abertura-page"
 import HomeOpAdminPage from "../modules/operacional/pages/home-op-admin"
+import FormFechamentoPage from "../modules/operacional/pages/form-fechamento-page"
 
 
 export default function RotasOp(){
@@ -15,6 +16,7 @@ export default function RotasOp(){
             <Route path="/form-abertura" element={<FormAberturaPage/>}/>
             <Route path="/home-op-admin" element={<HomeOpAdminPage/>}/>
             <Route path="/home-colab" element={<HomeOpAdminPage />}/>
+            <Route path="/form-fechamento" element={<FormFechamentoPage />}/>
         </>
     )
 }
