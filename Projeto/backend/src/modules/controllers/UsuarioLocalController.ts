@@ -78,3 +78,40 @@ export const checkUsuarioLocalHoje = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Erro ao verificar local do usuário" })
   }
 }
+
+// GET /usuario-local/estatisticas?periodo=hoje|30dias
+export const getEstatisticasLocais = async (req: Request, res: Response) => {
+  try {
+    const { periodo } = req.query // "hoje" ou "30dias"
+    const usuarioLocalRepository = AppDataSource.getRepository(UsuarioLocal)
+
+    const agora = new Date()
+    let inicio: Date
+
+    if (periodo === "30dias") {
+      // últimos 30 dias
+      inicio = new Date()
+      inicio.setDate(agora.getDate() - 30)
+      inicio.setHours(0, 0, 0, 0)
+    } else {
+      // padrão: somente hoje
+      inicio = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 0, 0, 0, 0)
+    }
+
+    const fim = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 23, 59, 59, 999)
+
+    const registros = await usuarioLocalRepository
+      .createQueryBuilder("usuario_local")
+      .select("usuario_local.local", "local")
+      .addSelect("COUNT(usuario_local.id)", "quantidade")
+      .where("usuario_local.data BETWEEN :inicio AND :fim", { inicio, fim })
+      .groupBy("usuario_local.local")
+      .getRawMany()
+
+    return res.json(registros)
+  } catch (error) {
+    console.error("Erro ao gerar estatísticas:", error)
+    return res.status(500).json({ message: "Erro ao buscar estatísticas de locais" })
+  }
+}
+
