@@ -11,7 +11,7 @@ Content-Type: application/json
   "setor": "Tecnologia",
   "senha": "Larissa@2025",
   "data_contratacao": "2024-07-01",
-  "role": "usuario"
+  "role": "operacional"
 }
 
 ### Criar novo usuário
@@ -27,7 +27,7 @@ Content-Type: application/json
   "setor": "Dados",
   "senha": "Rafa@2025",
   "data_contratacao": "2024-08-15",
-  "role": "usuario"
+  "role": "comercial"
 }
 
 
@@ -44,7 +44,7 @@ Content-Type: application/json
   "setor": "Gestão de Projetos",
   "senha": "JuCosta@123",
   "data_contratacao": "2023-11-20",
-  "role": "usuario"
+  "role": "operacional"
 }
 
 
@@ -61,7 +61,7 @@ Content-Type: application/json
   "setor": "Engenharia de Software",
   "senha": "Carlos@Dev2024",
   "data_contratacao": "2025-01-05",
-  "role": "usuario"
+  "role": "comercial"
 }
 
 
@@ -78,7 +78,7 @@ Content-Type: application/json
   "setor": "Design",
   "senha": "Amanda@2024",
   "data_contratacao": "2024-04-10",
-  "role": "usuario"
+  "role": "operacional"
 }
 
 ### Criar novo usuário - USUARIO NOVO
@@ -92,10 +92,9 @@ Content-Type: application/json
   "data_nascimento": "1994-07-07",
   "cargo": "Operadora",
   "setor": "Operações",
-  "senha": "CamilaR#2025",
+  "senha": "Camila@2025",
   "data_contratacao": "2025-08-01",
-  "role": "usuario",
-  "email": "camila.rocha@example.com"
+  "role": "admin"
 }
 
 
@@ -111,10 +110,9 @@ Content-Type: application/json
   "data_nascimento": "1986-01-11",
   "cargo": "Coordenador",
   "setor": "Coordenação",
-  "senha": "Eduardo!Coord25",
+  "senha": "Eduardo@2025",
   "data_contratacao": "2025-06-01",
-  "role": "usuario",
-  "email": "eduardo.martins@example.com"
+  "role": "admin"
 }
 
 

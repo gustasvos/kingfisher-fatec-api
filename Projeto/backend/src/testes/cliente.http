@@ -1,0 +1,72 @@
+### Criar usuário Comercial (necessário para as rotas de cliente)
+POST http://localhost:8080/usuario/create
+Content-Type: application/json
+
+{
+  "nome": "Ana Costa",
+  "cpf": "91123794090",
+  "genero": "F",
+  "data_nascimento": "1992-03-10",
+  "cargo": "Vendedor",
+  "setor": "Comercial",
+  "senha": "Ana@2025",
+  "data_contratacao": "2025-10-01",
+  "role": "comercial"
+}
+
+### login Usuário Comercial Ana
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "91123794090",
+  "senha": "Ana@2025"
+}
+
+###
+@token = {{login.response.body.token}}
+
+### Criar novo cliente (requer 'comercial')
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "29.140.503/0001-44",
+  "NomeFantasia": "Empresa de Teste Alfa Ltda",
+  "PrazoFaturamento": "2025-11-30T10:00:00Z",
+  "ContatoResponsavel": "Carlos Silva",
+  "EmailResponsavel": "carlos.silva@alfa.com"
+}
+
+###
+@clienteId = {{createCliente.response.body.cliente.id}}
+
+### Listar todos os clientes (requer 'comercial')
+GET http://localhost:8080/cliente/list
+Authorization: Bearer {{token}}
+
+### Listar cliente por ID (requer 'comercial')
+GET http://localhost:8080/cliente/{{clienteId}}
+Authorization: Bearer {{token}}
+
+### Atualizar cliente (requer 'comercial')
+PUT http://localhost:8080/cliente/{{clienteId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "NomeFantasia": "Novo Nome Fantasia Beta",
+  "ContatoResponsavel": "Ana Souza",
+  "EmailResponsavel": "ana.souza@beta.com"
+}
+
+### Deletar cliente (requer 'comercial')
+DELETE http://localhost:8080/cliente/{{clienteId}}
+Authorization: Bearer {{token}}
+
+### Tentar buscar cliente deletado (deve falhar com 404)
+GET http://localhost:8080/cliente/{{clienteId}}
+Authorization: Bearer {{token}}

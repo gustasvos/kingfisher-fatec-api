@@ -2,6 +2,7 @@
 import express, {Request, Response} from 'express'
 import usuariosRoutes from './modules/routers/usuariosRoutes';
 import EventoRoutes from './modules/routers/EventoRoutes';
+import clienteRoutes from './modules/routers/clienteRoutes';
 import dashboardOpRoutes from './modules/routers/dashboardOpRoutes';
 import formRoutes from './modules/routers/formRoutes'
 import path from 'path';
@@ -21,6 +22,7 @@ app.use(cors({
 
 app.use('/',EventoRoutes)
 app.use('/',usuariosRoutes)
+app.use('/',clienteRoutes)
 app.use("/uploads", express.static(uploadsDir));
 app.use("/data", express.static(dataDir));
 app.use("/", formRoutes);
