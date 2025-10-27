@@ -1,3 +1,5 @@
+@api = http://localhost:8080/
+
 ### LISTAR TODOS OS EVENTOS
 GET http://localhost:8080/admin/events
 Content-Type: application/json
@@ -79,7 +81,7 @@ Content-Type: application/json
   "descricao": "Imersão prática em desenvolvimento web",
   "dataHora": "2025-10-16T08:30:00.000Z",
   "localizacao": "Auditório Principal",
-  "convidados": [1, 2, 3, 4, 5, 6]
+  "convidados": [1, 2, 3, 4, 5, 6, 11]
 }
 
 ### CRIAR UM NOVO EVENTO
@@ -95,14 +97,15 @@ Content-Type: application/json
 }
 
 ### ATUALIZAR UM EVENTO
-PUT http://localhost:8080/admin/events/1
+PUT http://localhost:8080/admin/events/7
 Content-Type: application/json
 
 {
   "titulo": "Treinamento Atualizado",
   "descricao": "Workshop avançado",
   "dataHora": "2025-10-01T15:00:00.000Z",
-  "localizacao": "Auditório Central"
+  "localizacao": "Auditório Central",
+  "convidados": [1]
 }
 
 
@@ -111,15 +114,15 @@ DELETE http://localhost:8080/admin/events/1
 Content-Type: application/json
 
 ### ADICIONAR CONVIDADOS
-POST http://localhost:8080/admin/events/1/convidar
+POST http://localhost:8080/admin/events/4/convidar
 Content-Type: application/json
 
 {
-  "convidados": [5, 6]
+  "convidados": [1,5, 6]
 }
 
 ### CONFIRMAR CONVITE
-PATCH http://localhost:8080/admin/events/2/convidado/1
+PATCH http://localhost:8080/admin/events/7/convidado/1
 Content-Type: application/json
 
 {
@@ -127,7 +130,7 @@ Content-Type: application/json
 }
 
 ### RECUSAR CONVITE (com motivo)
-PATCH http://localhost:8080/admin/events/1/convidado/2
+PATCH http://localhost:8080/admin/events/7/convidado/3
 Content-Type: application/json
 
 {
@@ -146,3 +149,27 @@ GET http://localhost:8080/admin/events/convidado/1
 Content-Type: application/json
 
 {}
+
+### GET ALL RESPOSTAS
+### Listar todas as respostas de eventos
+GET http://localhost:8080/admin/events/respostas
+Content-Type: application/json
+
+
+### GET RESPOSTA BY ID
+GET {{api}}admin/events/respostas/2
+Content-Type: application/json
+
+{}
+
+
+### POST RESPOSTA
+POST {{api}}admin/events/respostas/10/participante/11
+Content-Type: application/json
+
+{
+  "titulo_evento": "Feedback do bootcamp",
+  "objetivo": "Treinar exercicios",
+  "comentarios": "Ótimas dinâmicas e aprendizado",
+  "avaliacao": 3
+}

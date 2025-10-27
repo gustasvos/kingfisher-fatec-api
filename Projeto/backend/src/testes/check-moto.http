@@ -1,0 +1,42 @@
+### Cadastrando um Forms de Checklist de Cadastro de Agregados (Moto)
+# Rota: POST http://localhost:8080/submit
+# O campo 'formTitle' é crucial para o backend identificar o esquema de validação.
+POST http://localhost:8080/submit
+Content-Type: application/json
+
+{
+  "formTitle": "Checklist de Cadastro de Agregados(Moto)",
+  "genero": "Masculino",
+  "nome-completo-motorista": "João Pedro Silva",
+  "cnpj": "",
+  "cpf": "12345678901",
+  "data-nascimento": "1990-05-15T00:00:00.000Z",
+  "cidade-nascimento": "Campinas",
+  "telefone": "+55 19 99999-9999",
+  "email": "joao.silva@example.com",
+  "rg": "12.345.678-9",
+  "data-emissao-rg": "2008-03-10T00:00:00.000Z",
+  "orgao-expedidor": "SSP",
+  "nome-do-pai": "Carlos Silva",
+  "nome-da-mae": "Mariana Silva",
+  "pis-pasep": "123.45678.90-1",
+  "cep": "13000-000",
+  "endereco": "Rua das Flores, 123 - Centro, Campinas - SP",
+  "nome-proprietario-veiculo": "João Pedro Silva",
+  "placa": "XYZ1A23",
+  "marca": "Honda",
+  "modelo": "CG 160",
+  "cor": "Preta",
+  "ano-fabricacao": "2019",
+  "cilindrada": "160cc",
+  "possui-bau-suporte-carga": "Sim",
+  "possui-seguro": "Não",
+  "valor-minimo-por-saida": "R$ 25,00",
+  "valor-minimo-por-km": "R$ 1,20",
+  "possui-curso-moto-frete": "Sim"
+}
+
+### Listar dados salvos no CSV do formulário
+# Para verificar se o dado foi salvo no CSV correto
+GET http://localhost:8080/ver-csv?formTitle=Checklist Cadastro de Agregados(Moto)
+Content-Type: application/json

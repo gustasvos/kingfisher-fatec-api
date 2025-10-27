@@ -11,20 +11,20 @@ export enum StatusConvite {
 @Entity('evento_convidado')
 export class EventoConvidado {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @ManyToOne(() => Evento, (evento) => evento.convidados, { onDelete: 'CASCADE' })
-  evento: Evento;
+  evento: Evento
 
   @ManyToOne(() => User, (usuario) => usuario.eventosConvidado, { eager: true })
-  funcionario: User;
+  funcionario: User
 
   @Column({ type: 'enum', enum: StatusConvite, default: StatusConvite.PENDENTE })
-  status: StatusConvite;
+  status: StatusConvite
 
   @Column({ type: 'varchar', length: 1024, nullable: true })
-  motivo?: string | null;
+  motivo?: string | null
 
   @CreateDateColumn()
-  criadoEm: Date;
+  criadoEm: Date
 }

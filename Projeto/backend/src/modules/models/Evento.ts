@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { EventoConvidado } from './EventoConvidado';
+import { EventoResposta } from './eventoResposta';
 
 @Entity('evento')
 export class Evento {
@@ -20,4 +21,7 @@ export class Evento {
 
   @OneToMany(() => EventoConvidado, ec => ec.evento, { cascade: true })
   convidados: EventoConvidado[];
+
+  @OneToMany(() => EventoResposta, er => er.evento)
+  respostas: EventoResposta[];
 }

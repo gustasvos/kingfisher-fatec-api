@@ -1,26 +1,29 @@
 import { Route } from "react-router-dom"
 import LoginPage from "../modules/administrativo/pages/login-page"
 import Cadastro from '../modules/administrativo/pages/PaginaCadastro';
-import EventoDetalhePage from "../modules/administrativo/pages/eventoDetalhe-page"
-import ListagemColaborador from "../modules/administrativo/pages/listagem-colaborador-page"
-import NovoEvento from "../modules/administrativo/components/novoEvento";
+import EventoDetalhe from "../modules/administrativo/components/eventoDetalhe";
 import PaginaEventos from "../modules/administrativo/components/paginaEventos";
+import ListagemColaborador from "../modules/administrativo/components/listagem-colaborador";
 import HomePage from "../modules/administrativo/pages/home-Page";
-
-
-
-
+import LocalDeTrabalho from "../modules/administrativo/components/localTrabalho";
+import ListagemEventos from "../modules/administrativo/components/listagem-eventos";
+import RespostaEventos from "../modules/administrativo/pages/page-resposta-eventos";
+import PrivateWrapper from "./../shared/components/PrivateWrapper";
+import ListagemChecklist from "../modules/operacional/components/listagem-checklist";
 
 export default function RotasADM(){
     return (
         <>
             <Route path="/" element={<LoginPage/>}/>
-            <Route path="/cadastrar" element={<Cadastro />} />
-            <Route path="/evento-convite" element={<EventoDetalhePage/>}/>
-            <Route path="/colaboradores" element={<ListagemColaborador/>}/>
-            <Route path="/eventos" element={<PaginaEventos/>}/>
-            <Route path="/novo-evento" element={<NovoEvento/>}/>
-            <Route path="/home" element={<HomePage/>} />
+            <Route path="/cadastrar" element={<PrivateWrapper roles={['admin']}><Cadastro /></PrivateWrapper>} />
+            <Route path="/evento-convite" element={<PrivateWrapper roles={['admin']}><EventoDetalhe/></PrivateWrapper>}/>
+            <Route path="/colaboradores" element={<PrivateWrapper roles={['admin','operacional','comercial']}><ListagemColaborador/></PrivateWrapper>}/>
+            <Route path="/eventos" element={<PrivateWrapper roles={['admin','operacional','comercial']}><PaginaEventos/></PrivateWrapper>}/>
+            <Route path="/home" element={<PrivateWrapper roles={['admin']}><HomePage/></PrivateWrapper>} />
+            <Route path="/eventos-colaborador" element={<PrivateWrapper roles={['admin']}><ListagemEventos /></PrivateWrapper>} />
+            <Route path="/local-trabalho" element={<PrivateWrapper roles={['admin']}><LocalDeTrabalho /></PrivateWrapper>} />
+            <Route path="/resposta-eventos" element={<PrivateWrapper roles={['admin','operacional','comercial']}><RespostaEventos /></PrivateWrapper>} />
+            <Route path="/lista-check-colaborador" element={<ListagemChecklist />} />
         </>
     )
 }

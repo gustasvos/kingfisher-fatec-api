@@ -4,11 +4,12 @@ import { Evento } from '../models/Evento';
 import { User } from '../models/usuario';
 import { EventoConvidado, StatusConvite } from '../models/EventoConvidado';
 import { In } from 'typeorm';
+import { EventoResposta } from '../models/eventoResposta';
 
-const router = Router();
 const eventoRepo = () => AppDataSource.getRepository(Evento);
 const usuarioRepo = () => AppDataSource.getRepository(User);
 const conviteRepo = () => AppDataSource.getRepository(EventoConvidado);
+const respostaRepo = () => AppDataSource.getRepository(EventoResposta);
 
 // Helper para formatar o evento com participantes
 function formatEvento(evento: Evento) {
@@ -23,7 +24,6 @@ function formatEvento(evento: Evento) {
       funcionario: c.funcionario ? {
         id: c.funcionario.id,
         nome: c.funcionario.nome,
-        email: c.funcionario.email,
       } : null,
       status: c.status,
       motivo: c.motivo || null,
@@ -59,7 +59,7 @@ export const listEvento =  async (req: Request, res: Response) => {
     console.error(err);
     return res.status(500).json({ error: 'Erro ao buscar eventos' });
   }
-};
+}
 
 // GET /admin/events/:id -> pega um evento com convidados
 export const listEventoById = async (req: Request, res: Response) => {
@@ -234,7 +234,7 @@ export const atualizaStatusEvento = async (req: Request, res: Response) => {
     if (motivo !== undefined) convite.motivo = motivo;
 
     await conviteRepo().save(convite);
-    return res.json(convite);
+    return res.status(200).json({mensagem: 'Convite confirmado com sucesso.', convite});
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Erro ao atualizar convite' });
@@ -293,7 +293,6 @@ export const listConvitesByUser = async (req: Request, res: Response) => {
       funcionario: {
         id: convite.funcionario.id,
         nome: convite.funcionario.nome,
-        email: convite.funcionario.email,
       }
     }));
 
@@ -303,4 +302,137 @@ export const listConvitesByUser = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Erro ao buscar convites do usuário' });
   }
 };
+
+// GET /admin/events/respostas -> lista todas as respostas de eventos
+export const listEventoRespostas = async (req: Request, res: Response) => {
+  try {
+    const eventoRespostaRepo = AppDataSource.getRepository(EventoResposta)
+
+    const respostas = await eventoRespostaRepo.find({
+      relations: ["usuario", "evento"],
+      order: { id: "DESC" }
+    })
+
+    // remover campos do usuário
+    const respostasLimpa = respostas.map((r) => {
+      if (r.usuario) {
+        const { senha, genero, role, data_contratacao, data_nascimento, ...usuarioFiltrado } = r.usuario
+        return {
+          ...r,
+          usuario: usuarioFiltrado
+        }
+      }
+      return r
+    })
+
+    return res.status(200).json(respostasLimpa)
+  } catch (error) {
+    console.error("Erro ao buscar evento:", error)
+    return res.status(500).json({ error: "Erro ao buscar evento" })
+  }
+}
+
+
+
+// GET /admin/events/respostas/:id -> pega uma resposta específica pelo ID
+export const getEventoRespostaById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id || isNaN(Number(id))) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    const resposta = await respostaRepo().findOne({
+      where: { id: Number(id) },
+      relations: ['evento', 'usuario']
+    });
+
+    if (!resposta) {
+      return res.status(404).json({ error: 'Resposta de evento não encontrada' });
+    }
+
+    return res.json({
+      id: resposta.id,
+      titulo_evento: resposta.titulo_evento,
+      data_evento: resposta.data_evento,
+      objetivo: resposta.objetivo,
+      comentarios: resposta.comentarios,
+      avaliacao: resposta.avaliacao,
+      usuario: {
+        id: resposta.usuario.id,
+        nome: resposta.usuario.nome,
+        cargo: resposta.usuario.cargo
+      },
+      evento: {
+        id: resposta.evento.id,
+        titulo: resposta.evento.titulo,
+        dataHora: resposta.evento.dataHora,
+        localizacao: resposta.evento.localizacao
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Erro ao buscar resposta de evento' });
+  }
+};
+
+
+export const createEventoResposta = async (req: Request, res: Response) => {
+  try {
+    const { eventoId, usuarioId } = req.params;
+    const { titulo_evento, objetivo, comentarios, avaliacao } = req.body;
+
+    if (!eventoId || !usuarioId) {
+      return res.status(400).json({ error: 'IDs de evento e usuário são obrigatórios' });
+    }
+
+    const evento = await eventoRepo().findOneBy({ id: Number(eventoId) });
+    const usuario = await usuarioRepo().findOneBy({ id: Number(usuarioId) });
+
+    if (!evento) return res.status(404).json({ error: 'Evento não encontrado' });
+    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
+
+    // impedir respostas duplicadas
+    const respostaExistente = await respostaRepo().findOne({
+      where: { evento: { id: evento.id }, usuario: { id: usuario.id } }
+    });
+
+    if (respostaExistente) {
+      return res.status(409).json({ error: 'Este usuário já respondeu a este evento' });
+    }
+
+    // validação da avaliacao
+    if (!Number.isInteger(avaliacao) || avaliacao < 1 || avaliacao > 5) {
+      return res.status(400).json({ error: 'Avaliacao deve ser um número inteiro entre 1 e 5' });
+    }
+
+    const resposta = respostaRepo().create({
+      titulo_evento: titulo_evento ?? evento.titulo,
+      data_evento: evento.dataHora,
+      objetivo: objetivo ?? '',
+      comentarios: comentarios ?? '',
+      avaliacao,
+      evento,
+      usuario
+    });
+
+    const saved = await respostaRepo().save(resposta);
+
+    return res.status(201).json({
+      id: saved.id,
+      titulo_evento: saved.titulo_evento,
+      data_evento: saved.data_evento,
+      objetivo: saved.objetivo,
+      comentarios: saved.comentarios,
+      avaliacao: saved.avaliacao,
+      usuario: { id: usuario.id, nome: usuario.nome, cargo: usuario.cargo },
+      evento: { id: evento.id, titulo: evento.titulo, dataHora: evento.dataHora, localizacao: evento.localizacao }
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Erro ao criar resposta de evento' });
+  }
+};
+
 

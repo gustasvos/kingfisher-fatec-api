@@ -1,33 +1,41 @@
 import React, { useRef, useState, useEffect } from 'react'
-import axios from 'axios'
-import FullCalendar from '@fullcalendar/react' 
-import dayGridPlugin from '@fullcalendar/daygrid'      
-import timeGridPlugin from '@fullcalendar/timegrid'    
-import listPlugin from '@fullcalendar/list'           
-import interactionPlugin from '@fullcalendar/interaction' 
-import ptBrLocale from '@fullcalendar/core/locales/pt-br' 
+import instance from "../../../services/api";
+import { useAuth } from "../../../contexts/AuthContext";
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import listPlugin from '@fullcalendar/list'
+import interactionPlugin from '@fullcalendar/interaction'
+import ptBrLocale from '@fullcalendar/core/locales/pt-br'
 import "./pagina-eventos.css"
-import { useNavigate } from 'react-router-dom';
 import { CalendarApi } from '@fullcalendar/core'
 
-import imgLogin from './../../../assets/imgLoginKey.svg';
-import imgHome from './../../../assets/imgHomepage.png';
-import imgUser from './../../../assets/imgAddUserMale.png';
-import imgCalendar from './../../../assets/imgTearOffCalendar.png';
-import imgNotification from './../../../assets/imgDoorbell.png';
-import imgColab from './../../../assets/imgTeam.svg';
+import imgLogin from './../../../assets/imgLoginKey.svg'
+import imgHome from './../../../assets/imgHomepage.png'
+import imgUser from './../../../assets/imgAddUserMale.png'
+import imgCalendar from './../../../assets/imgTearOffCalendar.png'
+import imgNotification from './../../../assets/imgDoorbell.png'
+import imgColab from './../../../assets/imgTeam.svg'
+import Modal from '../../../shared/components/modal'
+import NovoEvento from './novoEvento'
+import Navbar from '../../../shared/components/navbar'
 
 function PaginaEventos() {
-  const calendarRef = useRef<CalendarApi | null>(null) 
-  const [eventosCalendar, setEventosCalendar] = useState<any[]>([]);
-  const usuarioID = 1;
+  const [eventosCalendar, setEventosCalendar] = useState<any[]>([])
+  const [eventosOriginais, setEventosOriginais] = useState<any[]>([])
+  const [aberto, setAberto] = useState(false)
+  const [eventoSelecionado, setEventoSelecionado] = useState<any | null>(null)
+  const [abertoModal, setAbertoModal] = useState(false)
+  const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
+  const [eventosFiltrados, setEventosFiltrados] = useState<any[]>([]);
+  const [indiceAtual, setIndiceAtual] = useState(0);
 
-  const [aberto, setAberto] = useState(false); // sidebar aberta ou fechada
-
-  const navigate = useNavigate();
+  const calendarRef = useRef<CalendarApi | null>(null)
+  const { user } = useAuth(); // Usar o hook de autenticação
+  const usuarioID = user?.id; // Obter o ID do usuário da sessão
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/admin/events/convidado/${usuarioID}`)
+    instance.get(`/admin/events/convidado/${usuarioID}`)
       .then((response) => {
         const eventosFormatados = response.data.map((convite: any) => ({
           id: convite.evento.id,
@@ -38,19 +46,70 @@ function PaginaEventos() {
             localizacao: convite.evento.localizacao,
             status: convite.status,
           }
-        }));
-        setEventosCalendar(eventosFormatados);
+        }))
+        setEventosCalendar(eventosFormatados)
+        setEventosOriginais(eventosFormatados)
       })
-      .catch((error) => console.error("Erro ao buscar eventos:", error));
-  }, []);
+      .catch((error) => console.error("Erro ao buscar eventos:", error))
+  }, [])
 
-  const handleCreateEvent = () => {
-    navigate('/novo-evento');
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const termo = (e.target as HTMLInputElement).value.trim().toLowerCase();
+
+    // Navegar pelos resultados ao apertar Enter
+    if (e.key === "Enter") {
+      if (eventosFiltrados.length > 0) {
+        const proximoIndice = (indiceAtual + 1) % eventosFiltrados.length;
+        setIndiceAtual(proximoIndice);
+        const evento = eventosFiltrados[proximoIndice];
+        if (calendarRef.current) {
+          calendarRef.current.gotoDate(new Date(evento.start));
+        }
+      }
+      return;
+    }
+
+    // Filtrar eventos normalmente
+    if (!termo) {
+      setEventosCalendar(eventosOriginais);
+      setEventosFiltrados(eventosOriginais);
+      setIndiceAtual(0);
+      return;
+    }
+
+    const filtrados = eventosOriginais.filter((evento) =>
+      evento.title.toLowerCase().includes(termo) ||
+      evento.extendedProps.descricao.toLowerCase().includes(termo) ||
+      evento.extendedProps.localizacao.toLowerCase().includes(termo)
+    );
+
+    setEventosCalendar(filtrados);
+    setEventosFiltrados(filtrados);
+    setIndiceAtual(0);
+
+    // Ir para o primeiro evento filtrado
+    if (filtrados.length > 0 && calendarRef.current) {
+      const primeiraData = new Date(filtrados[0].start);
+      calendarRef.current.gotoDate(primeiraData);
+    }
+  };
+
+
+  const handleEventClick = (info: any) => {
+    setEventoSelecionado({
+      titulo: info.event.title,
+      data: info.event.start?.toLocaleDateString('pt-BR'),
+      local: info.event.extendedProps.localizacao,
+      descricao: info.event.extendedProps.descricao,
+    })
   }
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {  
-    const termo = e.target.value.trim().toLowerCase()
-    console.log('Pesquisar evento:', termo) 
+  const fecharModal = () => setEventoSelecionado(null)
+
+  const abrirModalCriarEvento = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<NovoEvento onFechar={() => setAbertoModal(false)} />)
+    setAbertoModal(true)
   }
 
   const menuItems = [
@@ -60,81 +119,21 @@ function PaginaEventos() {
     { src: imgCalendar, alt: "Calendário", title: "Calendário", route: "/eventos" },
     { src: imgNotification, alt: "Notificações", title: "Notificações", route: "/evento-convite" },
     { src: imgColab, alt: "Colaboradores", title: "Colaboradores", route: "/colaboradores" }
-  ];
+  ]
 
   return (
-    <>
-      <aside style={{
-        width: aberto ? '200px' : '60px',
-        backgroundColor: '#135b78',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: aberto ? 'flex-start' : 'center',
-        paddingTop: '20px',
-        paddingLeft: aberto ? '15px' : '0',
-        gap: '25px',
-        transition: 'width 0.3s ease',
-        color: 'white',
-        boxSizing: 'border-box',
-      }}>
-        {/* Botão hamburguer */}
-        <section
-          onClick={() => setAberto(!aberto)}
-          style={{
-            cursor: 'pointer',
-            marginBottom: '20px',
-            paddingLeft: aberto ? '10px' : '0',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-          }}
-          aria-label="Toggle sidebar"
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAberto(!aberto); }}
-        >
-          <span style={{ width: '25px', height: '3px', backgroundColor: 'white', borderRadius: '2px' }} />
-          <span style={{ width: '25px', height: '3px', backgroundColor: 'white', borderRadius: '2px' }} />
-          <span style={{ width: '25px', height: '3px', backgroundColor: 'white', borderRadius: '2px' }} />
-        </section>
+    <div className={abertoModal ? "overflow-hidden h-screen" : ""}>
+      <Navbar />
 
-        {/* Menu */}
-        <section style={{ width: '100%' }}>
-          {menuItems.map(({src, alt, title, route}) => (
-            <button
-              key={title}
-              title={title}
-              onClick={() => navigate(route)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px 10px',
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                color: 'inherit',
-                fontWeight: '600',
-                fontSize: '15px',
-                borderRadius: '5px',
-                whiteSpace: 'nowrap',
-                textAlign: 'left',
-              }}
-              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#1b7091d8'}
-              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-            >
-              <img src={src} alt={alt} style={{ width: '28px', height: '28px', flexShrink: 0 }} />
-              {aberto ? title : null}
-            </button>
-          ))}
-        </section>
-      </aside>
-
-      <main style={{ marginLeft: aberto ? '200px' : '60px', padding: '20px', transition: 'margin-left 0.3s ease' }}>
-        <div className="top-bar" style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <button onClick={handleCreateEvent} className="btn">
+      <main
+        style={{
+          marginLeft: aberto ? '200px' : '60px',
+          padding: '20px',
+          transition: 'margin-left 0.3s ease'
+        }}
+      >
+        <div className="top-bar mb-5 flex items-center gap-4">
+          <button onClick={abrirModalCriarEvento} className="btn">
             Criar Evento
           </button>
           <input
@@ -142,7 +141,8 @@ function PaginaEventos() {
             id="searchInput"
             className="input-search"
             placeholder="Pesquisar evento"
-            onInput={handleSearch}
+            onKeyDown={handleSearch}
+            style={{ color: '#000' }}
           />
         </div>
 
@@ -150,7 +150,7 @@ function PaginaEventos() {
           <FullCalendar
             ref={(el) => {
               if (el !== null) {
-                calendarRef.current = (el as any).getApi();
+                calendarRef.current = (el as any).getApi()
               }
             }}
             plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
@@ -163,19 +163,37 @@ function PaginaEventos() {
             }}
             height="1200px"
             events={eventosCalendar}
-            eventClick={(info) => {
-              const evento = info.event;
-              alert(
-                `Evento: ${evento.title}\n` +
-                `Data: ${evento.start?.toLocaleDateString('pt-BR')}\n` +
-                `Local: ${evento.extendedProps.localizacao}\n` +
-                `Descrição: ${evento.extendedProps.descricao}`
-              );
+            eventClick={handleEventClick}
+            eventDidMount={(info) => {
+              info.el.style.cursor = 'pointer'
             }}
           />
         </div>
+
+        <Modal
+          aberto={abertoModal}
+          onFechar={() => setAbertoModal(false)}
+          // modalClassName="w-[90%] sm:w-[95%] md:w-[80%] lg:w-[750px] xl:w-[900px] max-h-[90vh] bg-[rgba(28,175,23,0.94)] rounded-[15px]"
+          modalClassName=""
+        >
+          <div className='max-w-[900px] w-[70vw]'>
+            {conteudoModal}
+          </div>
+        </Modal>
       </main>
-    </>
+
+      {eventoSelecionado && (
+        <div className="modal-overlay" onClick={fecharModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>{eventoSelecionado.titulo}</h2>
+            <p><strong>Data:</strong> {eventoSelecionado.data}</p>
+            <p><strong>Local:</strong> {eventoSelecionado.local}</p>
+            <p><strong>Descrição:</strong> {eventoSelecionado.descricao}</p>
+            <button onClick={fecharModal}>Fechar</button>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 
