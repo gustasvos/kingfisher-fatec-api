@@ -19,29 +19,30 @@ A plataforma busca unificar e padronizar esses processos em um sistema centraliz
 
 ## 📋 Backlog de Produto
 
-| Id	| Prioridade | User Stories |
-| --- | --- | --- |
-| 01	| Alta |	Como administrador, eu quero criar e gerenciar colaboradores para ter um registro centralizado da equipe. |
-| 02 |	Alta |	Como colaborador, eu quero confirmar ou recusar minha participação em um evento para que o organizador saiba quem estará presente. |
-| 03 |	Alta |	Como administrador, eu quero consultar os eventos pendentes de confirmação para monitorar as respostas dos convidados. |
-| 04 |	Alta |	Como usuário, eu quero fazer login com segurança para acessar a plataforma. |
-| 05 |	Alta |	Como operador, eu quero preencher os checklists padronizados para registrar os processos. |
-| 06 |	Alta |	Como gestor, eu quero visualizar e consultar os checklists preenchidos para acompanhar as operações. |
-| 07 | Alta |	Como novo agregado, quero cadastrar minhas informações e as do meu veículo e receber notificações automáticas sobre o andamento e o resultado do meu cadastro. |
-| 08 | Alta |	Como comercial, eu quero registrar o histórico de interações com cada cliente para ter um panorama completo da relação. |
-| 09 | Alta |	Como comercial, eu quero cadastrar e gerenciar clientes para centralizar as informações de contato. |
-| 11 |	Alta	| Como comercial, eu quero mudar o status do cliente de acordo com o funil de vendas (Prospect, Inicial, etc.). |
-| 13 |	Alta |	Como comercial, eu quero pesquisar preços de frete para rotas e clientes específicos, para poder criar cotações de forma rápida e precisa. |
-| 14	| Alta |	Como comercial, eu quero gerar e enviar uma cotação para o cliente, para documentar a proposta. |
-| 15	| Alta |	Como comercial, eu quero transferir os detalhes de um frete fechado para a equipe operacional, para que eles possam dar início ao processo de logística e execução. |
-| 10 |	Média	| Como comercial, eu quero agendar tarefas e lembretes para o próximo contato com o cliente para não perder oportunidades. |
-| 12	| Média |	Como colaborador, eu quero receber notificações de eventos para ser informado sobre treinamentos e reuniões. |
+| Rank	| Prioridade | User Stories | Estimativa (Pontos) | Sprint |
+| --- | --- | --- | --- | --- |
+| 01	| Alta |	Como administrador, eu quero criar e gerenciar colaboradores para ter um registro centralizado da equipe. | 8 | 1 |
+| 02 |	Alta |	Como colaborador, eu quero confirmar ou recusar minha participação em um evento para que o organizador saiba quem estará presente. | 5 | 1 |
+| 03 |	Alta |	Como administrador, eu quero consultar os eventos pendentes de confirmação para monitorar as respostas dos convidados. | 5 | 1 |
+| 04 |	Alta |	Como usuário, eu quero fazer login com segurança para acessar a plataforma. | 3 | 1 |
+| 05 |	Alta |	Como operador, eu quero preencher os checklists padronizados para registrar os processos. | 8 | 2 |
+| 06 |	Alta |	Como gestor, eu quero visualizar e consultar os checklists preenchidos para acompanhar as operações. | 5 | 2 |
+| 07 | Alta |	Como novo agregado, quero cadastrar minhas informações e as do meu veículo e receber notificações automáticas sobre o andamento e o resultado do meu cadastro. | 13 | 2 |
+| 08 | Alta |	Como comercial, eu quero registrar o histórico de interações com cada cliente para ter um panorama completo da relação. | 8 | 3 |
+| 09 | Alta |	Como comercial, eu quero cadastrar e gerenciar clientes para centralizar as informações de contato. | 5 | 3 |
+| 11 |	Alta	| Como comercial, eu quero mudar o status do cliente de acordo com o funil de vendas (Prospect, Inicial, etc.). | 8 | 3 |
+| 13 |	Alta |	Como comercial, eu quero pesquisar preços de frete para rotas e clientes específicos, para poder criar cotações de forma rápida e precisa. | 5 | 3 |
+| 14	| Alta |	Como comercial, eu quero gerar e enviar uma cotação para o cliente, para documentar a proposta. | 5 | 3 |
+| 15	| Alta |	Como comercial, eu quero transferir os detalhes de um frete fechado para a equipe operacional, para que eles possam dar início ao processo de logística e execução. | 8 | 3
+| 10 |	Média	| Como comercial, eu quero agendar tarefas e lembretes para o próximo contato com o cliente para não perder oportunidades. | 5 | 3
+| 12	| Média |	Como colaborador, eu quero receber notificações de eventos para ser informado sobre treinamentos e reuniões. | 3 | 3
 ---
 
 ## 👟 Sprints
 | Sprint | Período | Documentação | Vídeo do Incremento |
 |---|---|---|---|
 | 1 | 08/09/2025 - 28/09/2025 | [Documentação Sprint 1](/documents/sprint-1/README.md) | [Vídeo Sprint 1](https://youtu.be/kRzsDg2WI8k) |
+| 2 | 06/10/2025 - 26/10/2025 | [Documentação Sprint 2](/documents/sprint-2/README.md) | [Vídeo Sprint 2](#) |
 
 ---
 

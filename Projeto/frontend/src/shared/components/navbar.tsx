@@ -16,6 +16,7 @@ import Modal from "./modal";
 import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
 import FormTeste from "../../modules/operacional/components/form-teste";
 import CadastroCliente from "../../modules/comercial/pages/cadastrocliente";
+import imgRespostaEvento  from './../../assets/imgRespostaEvento.png'
 
 export default function Navbar() {
   const [aberto, setAberto] = useState(false);
@@ -99,6 +100,11 @@ export default function Navbar() {
         <NavLink to="/listaCliente" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
           <img src={imgListaCliente} alt="Colaboradores" className="w-7 h-7" />
           {aberto ? <p className="pl-2 text-[15px] font-semibold">Clientes</p> : null}
+        </NavLink>
+
+        <NavLink to="/resposta-eventos" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
+          <img src={imgRespostaEvento} alt="Colaboradores" className="w-7 h-7" />
+          {aberto ? <p className="pl-2 text-[15px] font-semibold">Relatório de Aproveitamento</p> : null}
         </NavLink>
       </section>
 
