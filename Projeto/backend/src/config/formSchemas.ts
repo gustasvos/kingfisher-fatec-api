@@ -112,8 +112,12 @@ export const checkVeiculosAgregadosSchema: FormField[] = [
   { name: 'nome-vistor-outro', required: false, regex: /^[A-Za-zÀ-ú\s]{2,}$/, type: "string" } 
 ];
 
+// Checklist Diário - Frota Newe
 export const checklistDiarioFrotaNeweSchema: FormField[] = [
   { name: 'formTitle', required: true, type: "string" }, // Identificador (não deve ir para o CSV)
+  { name: "id-usuario", required: true, type: "string" },
+  { name: "cpf-usuario", required: true, regex: regexCpf, type: "string" },
+  { name: "timestamp", required: false, type: "date" },
   { name: "nome-motorista", required: true, type: "string" }, 
   { name: "placa-veiculo", required: true, regex: regexPlaca, type: "string" }, 
   { name: "km-inicial", required: true, type: "number" },
@@ -134,8 +138,10 @@ export const checklistDiarioFrotaNeweSchema: FormField[] = [
   { name: "observacoes", required: true, type: "string" } 
 ];
 
+// Forms de gestão de coleta
 export const formsGestaoColetaSchema: FormField[] = [
   { name: 'formTitle', required: true, type: "string" }, // Identificador (não deve ir para o CSV)
+  { name: "timestamp", required: false, type: "date" },
   { name: 'email', required: true, regex: regexEmail, type: "string" },
   { name: 'qual-cliente', required: true, type: "string" },
   { name: 'quem-solicita', required: true, type: "string" },
@@ -150,8 +156,10 @@ export const formsGestaoColetaSchema: FormField[] = [
   { name: 'observacoes-equipe-adicional', required: false, type: "string" },
 ];
 
+// Formulário de abertura
 export const formularioAberturaSchema: FormField[] = [
   { name: "formTitle", required: true, type: "string" }, // Identificador (não vai para o CSV)
+  { name: "timestamp", required: false, type: "date" },
   { name: "quem-esta-preenchendo", required: true, type: "string" },
   { name: "data-abertura-empresa", required: true, type: "date" },
   { name: "abriu-cadeado-correntes-frente", required: true, regex: regexSimNao, type: "radio" },
@@ -174,8 +182,10 @@ export const formularioAberturaSchema: FormField[] = [
   { name: "situacao-atipica", required: false, type: "string" }
 ];
 
+// Formulário de fechamento
 export const formularioFechamentoSchema: FormField[] = [
   { name: "formTitle", required: true, type: "string" }, // Identificador (não vai para o CSV)
+  { name: "timestamp", required: false, type: "date" },
   { name: "quem-esta-preenchendo", required: true, type: "string" },
   { name: "data-fechamento-empresa", required: true, type: "date" },
   { name: "tirou-lixo-organico-cozinha", required: true, regex: regexSimNao, type: "radio" },
@@ -242,7 +252,7 @@ export const cadastroAgregadoMotoSchema: FormField[] = [
 
 export const formularioManutencaoPredialSchema: FormField[] = [
   { name: "formTitle", required: true, type: "string" },
-  { name: "descricao", required: true, type: "string" },
+  { name: "timestamp", required: false, type: "date" },
 
   { name: "data_verificacao", required: false, type: "date" },
   { name: "condicoes_piso_escritorio", required: false, type: "string" },

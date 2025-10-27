@@ -11,8 +11,8 @@ router.post('/usuario/create', createUsuario)
 router.post('/login', loginUsuario)
 router.post('/logout', logoutUsuario)
 router.get('/usuario/list', autenticarUsuario, autorizarUsuario(['admin']), listUsuario);
-router.get('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','usuario']), listUsuarioById);
-router.put('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','usuario']), updateUsuario);
+router.get('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','operacional','comercial']), listUsuarioById);
+router.put('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin']), updateUsuario);
 router.delete('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin']), deleteUsuario);
 router.get("/users/exists", checkIfUsersExist);
 router.post("/usuario/:id/local", registrarLocalTrabalho);

@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import path from 'path';
 import { writeDataRow, readCsv, GenericDataRow } from '../../services/csvService';
 import { listUploadImages } from '../../services/fileService';
-import { csvPath as defaultCsvPath, dataDir, uploadsDir } from '../../config/paths'; 
+import { csvPath as defaultCsvPath, dataDir, uploadsDir } from '../../config/paths';
 import { validateFormData } from '../../services/validationService'
-import { allFormSchemas } from '../../config/formSchemas'; 
+import { allFormSchemas } from '../../config/formSchemas';
 import fs from 'fs/promises';
 
 
@@ -22,10 +22,10 @@ async function deleteUserUploadFolder(files: Express.Multer.File[] | undefined) 
   const folderPath = path.dirname(files[0]!.path);
   try {
     for (const file of files) {
-      await fs.unlink(file.path).catch(() => {});
+      await fs.unlink(file.path).catch(() => { });
     }
 
-    await fs.rmdir(folderPath).catch(() => {});
+    await fs.rmdir(folderPath).catch(() => { });
   } catch (err) {
     console.warn('Erro ao apagar pasta de uploads do usuário:', err);
   }
@@ -36,19 +36,19 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
     const data = req.body;
     // 💡 Correção 1: 'req.files' pode ser 'Express.Multer.File[]' ou 'undefined' (se for json/urlencoded)
     const files = (req.files || []) as Express.Multer.File[];
-    
+
     // 1. Identificar o formulário através do campo 'formTitle'
-    const formTitle = data.formTitle as string; 
-    
+    const formTitle = data.formTitle as string;
+
     if (!formTitle) {
-        await deleteUserUploadFolder(files);
-        return res.status(400).json({ message: 'Identificador do formulário (formTitle) é obrigatório.' });
+      await deleteUserUploadFolder(files);
+      return res.status(400).json({ message: 'Identificador do formulário (formTitle) é obrigatório.' });
     }
 
     const schema = allFormSchemas[formTitle];
     if (!schema) {
-        await deleteUserUploadFolder(files);
-        return res.status(404).json({ message: `Esquema de formulário para "${formTitle}" não encontrado.` });
+      await deleteUserUploadFolder(files);
+      return res.status(404).json({ message: `Esquema de formulário para "${formTitle}" não encontrado.` });
     }
 
     // 2. Definir o caminho do CSV dinamicamente
@@ -56,12 +56,12 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
 
     // 3. Validação dos dados (apenas campos que não são 'upload')
     const fieldsToValidate = Object.fromEntries(
-        Object.entries(data).filter(([key]) => {
-            const field = schema.find(f => f.name === key);
-            // Filtra o esquema para validar apenas campos que não são do tipo 'upload'
-            // O campo 'formTitle' também é excluído da validação de dados, pois não está no payload
-            return field && field.type !== 'upload' && field.name !== 'formTitle'; 
-        })
+      Object.entries(data).filter(([key]) => {
+        const field = schema.find(f => f.name === key);
+        // Filtra o esquema para validar apenas campos que não são do tipo 'upload'
+        // O campo 'formTitle' também é excluído da validação de dados, pois não está no payload
+        return field && field.type !== 'upload' && field.name !== 'formTitle';
+      })
     );
     const validationSchema = schema.filter(f => f.type !== 'upload' && f.name !== 'formTitle');
 
@@ -73,31 +73,36 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
 
     // 4. Processamento dos arquivos
     const rowToSave: Record<string, any> = { ...data };
-    delete rowToSave.formTitle; 
-    
+    delete rowToSave.formTitle;
+
     // 💡 Correção 2: Verifica se 'files.length > 0'. Se for JSON, 'files' é [] e esta seção é ignorada.
-    if (files.length > 0) { 
+    if (files.length > 0) {
       const filesMap = files.reduce((acc: Record<string, string[]>, file) => {
-          const fieldName = file.fieldname;
-          const relativePath = path.relative(path.join(__dirname, '..', '..'), file.path).replace(/\\/g, '/');
-          
-          if (!acc[fieldName]) acc[fieldName] = [];
-          acc[fieldName].push(relativePath);
-          return acc;
+        const fieldName = file.fieldname;
+        const relativePath = path.relative(path.join(__dirname, '..', '..'), file.path).replace(/\\/g, '/');
+
+        if (!acc[fieldName]) acc[fieldName] = [];
+        acc[fieldName].push(relativePath);
+        return acc;
       }, {});
 
       schema.filter(f => f.type === 'upload').forEach(field => {
-          const filePaths = filesMap[field.name] || [];
-          if (filePaths.length > 0) {
-              rowToSave[field.name] = filePaths.length === 1 ? filePaths[0] : JSON.stringify(filePaths);
-          } else if (field.required) {
-             return res.status(400).json({ message: `Campo de upload obrigatório "${field.name}" não preenchido.` });
-          }
+        const filePaths = filesMap[field.name] || [];
+        if (filePaths.length > 0) {
+          rowToSave[field.name] = filePaths.length === 1 ? filePaths[0] : JSON.stringify(filePaths);
+        } else if (field.required) {
+          return res.status(400).json({ message: `Campo de upload obrigatório "${field.name}" não preenchido.` });
+        }
       });
     }
-    
+
     // 5. Salvar dados
     // Remove o 'formTitle' do schema que é usado para gerar o cabeçalho do CSV
+
+    //Adiciona o timestamp vindo do middleware
+    if ((req as any).uploadTimestamp) {
+      rowToSave.timestamp = new Date((req as any).uploadTimestamp).toISOString();
+    }
     await writeDataRow(rowToSave, schema.filter(f => f.name !== 'formTitle'), currentCsvPath);
 
     res.status(201).json({ message: 'Dados salvos com sucesso!', data: rowToSave, csvPath: currentCsvPath });
@@ -105,7 +110,7 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Erro no handleFormSubmit:', error); // Log para depuração
     // Acessa o message da exceção se for um Error, caso contrário usa uma mensagem genérica
-    res.status(500).json({ message: error instanceof Error ? error.message : 'Erro inesperado.' }); 
+    res.status(500).json({ message: error instanceof Error ? error.message : 'Erro inesperado.' });
   }
 };
 
@@ -163,7 +168,7 @@ export const listarCSV = async (req: Request, res: Response) => {
 
     if (!formTitle) {
       const availableForms = Object.keys(allFormSchemas);
-      return res.status(200).json({ 
+      return res.status(200).json({
         message: 'Por favor, forneça o nome do formulário (formTitle) como parâmetro de consulta para ver o CSV.',
         formsDisponiveis: availableForms
       });
@@ -175,19 +180,19 @@ export const listarCSV = async (req: Request, res: Response) => {
     }
 
     const targetCsvPath = getFormCsvPath(formTitle);
-    
+
     let data: GenericDataRow[] = [];
     try {
-        data = await readCsv(targetCsvPath);
+      data = await readCsv(targetCsvPath);
     } catch (e) {
-        // Se o arquivo CSV não existir, retorna array vazio e info.
-        return res.status(200).json({
-            message: `O arquivo CSV para "${formTitle}" ainda não existe. Envie o formulário para criá-lo.`,
-            dados: []
-        });
+      // Se o arquivo CSV não existir, retorna array vazio e info.
+      return res.status(200).json({
+        message: `O arquivo CSV para "${formTitle}" ainda não existe. Envie o formulário para criá-lo.`,
+        dados: []
+      });
     }
 
-    res.setHeader('Content-Type', 'application/json'); 
+    res.setHeader('Content-Type', 'application/json');
     res.json(data);
   } catch (error) {
     console.error('Erro ao listar CSV:', error);
@@ -202,66 +207,66 @@ const regexCpf = /^\d{11}$/;
  */
 export const consultarCpfEmFormularios = async (req: Request, res: Response) => {
   try {
-      const cpf = req.params.cpf as string;
- 
-      if (!cpf) {
-          return res.status(400).json({ message: 'O CPF é obrigatório e deve ser fornecido na rota.' });
+    const cpf = req.params.cpf as string;
+
+    if (!cpf) {
+      return res.status(400).json({ message: 'O CPF é obrigatório e deve ser fornecido na rota.' });
+    }
+
+    // Validação básica do formato do CPF (opcional, mas recomendado)
+    if (!regexCpf.test(cpf)) {
+      return res.status(400).json({ message: 'Formato de CPF inválido. Deve ter 11 dígitos numéricos.' });
+    }
+
+    const formTitles = Object.keys(allFormSchemas);
+    const results: Record<string, GenericDataRow[]> = {};
+    let totalRecordsFound = 0;
+
+    // Itera por todos os esquemas de formulário cadastrados
+    for (const formTitle of formTitles) {
+      const schema = allFormSchemas[formTitle]!;
+      const currentCsvPath = getFormCsvPath(formTitle);
+      let csvData: GenericDataRow[] = [];
+
+      try {
+        // Tenta ler o CSV correspondente
+        csvData = await readCsv(currentCsvPath);
+      } catch (e) {
+        // Ignora se o arquivo CSV não existir
+        continue;
       }
- 
-      // Validação básica do formato do CPF (opcional, mas recomendado)
-      if (!regexCpf.test(cpf)) {
-          return res.status(400).json({ message: 'Formato de CPF inválido. Deve ter 11 dígitos numéricos.' });
-      }
- 
-      const formTitles = Object.keys(allFormSchemas);
-      const results: Record<string, GenericDataRow[]> = {};
-      let totalRecordsFound = 0;
- 
-      // Itera por todos os esquemas de formulário cadastrados
-      for (const formTitle of formTitles) {
-          const schema = allFormSchemas[formTitle]!;
-          const currentCsvPath = getFormCsvPath(formTitle);
-          let csvData: GenericDataRow[] = [];
- 
-          try {
-              // Tenta ler o CSV correspondente
-              csvData = await readCsv(currentCsvPath);
-          } catch (e) {
-              // Ignora se o arquivo CSV não existir
-              continue;
-          }
- 
-          // 1. Identificar o(s) campo(s) de CPF neste esquema
-          // Verifica se existe algum campo chamado 'cpf' ou que termine com '-cpf'
-          const cpfFields = schema
-              .filter(f => f.name === 'cpf' || f.name.toLowerCase().includes('cpf'))
-              .map(f => f.name);
- 
-          // 2. Filtrar os dados. Se houver mais de um campo de CPF, verifica em todos.
-          const filteredData = csvData.filter(row => {
-              // Percorre os nomes dos campos de CPF e verifica se algum deles tem o valor correspondente
-              return cpfFields.some(fieldName => row[fieldName] === cpf);
-          });
- 
-          if (filteredData.length > 0) {
-              // Adiciona os resultados encontrados
-              results[formTitle] = filteredData;
-              totalRecordsFound += filteredData.length;
-          }
-      }
- 
-      if (totalRecordsFound === 0) {
-          return res.status(404).json({ message: `Nenhum registro encontrado para o CPF: ${cpf}` });
-      }
- 
-      res.status(200).json({
-          message: `${totalRecordsFound} registro(s) encontrado(s) para o CPF: ${cpf}`,
-          results: results
+
+      // 1. Identificar o(s) campo(s) de CPF neste esquema
+      // Verifica se existe algum campo chamado 'cpf' ou que termine com '-cpf'
+      const cpfFields = schema
+        .filter(f => f.name === 'cpf' || f.name.toLowerCase().includes('cpf'))
+        .map(f => f.name);
+
+      // 2. Filtrar os dados. Se houver mais de um campo de CPF, verifica em todos.
+      const filteredData = csvData.filter(row => {
+        // Percorre os nomes dos campos de CPF e verifica se algum deles tem o valor correspondente
+        return cpfFields.some(fieldName => row[fieldName] === cpf);
       });
- 
+
+      if (filteredData.length > 0) {
+        // Adiciona os resultados encontrados
+        results[formTitle] = filteredData;
+        totalRecordsFound += filteredData.length;
+      }
+    }
+
+    if (totalRecordsFound === 0) {
+      return res.status(404).json({ message: `Nenhum registro encontrado para o CPF: ${cpf}` });
+    }
+
+    res.status(200).json({
+      message: `${totalRecordsFound} registro(s) encontrado(s) para o CPF: ${cpf}`,
+      results: results
+    });
+
   } catch (error) {
-      console.error('Erro ao consultar CPF:', error);
-      res.status(500).json({ error: error instanceof Error ? error.message : 'Erro desconhecido ao consultar CPF.' });
+    console.error('Erro ao consultar CPF:', error);
+    res.status(500).json({ error: error instanceof Error ? error.message : 'Erro desconhecido ao consultar CPF.' });
   }
 };
 
@@ -323,7 +328,7 @@ const consultarPorIdUsuario = async (id: string, res: Response) => {
       // Aqui procuramos diretamente pelo campo "id" na linha,
       // sem depender do schema (já que o "id" não está no schema)
       const encontrados = data.filter(row =>
-        row["id"]?.toString().trim() === id.trim()
+        row["id-usuario"]?.toString().trim() === id.trim()
       );
 
       if (encontrados.length > 0) {

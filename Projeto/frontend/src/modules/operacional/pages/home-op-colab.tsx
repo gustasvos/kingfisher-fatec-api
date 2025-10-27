@@ -36,9 +36,11 @@ const HomeOpColabPage: React.FC = () => {
   // Estado calculado quando os dados mudam
   const [totalForms, setTotalForms] = useState(checklistsForms.length)
 
-  const userId = localStorage.getItem("userId")
-  const token = localStorage.getItem("token")
   const navigate = useNavigate()
+  const storedUser = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const userId = parsedUser?.id || null;
 
   // FUNÇÕES DE NAVEGAÇÃO
   const irEventosColaborador = () => { navigate("/eventos-colaborador") }
@@ -187,7 +189,7 @@ const HomeOpColabPage: React.FC = () => {
   // Renderização Principal
   return (
     <>
-      <Header user={user} />
+      <Header user={{ name: user.nome, role: user.cargo }} />
       <Navbar />
 
       <div>

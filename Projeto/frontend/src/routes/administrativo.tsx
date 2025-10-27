@@ -9,6 +9,7 @@ import LocalDeTrabalho from "../modules/administrativo/components/localTrabalho"
 import ListagemEventos from "../modules/administrativo/components/listagem-eventos";
 import RespostaEventos from "../modules/administrativo/pages/page-resposta-eventos";
 import PrivateWrapper from "./../shared/components/PrivateWrapper";
+import ListagemChecklist from "../modules/operacional/components/listagem-checklist";
 
 export default function RotasADM(){
     return (
@@ -16,12 +17,13 @@ export default function RotasADM(){
             <Route path="/" element={<LoginPage/>}/>
             <Route path="/cadastrar" element={<PrivateWrapper roles={['admin']}><Cadastro /></PrivateWrapper>} />
             <Route path="/evento-convite" element={<PrivateWrapper roles={['admin']}><EventoDetalhe/></PrivateWrapper>}/>
-            <Route path="/colaboradores" element={<PrivateWrapper roles={['admin']}><ListagemColaborador/></PrivateWrapper>}/>
-            <Route path="/eventos" element={<PrivateWrapper roles={['admin']}><PaginaEventos/></PrivateWrapper>}/>
+            <Route path="/colaboradores" element={<PrivateWrapper roles={['admin','operacional','comercial']}><ListagemColaborador/></PrivateWrapper>}/>
+            <Route path="/eventos" element={<PrivateWrapper roles={['admin','operacional','comercial']}><PaginaEventos/></PrivateWrapper>}/>
             <Route path="/home" element={<PrivateWrapper roles={['admin']}><HomePage/></PrivateWrapper>} />
             <Route path="/eventos-colaborador" element={<PrivateWrapper roles={['admin']}><ListagemEventos /></PrivateWrapper>} />
             <Route path="/local-trabalho" element={<PrivateWrapper roles={['admin']}><LocalDeTrabalho /></PrivateWrapper>} />
-            <Route path="/resposta-eventos" element={<PrivateWrapper roles={['admin']}><RespostaEventos /></PrivateWrapper>} />
+            <Route path="/resposta-eventos" element={<PrivateWrapper roles={['admin','operacional','comercial']}><RespostaEventos /></PrivateWrapper>} />
+            <Route path="/lista-check-colaborador" element={<ListagemChecklist />} />
         </>
     )
 }

@@ -1,6 +1,7 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import BotaoSubmit from "../../../shared/components/botao-submit";
 import InputLine from "../../../shared/components/inputLine";
+import instance from "../../../services/api";
 
 type FormAberturaProps = {
     form: string;
@@ -22,6 +23,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
     const [sistemaEletrico, setSistemaEletrico] = useState<string | null>(null);
     const [estadoPneus, setEstadoPneus] = useState<string | null>(null);
     const [limpeza, setLimpeza] = useState<string | null>(null);
+    const [lubrificacaoSuspensoes, setLubrificacaoSuspensoes] = useState<string | null>(null);
     const [macaco, setMacaco] = useState<string | null>(null);
     const [chaveRoda, setChaveRoda] = useState<string | null>(null);
     const [documentoVigente, setDocumentoVigente] = useState<string | null>(null);
@@ -35,7 +37,16 @@ export default function CheckDiario({ form }: FormAberturaProps) {
         try {
             const formData = new FormData();
 
-            formData.append("formTitle", form);
+            // 🔹 Dados do usuário logado
+            const storedUser = localStorage.getItem("user");
+            const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+            const userId = parsedUser?.id || "";
+            const userCpf = parsedUser?.cpf || "";
+
+            // 🔹 Data/hora de envio
+            const dataEnvio = new Date().toISOString();
+
+            formData.append("formTitle", "Checklist Diário - Frota Newe");
             if (nomeMotorista) formData.append("nome-motorista", nomeMotorista);
 
             const simNao = (valor: string | null) =>
@@ -59,26 +70,32 @@ export default function CheckDiario({ form }: FormAberturaProps) {
                 formData.append("sistema-eletrico-ok", simNao(sistemaEletrico));
             if (estadoPneus) formData.append("estado-pneus-ok", simNao(estadoPneus));
             if (limpeza) formData.append("limpeza-bau-sider-cabine-ok", simNao(limpeza));
+            if (lubrificacaoSuspensoes)
+    formData.append("lubrificacao-suspensoes-ok", simNao(lubrificacaoSuspensoes));
             if (macaco) formData.append("macaco-ok", simNao(macaco));
             if (chaveRoda) formData.append("chave-roda-ok", simNao(chaveRoda));
             if (documentoVigente)
                 formData.append("documento-vigente-ok", simNao(documentoVigente));
 
-            const response = await fetch("http://localhost:8080/submit", {
-                method: "POST",
-                body: formData,
+            // 🔹 Adiciona campos automáticos
+            formData.append("id-usuario", userId);
+            formData.append("cpf-usuario", userCpf); 
+            formData.append("timestamp", dataEnvio); 
+
+            // 🔹 Envio usando Axios instance
+            const response = await instance.post("/submit", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
             });
 
-            if (response.ok) {
+            if (response.status === 201 || response.status === 200) {
                 setShowSuccess(true);
                 setTimeout(() => setShowSuccess(false), 3000);
             } else {
-                const erro = await response.text();
-                alert(`Erro ${response.status}: ${erro}`);
+                alert(`Erro ${response.status}: ${response.statusText}`);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erro:", error);
-            alert("Erro de conexão com o backend");
+            alert("Erro ao enviar formulário. Verifique a conexão ou tente novamente.");
         } finally {
             setLoading(false);
         }
@@ -195,6 +212,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
                                 ["Sistema elétrico OK?", "sistemaEletrico", sistemaEletrico, setSistemaEletrico],
                                 ["Estado dos pneus OK?", "estadoPneus", estadoPneus, setEstadoPneus],
                                 ["Limpeza baú/sider/cabine OK?", "limpeza", limpeza, setLimpeza],
+                                ["Lubrificação e suspensões OK?", "lubrificacaoSuspensoes", lubrificacaoSuspensoes, setLubrificacaoSuspensoes],
                                 ["Macaco OK?", "macaco", macaco, setMacaco],
                                 ["Chave de roda OK?", "chaveRoda", chaveRoda, setChaveRoda],
                                 ["Documento vigente OK?", "documentoVigente", documentoVigente, setDocumentoVigente],
