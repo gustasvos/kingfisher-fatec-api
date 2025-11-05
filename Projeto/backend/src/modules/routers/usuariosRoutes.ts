@@ -10,7 +10,7 @@ const router = express.Router()
 router.post('/usuario/create', createUsuario)
 router.post('/login', loginUsuario)
 router.post('/logout', logoutUsuario)
-router.get('/usuario/list', autenticarUsuario, autorizarUsuario(['admin']), listUsuario);
+router.get('/usuario/list', autenticarUsuario, autorizarUsuario(['admin','operacional','comercial']), listUsuario);
 router.get('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin','operacional','comercial']), listUsuarioById);
 router.put('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin']), updateUsuario);
 router.delete('/usuario/:id', autenticarUsuario, autorizarUsuario(['admin']), deleteUsuario);

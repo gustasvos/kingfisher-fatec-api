@@ -27,7 +27,7 @@ export class User {
     @Column({ type: 'varchar', length: 100 })
     cargo: string
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'text', })
     senha: string
 
     @IsDate()
