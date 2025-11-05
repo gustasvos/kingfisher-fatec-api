@@ -1,123 +1,289 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Navbar from "../../../shared/components/navbar";
+import instance from "../../../services/api";
+import Loading from "../../../shared/components/loading";
 import Modal from "../../../shared/components/modal";
-import LocalTrabalho from "../components/localTrabalho";
-import instance from "./../../../services/api";
-import CalendarioHome from "../components/calendarioHome";
-import ContadorHome from "../components/contadorHome";
-import Header from "../components/header";
-import GraficoLocalTrabalho from "../components/graficoLocalTrabalho";
+import EventoDetalhe from "./eventoDetalhe";
+import RelatorioAproveitamento from "./relatorio-aproveitamento";
+import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
-type User = { name: string; role: string; email: string; avatarUrl?: string };
+interface Evento {
+  id: number;
+  conviteId: number;
+  titulo: string;
+  descricao?: string;
+  localizacao: string;
+  dataHora: string; // Manter como string ISO
+  statusConvite?: string;
+  motivo?: string | null;
+}
 
-export default function HomePage() {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [eventos, setEventos] = useState<any[]>([]);
-  const userString = localStorage.getItem("user");
-  const userId = userString ? JSON.parse(userString).id : null;
-  const token = localStorage.getItem("token");
+export default function ListagemEventos() {
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth() + 1);
-  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
+  const [abertoModal, setAbertoModal] = useState(false);
+  const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);
 
-  // Buscar usuário
-  useEffect(() => {
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
+
+  // Função para fechar o modal e atualizar a lista
+  const fecharModalEAtualizar = useCallback(() => {
+    setAbertoModal(false);
     if (userId) {
-      instance
-        .get(`/usuario/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => setUser(res.data))
-        .catch((error) => console.error("Erro ao buscar usuário:", error));
+      fetchEventos(userId);
     }
   }, [userId]);
 
-  // Buscar eventos
-  useEffect(() => {
-    if (!token) return;
-    instance
-      .get("/admin/events", { headers: { Authorization: `Bearer ${token}` } })
-      .then((res) => setEventos(res.data))
-      .catch((err) => console.error("Erro ao buscar eventos:", err));
-  }, [token]);
+  // Buscar eventos do usuário
+  const fetchEventos = useCallback(async (currentUserId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await instance.get(`/admin/events/convidado/${currentUserId}`);
+      console.log("Convites recebidos da API:", res.data);
 
-  // Verificar se mostra modal
-  useEffect(() => {
-    const checkModal = async () => {
-      if (!userId || !token) return;
-      try {
-        const resp = await instance.get(`/usuario/${userId}/local/check`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setMostrarModal(resp.data?.mostrarModal ?? false);
-      } catch (error) {
-        console.error("Erro ao checar modal:", error);
+      // Se não vier nenhum evento, apenas limpa a lista e sai
+      if (!res.data || res.data.length === 0) {
+        navigate("/eventos");
+        return;
       }
+
+      // Mapeia os dados recebidos para a interface Evento
+      const eventosMapeados = res.data.map((convite: any) => ({
+        ...convite.evento,
+        conviteId: convite.idConvite,
+        statusConvite: convite.status,
+        motivo: convite.motivo,
+      }));
+
+      setEventos(eventosMapeados);
+    } catch (error: unknown) {
+      console.error("Erro ao buscar eventos:", error);
+      // Se for 404, redireciona para a página de eventos
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 404) {
+          navigate("/eventos");
+          alert("Nenhum evento encontrado para este usuário.");
+          return;
+        }
+      }
+      setError("Erro ao carregar eventos.");
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate]);
+
+  // Abrir modal conforme status do convite
+  const abrirModalEvento = (evento: Evento) => {
+    const status = evento.statusConvite?.toUpperCase() || "";
+
+    switch (status) {
+      case "PENDENTE":
+        setConteudoModal(
+          <EventoDetalhe
+            eventoId={evento.id}
+            conviteId={evento.conviteId}
+            onFechar={fecharModalEAtualizar}
+            statusConvite={evento.statusConvite}
+            motivoConvite={evento.motivo}
+          />
+        );
+        break;
+
+      case "CONFIRMADO":
+      case "APROVADO":
+        setConteudoModal(
+          <RelatorioAproveitamento
+            eventoId={evento.id}
+            tituloInicial={evento.titulo}
+            dataInicial={evento.dataHora}
+            onFechar={() => setAbertoModal(false)}
+          />
+        );
+        break;
+
+      case "RECUSADO":
+        setConteudoModal(
+          <EventoDetalhe
+            eventoId={evento.id}
+            conviteId={evento.conviteId}
+            onFechar={() => setAbertoModal(false)}
+            statusConvite={evento.statusConvite}
+            motivoConvite={evento.motivo}
+          />
+        );
+        break;
+
+      default:
+        setConteudoModal(
+          <EventoDetalhe
+            eventoId={evento.id}
+            conviteId={evento.conviteId}
+            onFechar={fecharModalEAtualizar}
+            statusConvite={evento.statusConvite}
+            motivoConvite={evento.motivo}
+          />
+        );
+        break;
+    }
+
+    setAbertoModal(true);
+  };
+
+  useEffect(() => {
+    if (userId) {
+      fetchEventos(userId);
+    } else {
+      setError("Usuário não encontrado.");
+      setLoading(false);
+    }
+  }, [userId, fetchEventos]);
+
+  // Formata a data para exibição
+  const formatarDataHora = (data: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     };
-    if (user) checkModal();
-  }, [user, userId, token]);
+    return new Date(data).toLocaleString("pt-BR", options);
+  };
+
+  // Define cor do status
+  const getStatusColor = (status: string | undefined) => {
+    switch (status?.toUpperCase()) {
+      case "CONFIRMADO":
+      case "APROVADO":
+        return "text-green-600 font-bold";
+      case "RECUSADO":
+        return "text-red-600 font-bold";
+      case "PENDENTE":
+        return "text-yellow-600 font-bold";
+      default:
+        return "text-gray-500";
+    }
+  };
+
+  if (loading) return <Loading />;
+  if (error) return <p>{error}</p>;
+
+  const eventosFiltrados = eventos.filter(
+    (e) =>
+      e.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      e.localizacao.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen flex bg-[var(--bg)] font-sans">
+    <>
       <Navbar />
-      <main className="flex-1 px-6 py-8">
-        <Header user={user} />
+      <main className="p-8 min-h-screen bg-[#d8ecf3]">
+        <form className="w-full mb-8" onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="text"
+            placeholder="Pesquisar evento..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-6 py-3 rounded-full border border-[#9aa7ad]
+              bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
+              focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
+              transition-colors text-lg"
+          />
+        </form>
 
-        {/* ======= Grid Principal ======= */}
-        <section className="grid grid-cols-12 gap-6 mt-6">
-          {/* Lado esquerdo */}
-          <div className="col-span-4 space-y-6">
-            <CalendarioHome
-              currentMonth={currentMonth}
-              currentYear={currentYear}
-              todayDay={new Date().getDate()}
-              todayMonth={new Date().getMonth() + 1}
-              todayYear={new Date().getFullYear()}
-            />
-            <ContadorHome eventos={eventos} />
-          </div>
+        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {eventosFiltrados.length > 0 ? (
+            eventosFiltrados.map((evento) => (
+              <div
+                key={evento.id}
+                className="bg-white rounded-xl shadow-md border border-gray-100 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
+              >
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                    {evento.titulo}
+                  </h2>
 
-          <div className="col-span-8">
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white rounded-[12px] shadow-lg p-6 flex flex-col items-center justify-center">
-                <h3 className="font-semibold mb-4 text-black">
-                  Locais de Trabalho (Hoje)
-                </h3>
-                <div className="h-[250px] w-full flex items-center justify-center">
-                  <GraficoLocalTrabalho periodo="hoje" titulo={""} />
+                  {evento.descricao && (
+                    <p className="text-gray-700 mb-4">{evento.descricao}</p>
+                  )}
+
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex items-center gap-2 text-gray-800">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-5 h-5 text-[#135b78]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 0v10m0 0l-4-4m4 4l4-4"
+                        />
+                      </svg>
+                      <span>{evento.localizacao}</span>
+                    </div>
+
+                    {/* Data */}
+                    <div className="flex items-center gap-2 text-gray-800">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-5 h-5 text-[#135b78]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <span>{formatarDataHora(evento.dataHora)}</span>
+                    </div>
+
+                    <div className="mt-2">
+                      <span className="text-sm font-semibold text-gray-700">
+                        Status:{" "}
+                      </span>
+                      <span className={`text-sm ${getStatusColor(evento.statusConvite)}`}>
+                        {evento.statusConvite || "PENDENTE"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div className="bg-white rounded-[12px] shadow-lg p-6 flex flex-col items-center justify-center">
-                <h3 className="font-semibold mb-4 text-black">
-                  Locais de Trabalho (Últimos 30 dias)
-                </h3>
-                <div className="h-[250px] w-full flex items-center justify-center">
-                  <GraficoLocalTrabalho periodo="30dias" titulo={""} />
-                </div>
+                <button
+                  onClick={() => abrirModalEvento(evento)}
+                  className="mt-6 bg-[#135b78] hover:bg-[#114a5f] text-white px-4 py-2 rounded-lg shadow transition-all duration-200 w-full"
+                >
+                  {evento.statusConvite === "PENDENTE"
+                    ? "Responder Convite"
+                    : "Ver Detalhes"}
+                </button>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Modal LocalTrabalho */}
-        <Modal
-          aberto={mostrarModal}
-          onFechar={() => setMostrarModal(false)}
-          modalClassName=""
-        >
-          <LocalTrabalho onFechar={() => setMostrarModal(false)} />
-        </Modal>
+            ))
+          ) : (
+            <p className="text-gray-600 text-center col-span-full">
+              Nenhum evento encontrado.
+            </p>
+          )}
+        </div>
       </main>
-    </div>
-  );
-}
 
-function getWeekNumber(d: Date) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  return Math.ceil(((date.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+      <Modal aberto={abertoModal} onFechar={fecharModalEAtualizar}>
+        {conteudoModal}
+      </Modal>
+    </>
+  );
 }

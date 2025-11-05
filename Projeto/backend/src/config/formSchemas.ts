@@ -159,6 +159,8 @@ export const formsGestaoColetaSchema: FormField[] = [
 // Formulário de abertura
 export const formularioAberturaSchema: FormField[] = [
   { name: "formTitle", required: true, type: "string" }, // Identificador (não vai para o CSV)
+  { name: "id-usuario", required: true, type: "string" },
+  { name: "cpf-usuario", required: true, regex: regexCpf, type: "string" },
   { name: "timestamp", required: false, type: "date" },
   { name: "quem-esta-preenchendo", required: true, type: "string" },
   { name: "data-abertura-empresa", required: true, type: "date" },
@@ -185,6 +187,8 @@ export const formularioAberturaSchema: FormField[] = [
 // Formulário de fechamento
 export const formularioFechamentoSchema: FormField[] = [
   { name: "formTitle", required: true, type: "string" }, // Identificador (não vai para o CSV)
+  { name: "id-usuario", required: true, type: "string" },
+  { name: "cpf-usuario", required: true, regex: regexCpf, type: "string" },
   { name: "timestamp", required: false, type: "date" },
   { name: "quem-esta-preenchendo", required: true, type: "string" },
   { name: "data-fechamento-empresa", required: true, type: "date" },

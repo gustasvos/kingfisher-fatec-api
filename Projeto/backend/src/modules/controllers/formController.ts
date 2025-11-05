@@ -86,14 +86,15 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
         return acc;
       }, {});
 
-      schema.filter(f => f.type === 'upload').forEach(field => {
+      for (const field of schema.filter(f => f.type === 'upload')) {
         const filePaths = filesMap[field.name] || [];
         if (filePaths.length > 0) {
           rowToSave[field.name] = filePaths.length === 1 ? filePaths[0] : JSON.stringify(filePaths);
         } else if (field.required) {
+          await deleteUserUploadFolder(files);
           return res.status(400).json({ message: `Campo de upload obrigatório "${field.name}" não preenchido.` });
         }
-      });
+      }
     }
 
     // 5. Salvar dados
