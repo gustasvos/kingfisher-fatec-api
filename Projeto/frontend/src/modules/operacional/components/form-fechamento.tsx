@@ -118,14 +118,72 @@ export default function FormFechamento({form}: FormAberturaProps) {
     }   
 
 
-    const enviaForm = (e: React.FormEvent<HTMLFormElement>) => {
+    const enviaForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
 
-        setTimeout(() => {
-            alert("Formulário enviado!");
+        try {
+            // 🔹 Dados do usuário logado
+            const storedUser = localStorage.getItem("user");
+            const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+            const userId = parsedUser?.id || "";
+            const userCpf = parsedUser?.cpf || "";
+
+            // Monta o objeto com todos os dados do formulário
+            const payload = {
+            formTitle: "Formulário de fechamento",
+            "quem-esta-preenchendo": "Rafael Costa",
+            "data-fechamento-empresa": dataFechamento, // formato ISO 8601
+            "tirou-lixo-organico-cozinha": lixoOrganico === "lixo-organico-sim" ? "Sim" : "Não",
+            "colocou-lixo-reciclavel-sexta": lixoReciclavel === "lixo-reciclavel-sim" ? "Sim" : "Não",
+            "cozinha-organizada": cozinhaOrganizada === "cozinha-organizada-sim" ? "Sim" : "Não",
+            "apagou-luzes-fechou-porta-cozinha": luzPorta === "luz-porta-sim" ? "Sim" : "Não",
+            "trancou-cadeado-portao-2": trancouPortao2 === "trancou-portao2-sim" ? "Sim" : "Não",
+            "trancou-cadeado-portao-1": trancouPortao1 === "trancou-portao1-sim" ? "Sim" : "Não",
+            "verificou-torneiras-mictorio": torneiraFechada === "torneira-fechada-sim" ? "Sim" : "Não",
+            "tirou-lixo-banheiro": banheiro === "banheiro-sim" ? "Sim" : "Não",
+            "trancou-porta-banheiro": trancouBanheiro === "trancou-banheiro-sim" ? "Sim" : "Não",
+            "desligou-tomada-colocou-plastico-bebedouro": bebedouro === "bebedouro-sim" ? "Sim" : "Não",
+            "deixou-chaves-internas-chaveiro": chaveChaveiro === "chave-chaveiro-sim" ? "Sim" : "Não",
+            "desligou-tv-cameras": desligouTvCamera === "desligou-tv-camera-sim" ? "Sim" : "Não",
+            "desligou-tv-dashboard": desligouTvDashboard === "desligou-tv-dashboard-sim" ? "Sim" : "Não",
+            "desligou-ar-condicionado": desligouAr === "desligou-ar-sim" ? "Sim" : "Não",
+            "desligou-luzes-escritorio-operacional": desligouLuzOp === "desligou-luz-op-sim" ? "Sim" : "Não",
+            "acendeu-luzes-armazem": acendeuLuzArmazem === "acendeu-luz-armazem-sim" ? "Sim" : "Não",
+            "retirou-cone-estacionamento-pcd": coneEstacionaPcd === "cone-estaciona-pcd-sim" ? "Sim" : "Não",
+            "acionou-alarme": alarme === "alarme-sim" ? "Sim" : "Não",
+            "fechou-porta-entrada-armazem": fechouPortaArmazem === "fechou-porta-armazem-sim" ? "Sim" : "Não",
+            "trancou-cadeado-correntes": trancouCorrentes === "trancou-correntes-sim" ? "Sim" : "Não",
+            "portoes-apresentam-ruido-travamento": ruidoPortao === "ruido-portao-sim" ? "Sim" : "Não",
+            "situacao-atipica": sitAtipico || " ",
+            "id-usuario": "",
+            "cpf-usuario": ""
+            };
+
+            // 🔹 Adiciona campos automáticos
+            payload["id-usuario"] = userId;
+            payload["cpf-usuario"] = userCpf;
+
+            // Envia a requisição POST
+            const response = await fetch("http://localhost:8080/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro ao enviar formulário: ${response.statusText}`);
+            }
+
+            alert("Formulário enviado com sucesso!");
+        } catch (error: any) {
+            console.error(error);
+            alert(`Falha ao enviar formulário: ${error.message}`);
+        } finally {
             setLoading(false);
-        }, 2000);
+        }
     };
 
     return (
