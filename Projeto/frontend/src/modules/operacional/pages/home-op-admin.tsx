@@ -2,19 +2,19 @@ import React, { useState, useEffect, useCallback } from 'react';
 import HighlightCard from '../../../shared/components/highlight-card';
 import { FiDollarSign, FiUsers, FiAlertTriangle, FiPackage, FiInfo } from 'react-icons/fi';
 import { FaCarSide, FaMotorcycle, FaCheck } from 'react-icons/fa'
-import Navbar from '../../../shared/components/navbar';
+import Navbar from "../../../shared/components/navbar.tsx";
 import PieChart from '../../../shared/components/grafico-setor';
 import Header from '../../../shared/components/header';
 
 // Definição da estrutura do usuário
 interface UserData {
-  name: string;
+  nome: string;
   role: string;
 }
 
 // Estado inicial
 const initialUser: UserData = {
-  name: "Carregando...",
+  nome: "Carregando...",
   role: "",
 };
 // Definição da estrutura de dados esperada do backend
@@ -95,23 +95,9 @@ const HomeOpAdminPage: React.FC = () => {
 
   // Fetch Dados do Usuário
   const fetchUser = useCallback(async () => {
-    setUserLoading(true);
-    try {
-      const response = await fetch(USER_API_URL, {
-        headers: {
-          'Authorization': 'Bearer SEU_TOKEN_AQUI' // Exemplo
-        }
-      });
-      if (!response.ok) {
-        throw new Error('Falha ao carregar dados do usuário.');
-      }
-      const userData: UserData = await response.json();
-      setUser(userData);
-    } catch (err) {
-      console.error("Erro ao buscar dados do usuário:", err);
-    } finally {
-      setUserLoading(false);
-    }
+    const storedUser = localStorage.getItem("user");
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    setUser(parsedUser)
   }, []);
 
   useEffect(() => {
@@ -162,7 +148,7 @@ const HomeOpAdminPage: React.FC = () => {
       <div className='max-h-screen'>
         <Navbar />
         <header>
-          <Header user={user} />
+          <Header user={{ nome: user.nome, role: user.role }} />
         </header>
 
         <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-10">

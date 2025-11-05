@@ -26,9 +26,9 @@ export default function ListagemEventos() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [abertoModal, setAbertoModal] = useState(false);
-  const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);
-
-  const userId = localStorage.getItem("userId");
+  const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);;
+  const userString = localStorage.getItem("user");
+  const userId = userString ? JSON.parse(userString).id : null;
   const navigate = useNavigate();
 
   // Função para fechar o modal e atualizar a lista

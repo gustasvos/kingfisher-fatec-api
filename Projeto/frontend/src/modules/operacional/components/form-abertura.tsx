@@ -29,7 +29,7 @@ export default function FormAbertura({ form }: FormAberturaProps) {
   const [bebedouroTomadaPlastico, setBebedouroTomadaPlastico] = useState<string | null>(null);
   const [tapeteLugar, setTapeteLugar] = useState<string | null>(null);
   const [cafeFeito, setCafeFeito] = useState<string | null>(null);
-  const [sitAtipica, setSitAtipica] = useState("");
+  const [sitAtipica, setSitAtipica] = useState(" ");
 
   const enviaForm = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,6 +38,10 @@ export default function FormAbertura({ form }: FormAberturaProps) {
     try {
       const formData = new FormData();
       formData.append('formTitle', form);
+      const storedUser = localStorage.getItem("user");
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+      const userId = parsedUser?.id || "";
+      const userCpf = parsedUser?.cpf || "";
 
       const converterParaSimNao = (valor: string | null) => {
         if (valor === null) return '';
@@ -64,8 +68,10 @@ export default function FormAbertura({ form }: FormAberturaProps) {
       if (tapeteLugar) formData.append('colocou-tapetes-devidos-lugares', converterParaSimNao(tapeteLugar));
       if (cafeFeito) formData.append('fez-cafe-dia', converterParaSimNao(cafeFeito));
       if (sitAtipica) formData.append('situacao-atipica', sitAtipica);
+      // 🔹 Adiciona campos automáticos
+      formData.append("id-usuario", userId);
+      formData.append("cpf-usuario", userCpf); 
 
-      console.log('Enviando FormData para /submit');
 
       const response = await fetch('http://localhost:8080/submit', {
         method: 'POST',

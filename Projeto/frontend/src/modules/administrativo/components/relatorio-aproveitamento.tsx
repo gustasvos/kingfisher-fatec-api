@@ -26,7 +26,9 @@ export default function RelatorioAproveitamento({
   const [comentarios, setComentarios] = useState("");
   const [respostaEnviada, setRespostaEnviada] = useState(false);
 
-  const userId = localStorage.getItem("userId");
+  const storedUser = localStorage.getItem("user");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const userId = parsedUser?.id || "";
 
   // Buscar evento se título/data não forem passados
   useEffect(() => {
