@@ -2,38 +2,49 @@ import React, { useState } from "react"
 import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
 
-export default function AgendamentoCliente() {
+
+type Props = {
+    nomeCliente?: string
+}
+
+export default function AgendamentoCliente(props: Props) {
     const [titulo, setTitulo] = useState('')
     const [data, setData] = useState('')
     const [localizacao, setLocalizacao] = useState('')
     const [descricao, setDescricao] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitulo(e.target.value)
-        setData(e.target.value)
-        setLocalizacao(e.target.value)
-        setDescricao(e.target.value)
-    }
-
-    const Enviar = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const Enviar = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if(loading) return
         setLoading(true)
+
+        // só para similar
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        setLoading(false)
+        setTitulo('')
+        setData('')
+        setLocalizacao('')
+        setDescricao('')
+
+        // por enquanto só para 'testar'
+        alert('Enviado com sucesso')
     }
 
     return (
         <section>
-            <form onChange={Enviar}>
-                <section>
-                    <section className="flex flex-col m-auto justify-center items-center">
-                        <h1 className="text-black">{`Marcar agendamento com ...`}</h1>
+            <form onSubmit={Enviar}>
+                <section className="flex justify-center items-center h-screen">
+                    <section className="flex flex-col m-auto justify-center items-center space-y-11">
+                        <h1 className="text-black">{`Marcar agendamento com ${props.nomeCliente}`}</h1>
                         <section className="flex m-auto gap-10">
                             <InputLine type="text"
                                 placeholder=""
                                 value={titulo}
                                 id="titulo"
                                 htmlfor="titulo"
-                                onChange={handleChange}
+                                onChange={(e) => setTitulo(e.target.value)}
                                 required>
                                 Título da reunião
                             </InputLine>
@@ -43,7 +54,7 @@ export default function AgendamentoCliente() {
                                 value={data}
                                 id="data"
                                 htmlfor="data"
-                                onChange={handleChange}
+                                onChange={(e) => setData(e.target.value)}
                                 required>
                                 Data
                             </InputLine>
@@ -55,7 +66,7 @@ export default function AgendamentoCliente() {
                                 value={localizacao}
                                 id="localizacao"
                                 htmlfor="localizacao"
-                                onChange={handleChange}
+                                onChange={(e) => setLocalizacao(e.target.value)}
                                 required>
                                 Localização
                             </InputLine>
@@ -65,7 +76,7 @@ export default function AgendamentoCliente() {
                                 value={descricao}
                                 id="descricao"
                                 htmlfor="descricao"
-                                onChange={handleChange}>
+                                onChange={(e) => setDescricao(e.target.value)}>
                                 Descrição
                             </InputLine>
                         </section>
