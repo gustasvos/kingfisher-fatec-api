@@ -37,19 +37,16 @@ const CATEGORIAS = [
 interface FunilColumnProps {
   title: string
   leads: LeadProps[]
+  onLeadDrop: (leadId: string, novaCategoria: string) => void
 }
 
-const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads }) => {
-  
-  // HANDLERS PARA AÇÕES DE ARRASTAR E SOLTAR CARDS
+const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads, onLeadDrop }) => {
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     const leadId = e.dataTransfer.getData('leadId')
     e.currentTarget.classList.remove('bg-blue-100')
-    
-    console.log(`Mover Lead ID: ${leadId} para o stage: ${title}`)
-    instance.put(`/cliente/${leadId}/categoria`, { categoria : title }) // ATUALIZA CATEGORIA QUANDO O CARD É SOLTO EM OUTRA COLUNA
+    onLeadDrop(leadId, title)
   }
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -66,7 +63,7 @@ const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads }) => {
     <div className="w-full lg:w-1/6 flex-shrink-0 p-2">
       <div 
         className="bg-gray-100 rounded-xl p-3 h-full flex flex-col transition-colors"
-        onDrop={handleDrop}
+        onDrop={(e => handleDrop(e, title))}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
@@ -122,10 +119,25 @@ const FunilVendas: React.FC = () => {
   }, []) 
 
   
-  const getLeadsByCategoria = (categoria: string) => {
-    return leads.filter((lead) => lead.categoria === categoria)
+  const handleLeadDrop = (leadId: string, novaCategoria: string) => {
+    instance.patch(`/cliente/${leadId}/categoria`, { categoria: novaCategoria })
+      .then(response => {
+        setLeads(prevLeads => 
+          prevLeads.map(lead => 
+            lead.id === parseInt(leadId) 
+              ? { ...lead, Categoria: novaCategoria } 
+              : lead
+          )
+        )
+      })
+      .catch(err => {
+        console.error("Erro ao mover o lead", err)
+      })
   }
 
+  const getLeadsByCategoria = (categoria: string) => {
+    return leads.filter((lead) => lead.Categoria === categoria)
+  }
 
   const renderContent = () => {
     if (loading) {
@@ -151,6 +163,7 @@ const FunilVendas: React.FC = () => {
             key={categoria}
             title={categoria}
             leads={getLeadsByCategoria(categoria)}
+            onLeadDrop={handleLeadDrop}
           />
         ))}
       </div>

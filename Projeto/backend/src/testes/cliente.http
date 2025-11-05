@@ -38,7 +38,8 @@ Content-Type: application/json
   "NomeFantasia": "Empresa de Teste Alfa Ltda",
   "PrazoFaturamento": "2025-11-30T10:00:00Z",
   "ContatoResponsavel": "Carlos Silva",
-  "EmailResponsavel": "carlos.silva@alfa.com"
+  "EmailResponsavel": "carlos.silva@alfa.com",
+  "Categoria": "Follow Up"
 }
 
 ###

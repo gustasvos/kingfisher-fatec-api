@@ -4,5 +4,5 @@ export interface LeadProps {
     ContatoResponsavel: string
     CNPJ?: string
     EmailResponsavel?: string
-    categoria: string
+    Categoria: string
   }

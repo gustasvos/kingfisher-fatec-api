@@ -1,5 +1,6 @@
 import { IsDate, isDate } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { CategoriaFunil } from "../../utils/enums/categoriaFunil";
 
 @Entity('cliente')
 export class Cliente {
@@ -21,4 +22,7 @@ export class Cliente {
 
     @Column({ type: 'varchar', length: 255 })
     EmailResponsavel: string
+
+    @Column({ type: 'enum', enum: CategoriaFunil, default: CategoriaFunil.PROSPECT})
+    Categoria: CategoriaFunil
 }
