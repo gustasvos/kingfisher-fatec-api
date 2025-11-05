@@ -125,7 +125,7 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
       setSucesso("Cadastro atualizado com sucesso!");
       setTimeout(() => {
         setSucesso(null)
-        navigate("/colaboradores");
+        navigate(0);
       }, 1200);
     } catch (error: any) {
       const mensagemErro = error?.response?.data?.message || "Erro desconhecido. Tente novamente."

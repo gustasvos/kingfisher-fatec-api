@@ -65,7 +65,6 @@ const HomeOpColabPage: React.FC = () => {
         setUser({
           nome: userData.nome || "Usuário",
           role: userData.role || "Colaborador",
-          email: userData.email || "",
         });
       })
       .catch(err => {
@@ -189,7 +188,7 @@ const HomeOpColabPage: React.FC = () => {
   // Renderização Principal
   return (
     <>
-      <Header user={{ name: user.nome, role: user.cargo }} />
+      <Header user={{ nome: user.nome, role: user.role }} />
       <Navbar />
 
       <div>
