@@ -2,6 +2,7 @@ import { useState } from "react"
 import Navbar from "../../../shared/components/navbar"
 import Botao from "../../../shared/components/botao"
 import Modal from "../../../shared/components/modal"
+import CheckGestao from "../../operacional/components/check-gestão"
 import { FiFileText, FiSend, FiPlus, FiRepeat } from "react-icons/fi"
 import jsPDF from "jspdf"
 
@@ -18,42 +19,23 @@ export default function CotacaoFrete() {
     { id: 1, origem: "São Paulo", destino: "Curitiba", carga: "Alimentos", valor: "R$ 2.000" },
     { id: 2, origem: "Rio de Janeiro", destino: "Florianópolis", carga: "Eletrônicos", valor: "R$ 3.500" }
   ])
+
   const [abertoModal, setAbertoModal] = useState(false)
 
-  const [novaCotacao, setNovaCotacao] = useState<Cotacao>({
-    id: 0,
-    origem: "",
-    destino: "",
-    carga: "",
-    valor: ""
-  })
+  const abrirModalNovaCotacao = () => setAbertoModal(true)
+  const fecharModal = () => setAbertoModal(false)
 
-  const abrirModalNovaCotacao = () => {
-    setAbertoModal(true)
-  }
-
-  const salvarCotacao = () => {
-    setCotacoes(prev => [...prev, { ...novaCotacao, id: prev.length + 1 }])
-    setAbertoModal(false)
-    setNovaCotacao({ id: 0, origem: "", destino: "", carga: "", valor: "" })
-  }
-
-  // funcao pdf
+  // Função PDF
   const gerarPDF = (cotacao: Cotacao) => {
     const doc = new jsPDF()
-
     doc.setFontSize(16)
     doc.text("Cotação de Frete", 20, 20)
-
     doc.setFontSize(12)
     doc.text(`ID da Cotação: ${cotacao.id}`, 20, 40)
     doc.text(`Origem: ${cotacao.origem}`, 20, 50)
     doc.text(`Destino: ${cotacao.destino}`, 20, 60)
     doc.text(`Carga: ${cotacao.carga}`, 20, 70)
     doc.text(`Valor: ${cotacao.valor}`, 20, 80)
-
-    doc.text("Gerado automaticamente pelo sistema.", 20, 100)
-
     doc.save(`cotacao_${cotacao.id}.pdf`)
   }
 
@@ -132,53 +114,28 @@ export default function CotacaoFrete() {
         </section>
       </main>
 
-      {/* Modal nova cotação */}
-      <Modal aberto={abertoModal} onFechar={() => setAbertoModal(false)}>
-        <h2 className="text-xl font-bold mb-4">Formulário de Gestão de Coleta</h2>
+      {/* === Modal Popup CheckGestao === */}
+      {abertoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="relative bg-white rounded-2xl shadow-xl w-[90%] h-[90vh] overflow-hidden flex flex-col">
+            {/* Cabeçalho do popup */}
+            <div className="flex justify-between items-center p-4 border-b bg-gray-100">
+              <h2 className="text-xl font-bold text-gray-800">Checklist de Gestão de Coleta</h2>
+              <button
+                onClick={fecharModal}
+                className="text-gray-600 hover:text-red-600 font-semibold text-lg"
+              >
+                ✕
+              </button>
+            </div>
 
-        <div className="flex flex-col gap-3">
-          <input
-            type="text"
-            placeholder="Origem"
-            className="border p-2 rounded"
-            value={novaCotacao.origem}
-            onChange={e => setNovaCotacao({ ...novaCotacao, origem: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Destino"
-            className="border p-2 rounded"
-            value={novaCotacao.destino}
-            onChange={e => setNovaCotacao({ ...novaCotacao, destino: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Carga"
-            className="border p-2 rounded"
-            value={novaCotacao.carga}
-            onChange={e => setNovaCotacao({ ...novaCotacao, carga: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Valor"
-            className="border p-2 rounded"
-            value={novaCotacao.valor}
-            onChange={e => setNovaCotacao({ ...novaCotacao, valor: e.target.value })}
-          />
-
-          <div className="flex justify-end gap-2 mt-3">
-            <Botao
-              onClick={() => setAbertoModal(false)}
-              className="bg-gray-500 hover:bg-gray-600"
-            >
-              Cancelar
-            </Botao>
-            <Botao onClick={salvarCotacao} className="bg-blue-600 hover:bg-blue-700">
-              Salvar
-            </Botao>
+            {/* Conteúdo rolável do popup */}
+            <div className="flex-1 overflow-y-auto p-4">
+              <CheckGestao form="Formulário de Gestão de Coleta" />
+            </div>
           </div>
         </div>
-      </Modal>
+      )}
     </>
   )
 }
