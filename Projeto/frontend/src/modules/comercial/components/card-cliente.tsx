@@ -1,0 +1,84 @@
+import { Cliente } from "../../../types/cliente"
+import { useState } from "react"
+import Botao from "../../../shared/components/botao"
+import Modal from "../../../shared/components/modal"
+import CadastroCliente from "../pages/cadastrocliente"
+import { FiEdit2, FiTrash2, FiClock, FiCalendar } from "react-icons/fi"
+
+export type ClienteCardProps = {
+  cliente: Cliente
+  excluir: (id: number) => void
+}
+
+export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
+  const [abertoModal, setAbertoModal] = useState(false)
+  const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
+
+  const abrirModalEditar = () => {
+    setConteudoModal(<CadastroCliente clienteId={cliente.id} />)
+    setAbertoModal(true)
+  }
+
+  const abrirModalHistorico = () => {
+    alert("Abrir modal com o histórico de interações do cliente.")
+  }
+
+  const abrirModalAgendar = () => {
+    alert("Abrir modal de agendamento com cliente pré-selecionado.")
+  }
+
+  return (
+    <>
+      <section className="bg-white w-[450px] rounded-2xl drop-shadow-lg flex flex-col justify-between p-5 transition hover:shadow-xl">
+        {/* Header */}
+        <div className="border-b pb-2 mb-2">
+          <p className="font-semibold text-lg text-gray-800">{cliente.CNPJ}</p>
+          <p className="font-sans text-xl font-bold text-gray-900">{cliente.NomeFantasia}</p>
+        </div>
+
+        {/* Corpo */}
+        <div className="flex flex-col text-gray-700 space-y-1 text-sm">
+          <p><span className="font-semibold">Prazo Faturamento:</span> {cliente.PrazoFaturamento ?? "—"}</p>
+          <p><span className="font-semibold">Contato Resp.:</span> {cliente.ContatoResponsavel ?? "—"}</p>
+          <p><span className="font-semibold">Email:</span> {cliente.EmailResponsavel ?? "—"}</p>
+          <p><span className="font-semibold">Categoria:</span> {cliente.Categoria ?? "—"}</p>
+        </div>
+
+        {/* Rodapé com botões (somente ícones) */}
+        <div className="flex justify-around mt-4 pt-3 border-t">
+          <Botao
+            onClick={abrirModalEditar}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <FiEdit2 size={18} />
+          </Botao>
+
+          <Botao
+            onClick={() => excluir(cliente.id)}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 text-white"
+          >
+            <FiTrash2 size={18} />
+          </Botao>
+
+          <Botao
+            onClick={abrirModalHistorico}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 hover:bg-gray-600 text-white"
+          >
+            <FiClock size={18} />
+          </Botao>
+
+          <Botao
+            onClick={abrirModalAgendar}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-green-600 hover:bg-green-700 text-white"
+          >
+            <FiCalendar size={18} />
+          </Botao>
+        </div>
+      </section>
+
+      <Modal aberto={abertoModal} onFechar={() => setAbertoModal(false)}>
+        {conteudoModal}
+      </Modal>
+    </>
+  )
+}
