@@ -3,6 +3,8 @@ import { LeadProps } from '../../../types/LeadProps'
 import LeadCard from '../components/LeadCard'
 import Navbar from '../../../shared/components/navbar'
 import instance from '../../../services/api'
+import Header from '../../../shared/components/header'
+type User = { name: string; role: string; email: string; avatarUrl?: string };
 
 // FILTRO
 const FilterIcon: React.FC = () => (
@@ -63,14 +65,14 @@ const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads, onLeadDrop, sel
 
   return (
     (
-      <div className="w-full lg:w-1/6 flex-shrink-0 p-2">
+      <div className="w-full h-screen lg:w-1/6 flex-shrink-0 p-2">
         <div
           className="
-            bg-slate-50 
-            rounded-xl 
+            bg-slate-100/85 
+            rounded-xl
             border
-            border-slate-200
-            h-full
+            border-slate-100
+            h-[75%]
             p-3
             flex 
             flex-col
@@ -117,6 +119,23 @@ const FunilVendas: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null)
+  const [user, setUser] = useState<User | null>(null);
+  const userString = localStorage.getItem("user");
+  const userId = userString ? JSON.parse(userString).id : null;
+  const token = localStorage.getItem("token");
+
+
+  
+  useEffect(() => {
+    if (userId) {
+      instance
+        .get(`/usuario/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setUser(res.data))
+        .catch((error) => console.error("Erro ao buscar usuário:", error));
+    }
+  }, [userId]);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -186,11 +205,15 @@ const FunilVendas: React.FC = () => {
 
     return (
       <div className="
+    
+      rounded-lg
         flex 
         flex-col 
         lg:flex-row 
         w-full 
+        h-screen
         overflow-x-hidden
+        overflow-y-hidden
         pb-4
         ">
         {CATEGORIAS.map((categoria) => (
@@ -210,30 +233,11 @@ const FunilVendas: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-gray-50 min-h-screen p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
+      {user && <Header user={user} />}
+      <div className=" h-screen p-4 md:p-8 overflow-y-hidden">
+        <div className="ml-14">
           <header className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Funil de Vendas</h1>
-            <button className="
-              flex 
-              items-center 
-              gap-2 
-              px-4 
-              py-2 
-              bg-white 
-              border 
-              border-gray-300 
-              rounded-lg 
-              text-sm 
-              font-medium 
-              text-gray-700 
-              hover:bg-gray-50
-              hover:shadow-sm
-              transition
-              ">
-              <FilterIcon />
-              Filtros
-            </button>
           </header>
           {renderContent()}
         </div>
