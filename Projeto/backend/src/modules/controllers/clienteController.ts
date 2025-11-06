@@ -2,8 +2,10 @@ import express, { NextFunction, Request, Response } from 'express'
 import { AppDataSource } from '../../config/database'
 import { Cliente } from '../models/cliente'
 import { Not } from 'typeorm'
-import { validarCNPJ } from "../../utils/validarCNPJ" 
+import { validarCNPJ } from "../../utils/validarCNPJ"
 import { validarEmail } from '../../utils/validarEmail'
+import { CategoriaFunil } from '../../utils/enums/categoriaFunil'
+import { isEnum, IsEnum } from 'class-validator'
 
 export const createCliente = async (req: Request, res: Response) => {
     try {
@@ -40,6 +42,8 @@ export const createCliente = async (req: Request, res: Response) => {
 
         // 4. Salva o novo cliente
         data.CNPJ = cnpjLimpo // Garante que o CNPJ salvo está sem formatação
+        data.CategoriaFunil = CategoriaFunil.PROSPECT
+
         const newCliente = clienteRepository.create(data)
         await clienteRepository.save(newCliente)
 
@@ -156,3 +160,36 @@ export const deleteliente = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Erro ao deletar o cliente!" })
     }
 }
+
+export const updateClienteCategoria = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const { categoria } = req.body
+
+        if (!categoria) {
+            return res.status(400).json({ message: 'Nova categoria é obrigatória' })
+        }
+        
+        if (!isEnum(categoria, CategoriaFunil)) {
+            return res.status(400).json({ message: `Categoria inválida: ${categoria}` });
+        }
+
+        const clienteRepository = AppDataSource.getRepository(Cliente);
+        const cliente = await clienteRepository.findOneBy({ id: parseInt(id!) });
+
+        if (!cliente) {
+            return res.status(404).json({ message: 'Cliente não encontrado!' });
+        }
+
+        cliente.Categoria = categoria;
+        await clienteRepository.save(cliente);
+
+        return res.status(200).json({
+            message: `Cliente movido para ${categoria} com sucesso!`,
+            cliente: cliente
+        });
+
+    } catch (error) {
+        return res.status(500).json({ message: "Erro ao atualizar categoria do cliente!", error });
+    }
+};

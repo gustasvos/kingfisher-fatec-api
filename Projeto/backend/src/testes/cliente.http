@@ -38,10 +38,203 @@ Content-Type: application/json
   "NomeFantasia": "Empresa de Teste Alfa Ltda",
   "PrazoFaturamento": "2025-11-30T10:00:00Z",
   "ContatoResponsavel": "Carlos Silva",
-  "EmailResponsavel": "carlos.silva@alfa.com"
+  "EmailResponsavel": "carlos.silva@alfa.com",
+  "Categoria": "Follow Up"
 }
 
 ###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+  {
+    "CNPJ": "29.140.503/0001-44",
+    "NomeFantasia": "Empresa de Teste Alfa Ltda",
+    "PrazoFaturamento": "2025-11-30T10:00:00Z",
+    "ContatoResponsavel": "Carlos Silva",
+    "EmailResponsavel": "carlos.silva@alfa.com",
+    "Categoria": "Follow Up"
+  }
+
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "12.345.678/0001-90",
+    "NomeFantasia": "Tech Solutions Brasil",
+    "PrazoFaturamento": "2025-12-10T15:30:00Z",
+    "ContatoResponsavel": "Fernanda Souza",
+    "EmailResponsavel": "fernanda.souza@techsol.com",
+    "Categoria": "Prospect"
+  }
+
+### 
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "69.803.878/0001-61",
+  "NomeFantasia": "Empresa de Teste Alfa Ltda",
+  "PrazoFaturamento": "2025-11-30T10:00:00Z",
+  "ContatoResponsavel": "Carlos Silva",
+  "EmailResponsavel": "carlos.silva@alfa.com",
+  "Categoria": "Follow Up"
+}
+
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+  {
+    "CNPJ": "97.826.881/0001-36",
+    "NomeFantasia": "Maxi Distribuidora",
+    "PrazoFaturamento": "2025-11-25T09:00:00Z",
+    "ContatoResponsavel": "Juliana Castro",
+    "EmailResponsavel": "juliana.castro@maxidis.com",
+    "Categoria": "Potencial"
+  }
+
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "27.246.081/0001-60",
+    "NomeFantasia": "Mercado Bom Preço",
+    "PrazoFaturamento": "2025-10-20T14:00:00Z",
+    "ContatoResponsavel": "Eduardo Lima",
+    "EmailResponsavel": "eduardo.lima@bompreco.com",
+    "Categoria": "Manutenção"
+  }
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "78.676.146/0001-49",
+    "NomeFantasia": "Auto Peças Rápidas",
+    "PrazoFaturamento": "2025-09-12T11:10:00Z",
+    "ContatoResponsavel": "Ricardo Matos",
+    "EmailResponsavel": "ricardo.matos@autorap.com",
+    "Categoria": "Follow Up"
+  }
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "26.080.014/0001-56",
+    "NomeFantasia": "Farmácia Vida Saudável",
+    "PrazoFaturamento": "2025-10-01T08:30:00Z",
+    "ContatoResponsavel": "Aline Ribeiro",
+    "EmailResponsavel": "aline.ribeiro@vidasau.com",
+    "Categoria": "Inicial"
+  }
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+ 
+  {
+    "CNPJ": "54.560.231/0001-89",
+    "NomeFantasia": "Construtora Top House",
+    "PrazoFaturamento": "2025-12-20T16:20:00Z",
+    "ContatoResponsavel": "Diego Fernandes",
+    "EmailResponsavel": "diego.fernandes@tophouse.com",
+    "Categoria": "Potencial"
+  }
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "64.440.556/0001-81",
+    "NomeFantasia": "AgroMais Cooperativa",
+    "PrazoFaturamento": "2025-11-15T07:45:00Z",
+    "ContatoResponsavel": "Patrícia Gomes",
+    "EmailResponsavel": "patricia.gomes@agromais.com",
+    "Categoria": "Em Negociação"
+  }
+
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "73.606.400/0001-19",
+    "NomeFantasia": "Digital Marketing Pro",
+    "PrazoFaturamento": "2025-12-01T10:00:00Z",
+    "ContatoResponsavel": "Bruno Teixeira",
+    "EmailResponsavel": "bruno.teixeira@dmpro.com",
+    "Categoria": "Prospect"
+  }
+
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "07.358.987/0001-60",
+    "NomeFantasia": "Eco Energia Solar",
+    "PrazoFaturamento": "2025-09-28T09:30:00Z",
+    "ContatoResponsavel": "Sílvia Andrade",
+    "EmailResponsavel": "silvia.andrade@ecoenergia.com",
+    "Categoria": "Manutenção"
+  }
+
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "35.055.550/0001-92",
+    "NomeFantasia": "Loja Universo Kids",
+    "PrazoFaturamento": "2025-08-18T13:00:00Z",
+    "ContatoResponsavel": "Tatiana Moreira",
+    "EmailResponsavel": "tatiana.moreira@universokids.com",
+    "Categoria": "Follow Up"
+  }
+
+###
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+  
+  {
+    "CNPJ": "14.294.435/0001-09",
+    "NomeFantasia": "Global Import Solutions",
+    "PrazoFaturamento": "2025-10-22T10:15:00Z",
+    "ContatoResponsavel": "Flávio Campos",
+    "EmailResponsavel": "flavio.campos@globalimp.com",
+    "Categoria": "Em Negociação"
+  }
+###
+###
+
 @clienteId = {{createCliente.response.body.cliente.id}}
 
 ### Listar todos os clientes (requer 'comercial')
