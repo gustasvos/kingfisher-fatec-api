@@ -5,4 +5,5 @@ export type Cliente = {
     PrazoFaturamento: string
     ContatoResponsavel: string
     EmailResponsavel: string
+    Categoria: string
 }

@@ -1,9 +1,9 @@
 import { Cliente } from "../../../types/cliente"
 import { useState } from "react"
-import Botao from "../../../shared/components/botao"
 import Modal from "../../../shared/components/modal"
 import CadastroCliente from "../pages/cadastrocliente"
 import { FiEdit2, FiTrash2, FiClock, FiCalendar } from "react-icons/fi"
+import AgendamentoCliente from "../pages/agendamento-cliente"
 
 export type ClienteCardProps = {
   cliente: Cliente
@@ -23,8 +23,11 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
     alert("Abrir modal com o histórico de interações do cliente.")
   }
 
-  const abrirModalAgendar = () => {
-    alert("Abrir modal de agendamento com cliente pré-selecionado.")
+  const abrirModalAgendar = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<AgendamentoCliente nomeCliente={cliente.NomeFantasia}/>)
+    setAbertoModal(true)
+    // alert("Abrir modal de agendamento com cliente pré-selecionado.")
   }
 
   return (
@@ -46,33 +49,33 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
 
         {/* Rodapé com botões (somente ícones) */}
         <div className="flex justify-around mt-4 pt-3 border-t">
-          <Botao
+          <button
             onClick={abrirModalEditar}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white"
+            className="flex items-center justify-center w-14 h-14 p-4 rounded-[50px] bg-blue-600 hover:bg-blue-700 text-white"
           >
             <FiEdit2 size={18} />
-          </Botao>
+          </button>
 
-          <Botao
+          <button
             onClick={() => excluir(cliente.id)}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 text-white"
+            className="flex items-center justify-center w-14 h-14 p-4 rounded-[50px] bg-red-600 hover:bg-red-700 text-white"
           >
             <FiTrash2 size={18} />
-          </Botao>
+          </button>
 
-          <Botao
+          <button
             onClick={abrirModalHistorico}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 hover:bg-gray-600 text-white"
+            className="flex items-center justify-center w-14 h-14 p-4 rounded-[50px] bg-gray-500 hover:bg-gray-600 text-white"
           >
             <FiClock size={18} />
-          </Botao>
+          </button>
 
-          <Botao
+          <button
             onClick={abrirModalAgendar}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-green-600 hover:bg-green-700 text-white"
+            className="flex items-center justify-center w-14 h-14 p-4 rounded-[50px] bg-green-600 hover:bg-green-700 text-white"
           >
             <FiCalendar size={18} />
-          </Botao>
+          </button>
         </div>
       </section>
 
