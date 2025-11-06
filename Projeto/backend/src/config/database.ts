@@ -8,6 +8,9 @@ import { Evento } from '../modules/models/Evento'
 import { EventoResposta } from '../modules/models/eventoResposta'
 import { UsuarioLocal } from '../modules/models/UsuarioLocal'
 import { Cliente } from '../modules/models/cliente'
+import { RegistroCliente } from '../modules/models/registroCliente'
+import { ClienteCategoria } from '../modules/models/clienteCategoria'
+import { AgendamentoCliente } from '../modules/models/agendamentoCliente'
 dotenv.config()
 
 export const AppDataSource = new DataSource({
@@ -19,7 +22,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME!,
     synchronize: true,
     logging: true,
-    entities: [User, Evento, EventoConvidado, EventoResposta, UsuarioLocal, Cliente],
+    entities: [User, Evento, EventoConvidado, EventoResposta, UsuarioLocal, Cliente, RegistroCliente, ClienteCategoria, AgendamentoCliente],
     subscribers: [],
     migrations: [__dirname + './migration/*.js'],
 })
