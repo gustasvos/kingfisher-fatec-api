@@ -1,9 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
 
-
 type Props = {
+    idCliente?: number
     nomeCliente?: string
 }
 
@@ -16,7 +16,7 @@ export default function AgendamentoCliente(props: Props) {
 
     const Enviar = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if(loading) return
+        if (loading) return
         setLoading(true)
 
         // só para similar
@@ -34,11 +34,11 @@ export default function AgendamentoCliente(props: Props) {
 
     return (
         <section>
-            <form onSubmit={Enviar}>
-                <section className="flex justify-center items-center h-screen">
-                    <section className="flex flex-col m-auto justify-center items-center space-y-11">
-                        <h1 className="text-black">{`Marcar agendamento com ${props.nomeCliente}`}</h1>
-                        <section className="flex m-auto gap-10">
+            <form onSubmit={Enviar} className="flex justify-center items-center">
+                <section className="flex justify-center items-center h-full w-full p-14 rounded-3xl bg-white">
+                    <section className="flex flex-col m-auto justify-center items-center space-y-14">
+                        <h1 className=" text-blue-600 font-semibold text-3xl mb-6">{`Marcar agendamento com ${props.nomeCliente}`}</h1>
+                        <section className="flex m-auto gap-32">
                             <InputLine type="text"
                                 placeholder=""
                                 value={titulo}
@@ -49,7 +49,7 @@ export default function AgendamentoCliente(props: Props) {
                                 Título da reunião
                             </InputLine>
                             <InputLine
-                                type="date"
+                                type="datetime-local"
                                 placeholder=""
                                 value={data}
                                 id="data"
@@ -59,7 +59,7 @@ export default function AgendamentoCliente(props: Props) {
                                 Data
                             </InputLine>
                         </section>
-                        <section className="flex m-auto gap-10">
+                        <section className="flex m-auto gap-32">
                             <InputLine
                                 type="text"
                                 placeholder=""
@@ -84,7 +84,7 @@ export default function AgendamentoCliente(props: Props) {
                             loading={loading}
                             label={loading ? "Agendando..." : "Agendar"}
                             type="submit"
-                            className="w-[20%] bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
+                            className="w-[20%] m-auto bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
                         >
                         </BotaoSubmit>
                     </section>
