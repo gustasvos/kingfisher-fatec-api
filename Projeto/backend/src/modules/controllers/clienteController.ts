@@ -73,7 +73,7 @@ export const listCliente = async (req: Request, res: Response) => {
     }
 }
 
-export const listlienteById = async (req: Request, res: Response) => {
+export const listClienteById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const clienteRepository = AppDataSource.getRepository(Cliente)
@@ -93,7 +93,7 @@ export const listlienteById = async (req: Request, res: Response) => {
     }
 }
 
-export const updateliente = async (req: Request, res: Response) => {
+export const updateCliente = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const data = req.body
@@ -141,7 +141,7 @@ export const updateliente = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteliente = async (req: Request, res: Response) => {
+export const deleteCliente = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const clienteRepository = AppDataSource.getRepository(Cliente)
@@ -181,7 +181,7 @@ export const updateClienteCategoria = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'Cliente não encontrado!' });
         }
 
-        cliente.Categoria = categoria;
+        // cliente.Categoria = categoria;
         await clienteRepository.save(cliente);
 
         return res.status(200).json({

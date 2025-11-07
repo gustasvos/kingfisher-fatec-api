@@ -29,11 +29,18 @@ interface CadastroClienteProps {
 
 export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
 
+  // 🔹 Dados do usuário logado
+  const storedUser = localStorage.getItem("user");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const userId = parsedUser?.id || "";
+
   const [CNPJ, setCnpj] = useState("")
   const [NomeFantasia, setNomeFantasia] = useState("")
   const [PrazoFaturamento, setPrazoFaturamento] = useState("")
   const [ContatoResponsavel, setContatoResponsavel] = useState("")
   const [EmailResponsavel, setEmailResponsavel] = useState("")
+  const [CNAE, setCnae] = useState("")
+  const [descricaoCNAE, setDescricaoCNAE] = useState("")
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -59,6 +66,8 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
       setPrazoFaturamento(cliente.PrazoFaturamento);
       setContatoResponsavel(cliente.ContatoResponsavel);
       setEmailResponsavel(cliente.EmailResponsavel);
+      setCnae(cliente.CNAE)
+      setDescricaoCNAE(cliente.descricaoCNAE)
       console.log('cliente:', cliente)
 
     } catch (error) {
@@ -88,7 +97,10 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
       NomeFantasia: limparTexto(NomeFantasia),
       PrazoFaturamento: prazoISO,
       ContatoResponsavel: limparTexto(ContatoResponsavel),
-      EmailResponsavel: EmailResponsavel
+      EmailResponsavel: EmailResponsavel,
+      CNAE: CNAE,
+      descricaoCNAE: descricaoCNAE,
+      colaborador_id: userId
     };
 
     try {
@@ -140,6 +152,31 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               style={{ outline: 'none', boxShadow: 'none' }}
             />
           </div>
+          <div>
+            <InputMaskField
+              label="CNAE"
+              classNameLabel="!text-[#015084]"
+              mask="00.000-0/00"
+              placeholder="Digite o CNAE"
+              required
+              maxLength={11}
+              value={CNAE}
+              onAccept={(value: string) => setCnae(value)}
+              style={{ outline: 'none', boxShadow: 'none' }}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block font-medium text-[#015084] mb-1">
+              Descrição do CNAE
+            </label>
+            <input
+              type="text"
+              placeholder="Digite a descrição do CNAE"
+              value={descricaoCNAE}
+              onChange={(e) => setDescricaoCNAE(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
+            />
+          </div>
 
           <div>
             <label className="block font-medium text-[#015084] mb-1">
@@ -162,7 +199,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               placeholder="DD/MM/AAAA"
               required
               maxLength={10}
-              value={PrazoFaturamento ? formatarDataParaPtBr(PrazoFaturamento) : ""}              
+              value={PrazoFaturamento ? formatarDataParaPtBr(PrazoFaturamento) : ""}
               style={{ outline: 'none', boxShadow: 'none' }}
               onAccept={(value: string) => {
                 if (isValidDataPtBr(value)) {

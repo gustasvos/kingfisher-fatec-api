@@ -15,7 +15,7 @@ export class Cliente {
     NomeFantasia: string
 
     @IsDate()
-    @Column({ type: 'datetime'  })
+    @Column({ type: 'date', default: '2000-01-01' })
     PrazoFaturamento: Date
 
     @Column({ type: 'varchar', length: 255  })
@@ -24,14 +24,12 @@ export class Cliente {
     @Column({ type: 'varchar', length: 255 })
     EmailResponsavel: string
 
-    @Column({ type: 'varchar', length: 7 })
+    @Column({ type: 'varchar', length: 10 })
     CNAE: string
 
     @Column({ type: 'varchar', length: 255 })
-    descricao_CNAE: string
+    descricaoCNAE: string
 
-    @Column({ type: 'enum', enum: CategoriaFunil, default: CategoriaFunil.PROSPECT})
-    Categoria: CategoriaFunil
 
     @ManyToOne(() => User, {onDelete: 'CASCADE'})
     @JoinColumn({ name: 'colaborador_id'})
