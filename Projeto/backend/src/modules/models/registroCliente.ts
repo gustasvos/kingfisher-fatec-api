@@ -13,7 +13,7 @@ export class RegistroCliente {
     @Column()
     categoria_id: number
 
-    @Column({ type: 'date' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     data_registro: Date
 
     @Column({ type: 'varchar', length: 500 })
@@ -23,7 +23,7 @@ export class RegistroCliente {
     @JoinColumn({ name: 'cliente_id' })
     cliente: Cliente
 
-    @ManyToOne(() => ClienteCategoria)
+    @ManyToOne(() => ClienteCategoria, (categoria) => categoria.registros)
     @JoinColumn({ name: 'categoria_id' })
     categoria: ClienteCategoria    
 }
