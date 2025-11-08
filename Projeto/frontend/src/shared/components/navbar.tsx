@@ -13,6 +13,7 @@ import imgAddCliente from './../../assets/imgAddCliente.png';
 import imgListaCliente from './../../assets/imgListaCliente.png';
 import imgRespostaEvento from './../../assets/imgRespostaEvento.png';
 import imgDashboard from './../../assets/imgDashboard.png';
+import imgFunilVendas from './../../assets/imgFunilVendas.png';
 
 // Componentes e modais
 import Modal from "./modal";
@@ -141,6 +142,11 @@ export default function Navbar() {
             <NavLink to="/listaCliente" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
               <img src={imgListaCliente} alt="Clientes" className="w-7 h-7" />
               {aberto && <p className="pl-2 text-[15px] font-semibold">Clientes</p>}
+            </NavLink>
+
+            <NavLink to="/funilVendas" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
+              <img src={imgFunilVendas} alt="Clientes" className="w-7 h-7" />
+              {aberto && <p className="pl-2 text-[15px] font-semibold">FunilVendas</p>}
             </NavLink>
           </>
         );

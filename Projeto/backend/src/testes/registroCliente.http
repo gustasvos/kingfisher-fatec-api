@@ -1,0 +1,50 @@
+### login Usuário Comercial Ana
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "54294676000",
+  "senha": "Rafa@2025"
+}
+
+###
+@token = {{login.response.body.token}}
+@id_usuario = {{login.response.body.user.id}}
+
+### 🔹 Listar histórico de interações de um colaborador
+GET http://localhost:8080/registro_cliente/comercial/{{id_usuario}}
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 🔹 Criar novo registro de interação
+POST http://localhost:8080/registro_cliente
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "cliente_id": 3,
+  "categoria_id": 3,
+  "data_registro": "2025-11-08",
+  "observacao": "Novo contato registrado"
+}
+
+### 🔹 Atualizar um registro de cliente
+PUT http://localhost:8080/registro_cliente/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "cliente_id": 1,
+  "categoria_id": 1,
+  "data_registro": "2025-11-07",
+  "observacao": "Atualização de teste do registro"
+}
+
+###
+
+### 🔹 Deletar um registro de interação
+DELETE http://localhost:8080/registro_cliente/{{id_registro_cliente}}
+Authorization: Bearer {{token}}
+Accept: application/json
+

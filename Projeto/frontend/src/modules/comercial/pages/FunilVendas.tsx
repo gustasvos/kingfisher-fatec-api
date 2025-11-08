@@ -117,18 +117,70 @@ const FunilVendas: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null)
+  const storedUser = localStorage.getItem("user");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const userId = parsedUser?.id || "";
+
+  // Depois de buscar as categorias do backend ou usar os enums do frontend
+  const CATEGORIA_MAP: Record<string, number> = {
+    'Prospect': 1,
+    'Inicial': 2,
+    'Potencial': 3,
+    'Manutenção': 4,
+    'Em Negociação': 5,
+    'Follow Up': 6
+  }
+
+  // Tipo auxiliar para o retorno da API
+  interface RegistroLeadAPI {
+    id: number
+    cliente_id: number
+    categoria_id: number
+    data_registro: string
+    observacao?: string
+    cliente: {
+      id: number
+      NomeFantasia: string
+      ContatoResponsavel: string
+      CNPJ?: string
+      EmailResponsavel?: string
+    }
+    categoria?: {
+      categoria: string
+    }
+  }
 
   useEffect(() => {
     const fetchLeads = async () => {
       try {
         setLoading(true)
         setError(null)
-        const response = await instance.get<LeadProps[]>('/cliente/list')
-        const leadsComCategoria = response.data.map(lead => ({
-          ...lead,
-          categoria: lead.Categoria || 'null',
-        }))
+        
+        const response = await instance.get(`/registro_cliente/comercial/${userId}`)
+        // Criar um Map para pegar apenas o registro mais recente de cada cliente
+        const leadsMaisRecentesMap = new Map<number, any>()
 
+        response.data.forEach((registro: any) => {
+          const clienteId = registro.cliente_id
+          const registroAtual = leadsMaisRecentesMap.get(clienteId)
+
+          if (
+            !registroAtual ||
+            new Date(registro.data_registro) > new Date(registroAtual.data_registro)
+          ) {
+            leadsMaisRecentesMap.set(clienteId, registro)
+          }
+        })
+
+        // Transformar apenas para LeadProps usando os registros mais recentes
+        const leadsComCategoria: LeadProps[] = Array.from(leadsMaisRecentesMap.values()).map((registro: any) => ({
+          id: registro.cliente.id,
+          NomeFantasia: registro.cliente.NomeFantasia,
+          ContatoResponsavel: registro.cliente.ContatoResponsavel,
+          CNPJ: registro.cliente.CNPJ,
+          EmailResponsavel: registro.cliente.EmailResponsavel,
+          Categoria: registro.categoria?.categoria || 'null',
+        }));
         setLeads(leadsComCategoria)
       } catch (err) {
         console.error("Erro ao buscar clientes:", err)
@@ -141,20 +193,46 @@ const FunilVendas: React.FC = () => {
     fetchLeads()
   }, [])
 
-  const handleLeadDrop = (leadId: string, novaCategoria: string) => {
-    instance.patch(`/cliente/${leadId}/categoria`, { categoria: novaCategoria })
-      .then(response => {
-        setLeads(prevLeads =>
-          prevLeads.map(lead =>
-            lead.id === parseInt(leadId)
-              ? { ...lead, Categoria: novaCategoria }
-              : lead
-          )
+  const handleLeadDrop = async (leadId: string, novaCategoria: string) => {
+    const categoriaId = CATEGORIA_MAP[novaCategoria]
+
+    if (!categoriaId) {
+      console.error("Categoria desconhecida:", novaCategoria)
+      return
+    }
+
+    try {
+      // Criar a data local no fuso horário do Brasil
+      const dataAgora = new Date()
+      const offset = -3 // UTC-3
+      dataAgora.setHours(dataAgora.getHours() + offset)
+      const dataFormatada = dataAgora.toISOString().slice(0, 19).replace('T', ' ')
+
+      const body = {
+        cliente_id: parseInt(leadId),
+        categoria_id: categoriaId,
+        data_registro: dataFormatada,
+        observacao: `Lead movido para ${novaCategoria}`
+      }
+
+      console.log("Enviando novo registro de interação:", body)
+
+      await instance.post('/registro_cliente', body)
+
+      // Atualiza o estado local (frontend)
+      setLeads(prevLeads =>
+        prevLeads.map(lead =>
+          lead.id === parseInt(leadId)
+            ? { ...lead, Categoria: novaCategoria }
+            : lead
         )
-      })
-      .catch(err => {
-        console.error("Erro ao mover o lead", err)
-      })
+      )
+
+      console.log(`Lead ${leadId} movido para ${novaCategoria}`)
+
+    } catch (err) {
+      console.error("Erro ao criar novo registro de interação:", err)
+    }
   }
 
   const handleSelectLead = (id: number) => {
