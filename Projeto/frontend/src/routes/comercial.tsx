@@ -4,6 +4,7 @@ import ListaCliente from "../modules/comercial/pages/lista-cliente"
 import PrivateWrapper from "./../shared/components/PrivateWrapper";
 import FunilVendas from "../modules/comercial/pages/FunilVendas";
 import AgendamentoCliente from "../modules/comercial/pages/agendamento-cliente";
+import { HistoricoInteracao } from "../modules/comercial/components/historico-interacao";
 
 export default function RotasComercial(){
     return (
@@ -12,6 +13,7 @@ export default function RotasComercial(){
         <Route path="/listaCliente" element={<PrivateWrapper roles={['comercial']}><ListaCliente /></PrivateWrapper>} />
         <Route path="/funilVendas" element={<PrivateWrapper roles={['comercial']}><FunilVendas /></PrivateWrapper>} />
         <Route path="/agendaCliente" element={<PrivateWrapper roles={['comercial']}><AgendamentoCliente /></PrivateWrapper>} />
+         <Route path="/historicoInteracao" element={<HistoricoInteracao/>} />
         </>
     )
 }
