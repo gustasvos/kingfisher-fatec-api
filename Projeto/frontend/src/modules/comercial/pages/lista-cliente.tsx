@@ -9,9 +9,13 @@ export default function ListaCliente() {
     const [cliente, setCliente] = useState<Cliente[]>([])
     const [carregando, setCarregando] = useState(true)
     const [pesquisa, setPesquisa] = useState("")
+    // Pega o ID do usuário logado
+    const storedUser = localStorage.getItem("user")
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null
+    const userId = parsedUser?.id || ""
 
     useEffect(() => {
-        instance.get<Cliente[]>("/cliente/list")
+        instance.get<Cliente[]>(`/cliente/comercial/${userId}`)
             .then((response: any) => {
                 setCliente(response.data)
             })
@@ -21,7 +25,7 @@ export default function ListaCliente() {
             .finally(() => {
                 setCarregando(false)
             })
-    }, [])
+    }, [userId])
 
     const excluirCliente = async (id: number) => {
         if (window.confirm("Tem certeza que deseja excluir esse cliente?")) {
