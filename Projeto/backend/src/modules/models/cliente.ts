@@ -31,7 +31,6 @@ export class Cliente {
     descricaoCNAE: string
 
 
-    @ManyToOne(() => User, {onDelete: 'CASCADE'})
-    @JoinColumn({ name: 'colaborador_id'})
-    colaborador: User
+    @Column({ name: 'colaborador_id', type: 'int' })
+    colaborador_id: number
 }

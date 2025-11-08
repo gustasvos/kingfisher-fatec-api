@@ -5,5 +5,8 @@ export type Cliente = {
     PrazoFaturamento: string
     ContatoResponsavel: string
     EmailResponsavel: string
-    Categoria: string
+    CNAE: string
+    descricaoCNAE: string
+    colaborador_id: string
+    ultimaCategoria?: string | null
 }

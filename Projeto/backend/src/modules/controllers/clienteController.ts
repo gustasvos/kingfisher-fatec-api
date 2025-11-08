@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { AppDataSource } from '../../config/database'
 import { Cliente } from '../models/cliente'
+import { RegistroCliente } from '../models/registroCliente'
 import { Not } from 'typeorm'
 import { validarCNPJ } from "../../utils/validarCNPJ"
 import { validarEmail } from '../../utils/validarEmail'
@@ -92,6 +93,64 @@ export const listClienteById = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Erro ao listar o cliente!' })
     }
 }
+// Rota: GET /cliente/comercial/:id_usuario
+export const listClientesComUltimoStatus = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const user = req.user
+
+        const clienteRepository = AppDataSource.getRepository(Cliente)
+        const registroRepository = AppDataSource.getRepository(RegistroCliente)
+
+        let clientes: Cliente[] = []
+
+        clientes = await clienteRepository.find({ where: { colaborador_id: parseInt(id!) } })
+
+
+        if (clientes.length === 0) {
+            return res.status(200).json([])
+        }
+
+        const clienteIds = clientes.map((c) => c.id)
+
+        // Buscar todos os registros dos clientes
+        const registros = await registroRepository
+            .createQueryBuilder("registro")
+            .leftJoinAndSelect("registro.categoria", "categoria")
+            .leftJoinAndSelect("registro.cliente", "cliente")
+            .where("registro.cliente_id IN (:...clienteIds)", { clienteIds })
+            .orderBy("registro.data_registro", "DESC")
+            .getMany()
+
+        // Mapear último status por cliente
+        const ultimoStatusMap = new Map<number, string>()
+        registros.forEach(r => {
+            if (r.cliente && r.categoria && !ultimoStatusMap.has(r.cliente.id)) {
+                ultimoStatusMap.set(r.cliente.id, r.categoria.categoria)
+            }
+        })
+
+        // Montar resposta final
+        const resposta = clientes.map(c => ({
+            id: c.id,
+            CNPJ: c.CNPJ,
+            NomeFantasia: c.NomeFantasia,
+            PrazoFaturamento: c.PrazoFaturamento,
+            ContatoResponsavel: c.ContatoResponsavel,
+            EmailResponsavel: c.EmailResponsavel,
+            CNAE: c.CNAE,
+            descricao_CNAE: c.descricaoCNAE,
+            colaborador_id: c.colaborador_id,
+            ultimaCategoria: ultimoStatusMap.get(c.id) || null
+        }))
+
+        return res.status(200).json(resposta)
+    } catch (error) {
+        console.error("Erro ao listar clientes com último status:", error)
+        return res.status(500).json({ message: "Erro ao listar clientes com último status" })
+    }
+}
+
 
 export const updateCliente = async (req: Request, res: Response) => {
     try {

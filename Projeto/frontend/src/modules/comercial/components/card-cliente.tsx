@@ -44,7 +44,7 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
           <p><span className="font-semibold">Prazo Faturamento:</span> {cliente.PrazoFaturamento ?? "—"}</p>
           <p><span className="font-semibold">Contato Resp.:</span> {cliente.ContatoResponsavel ?? "—"}</p>
           <p><span className="font-semibold">Email:</span> {cliente.EmailResponsavel ?? "—"}</p>
-          <p><span className="font-semibold">Categoria:</span> {cliente.Categoria ?? "—"}</p>
+          <p><span className="font-semibold">Categoria:</span> {cliente.ultimaCategoria ?? "—"}</p>
         </div>
 
         {/* Rodapé com botões (somente ícones) */}
