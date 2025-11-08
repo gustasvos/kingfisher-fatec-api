@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import InteracaoManual from "./interacao-manual";
 
 interface Interacao {
   id: number;
@@ -10,8 +11,15 @@ interface Interacao {
 
 export const HistoricoInteracao: React.FC = () => {
   const [interacoes, setInteracoes] = useState<Interacao[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
   const handleNovaInteracao = () => {
     console.log("Abrir modal de nova interação"); 
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -150,6 +158,20 @@ export const HistoricoInteracao: React.FC = () => {
           )}
         </div>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="relative">
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+            >
+              ✕
+            </button>
+            <InteracaoManual onClose={handleCloseModal} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
