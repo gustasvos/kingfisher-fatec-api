@@ -3,9 +3,8 @@ import { AppDataSource } from "../../config/database"
 import { RegistroCliente } from "../models/registroCliente"
 import { Cliente } from "../models/cliente"
 import { ClienteCategoria } from "../models/clienteCategoria"
-import { User } from "../models/usuario"
 
-//Rota: GET /registro_cliente/comercial/:id_usuario
+//Rota: GET /registroCliente/comercial/:id_usuario
 export const listRegistroByComercial = async (req: Request, res: Response) => {
     try {
         const { id_usuario } = req.params
@@ -18,14 +17,14 @@ export const listRegistroByComercial = async (req: Request, res: Response) => {
         if (user?.cargo === "admin-comercial") {
             const registros = await registroRepository.find({
                 relations: ["cliente", "categoria"],
-                order: { data_registro: "DESC" },
+                order: { dataRegistro: "DESC" },
             })
             return res.status(200).json(registros)
         }
 
         // Comercial comum: só vê os registros dos seus clientes
         const clientesDoColaborador = await clienteRepository.find({
-            where: { colaborador_id: parseInt(id_usuario!) },
+            where: { colaboradorId: parseInt(id_usuario!) },
         })
 
 
@@ -39,8 +38,8 @@ export const listRegistroByComercial = async (req: Request, res: Response) => {
             .createQueryBuilder("registro")
             .leftJoinAndSelect("registro.cliente", "cliente")
             .leftJoinAndSelect("registro.categoria", "categoria")
-            .where("registro.cliente_id IN (:...clienteIds)", { clienteIds })
-            .orderBy("registro.data_registro", "DESC")
+            .where("registro.clienteId IN (:...clienteIds)", { clienteIds })
+            .orderBy("registro.dataRegistro", "DESC")
             .getMany()
 
         return res.status(200).json(registros)
@@ -52,8 +51,8 @@ export const listRegistroByComercial = async (req: Request, res: Response) => {
 
 export const updateRegistro = async (req: Request, res: Response) => {
   try {
-    const { id_registro_cliente } = req.params
-    const { cliente_id, categoria_id, data_registro, observacao } = req.body
+    const { id_registroCliente } = req.params
+    const { clienteId, categoriaId, dataRegistro, observacao } = req.body
     const user = req.user
 
     const registroRepository = AppDataSource.getRepository(RegistroCliente)
@@ -61,7 +60,7 @@ export const updateRegistro = async (req: Request, res: Response) => {
     const categoriaRepository = AppDataSource.getRepository(ClienteCategoria)
 
     const registro = await registroRepository.findOne({
-      where: { id: parseInt(id_registro_cliente!) },
+      where: { id: parseInt(id_registroCliente!) },
       relations: ["cliente", "categoria"],
     })
 
@@ -75,7 +74,7 @@ export const updateRegistro = async (req: Request, res: Response) => {
         id: registro.cliente.id,
       })
 
-      if (clienteDono?.colaborador_id !== user!.id) {
+      if (clienteDono?.colaboradorId !== user!.id) {
         return res
           .status(403)
           .json({ message: "Acesso negado: este cliente não pertence a você." })
@@ -83,17 +82,17 @@ export const updateRegistro = async (req: Request, res: Response) => {
     }
 
     // Valida cliente e categoria
-    const cliente = await clienteRepository.findOneBy({ id: cliente_id })
+    const cliente = await clienteRepository.findOneBy({ id: clienteId })
     if (!cliente) return res.status(400).json({ message: "Cliente inválido" })
 
-    const categoria = await categoriaRepository.findOneBy({ id: categoria_id })
+    const categoria = await categoriaRepository.findOneBy({ id: categoriaId })
     if (!categoria)
       return res.status(400).json({ message: "Categoria inválida" })
 
     // Atualiza o registro
     registro.cliente = cliente
     registro.categoria = categoria
-    registro.data_registro = new Date(data_registro)
+    registro.dataRegistro = new Date(dataRegistro)
     registro.observacao = observacao
 
     const atualizado = await registroRepository.save(registro)
@@ -110,14 +109,14 @@ export const updateRegistro = async (req: Request, res: Response) => {
 
 export const deleteRegistro = async (req: Request, res: Response) => {
   try {
-    const { id_registro_cliente } = req.params
+    const { id_registroCliente } = req.params
     const user = req.user
 
     const registroRepository = AppDataSource.getRepository(RegistroCliente)
     const clienteRepository = AppDataSource.getRepository(Cliente)
 
     const registro = await registroRepository.findOne({
-      where: { id: parseInt(id_registro_cliente!) },
+      where: { id: parseInt(id_registroCliente!) },
       relations: ["cliente"],
     })
 
@@ -131,7 +130,7 @@ export const deleteRegistro = async (req: Request, res: Response) => {
         id: registro.cliente.id,
       })
 
-      if (clienteDono?.colaborador_id !== user!.id) {
+      if (clienteDono?.colaboradorId !== user!.id) {
         return res
           .status(403)
           .json({ message: "Acesso negado: este cliente não pertence a você." })
@@ -149,7 +148,7 @@ export const deleteRegistro = async (req: Request, res: Response) => {
 
 export const createRegistro = async (req: Request, res: Response) => {
   try {
-    const { cliente_id, categoria_id, data_registro, observacao } = req.body
+    const { clienteId, categoriaId, dataRegistro, observacao } = req.body
     const user = req.user
 
     const registroRepository = AppDataSource.getRepository(RegistroCliente)
@@ -157,25 +156,25 @@ export const createRegistro = async (req: Request, res: Response) => {
     const categoriaRepository = AppDataSource.getRepository(ClienteCategoria)
 
     // Valida cliente
-    const cliente = await clienteRepository.findOneBy({ id: cliente_id })
+    const cliente = await clienteRepository.findOneBy({ id: clienteId })
     if (!cliente) return res.status(400).json({ message: "Cliente inválido" })
 
     // Verifica se o colaborador é dono do cliente (exceto admin-comercial)
-    if (user?.cargo !== "admin-comercial" && cliente.colaborador_id !== user!.id) {
+    if (user?.cargo !== "admin-comercial" && cliente.colaboradorId !== user!.id) {
       return res
         .status(403)
         .json({ message: "Acesso negado: este cliente não pertence a você." })
     }
 
     // Valida categoria
-    const categoria = await categoriaRepository.findOneBy({ id: categoria_id })
+    const categoria = await categoriaRepository.findOneBy({ id: categoriaId })
     if (!categoria) return res.status(400).json({ message: "Categoria inválida" })
 
     // Cria novo registro
     const novoRegistro = registroRepository.create({
       cliente,
       categoria,
-      data_registro: new Date(data_registro),
+      dataRegistro: new Date(dataRegistro),
       observacao: observacao || "",
     })
 

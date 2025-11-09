@@ -10,33 +10,33 @@ import {
 
 const router = express.Router()
 
-// 🔹 Listar histórico de interações de um colaborador
+// Listar histórico de interações de um colaborador
 router.get(
-  "/registro_cliente/comercial/:id_usuario",
+  "/registroCliente/comercial/:id_usuario",
   autenticarUsuario,
   autorizarUsuario(["comercial", "admin-comercial"]),
   listRegistroByComercial
 )
 
-// 🔹 Atualizar um registro
+// Atualizar um registro
 router.put(
-  "/registro_cliente/:id_registro_cliente",
+  "/registroCliente/:id_registroCliente",
   autenticarUsuario,
   autorizarUsuario(["comercial", "admin-comercial"]),
   updateRegistro
 )
 
-// 🔹 Deletar um registro
+// Deletar um registro
 router.delete(
-  "/registro_cliente/:id_registro_cliente",
+  "/registroCliente/:id_registroCliente",
   autenticarUsuario,
   autorizarUsuario(["comercial", "admin-comercial"]),
   deleteRegistro
 )
 
-// 🔹 Criar um novo registro
+// Criar um novo registro
 router.post(
-  "/registro_cliente",
+  "/registroCliente",
   autenticarUsuario,
   autorizarUsuario(["comercial", "admin-comercial"]),
   createRegistro
