@@ -29,9 +29,9 @@ export class ClienteSubscriber implements EntitySubscriberInterface<Cliente> {
         const nowSP = new Date(nowUTC.getTime() - 3 * 60 * 60 * 1000) // subtrai 3 horas
 
         const novoRegistro = registroRepository.create({
-            cliente_id: event.entity.id,
-            categoria_id: prospectCategoria.id,
-            data_registro: nowSP,
+            clienteId: event.entity.id,
+            categoriaId: prospectCategoria.id,
+            dataRegistro: nowSP,
             observacao: ""
         })
 
