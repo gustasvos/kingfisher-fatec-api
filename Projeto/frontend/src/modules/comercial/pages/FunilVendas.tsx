@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LeadProps } from '../../../types/LeadProps'
 import LeadCard from '../components/LeadCard'
 import Navbar from '../../../shared/components/navbar'
@@ -134,9 +134,9 @@ const FunilVendas: React.FC = () => {
   // Tipo auxiliar para o retorno da API
   interface RegistroLeadAPI {
     id: number
-    cliente_id: number
-    categoria_id: number
-    data_registro: string
+    clienteId: number
+    categoriaId: number
+    dataRegistro: string
     observacao?: string
     cliente: {
       id: number
@@ -156,17 +156,17 @@ const FunilVendas: React.FC = () => {
         setLoading(true)
         setError(null)
         
-        const response = await instance.get(`/registro_cliente/comercial/${userId}`)
+        const response = await instance.get(`/registroCliente/comercial/${userId}`)
         // Criar um Map para pegar apenas o registro mais recente de cada cliente
         const leadsMaisRecentesMap = new Map<number, any>()
 
         response.data.forEach((registro: any) => {
-          const clienteId = registro.cliente_id
+          const clienteId = registro.clienteId
           const registroAtual = leadsMaisRecentesMap.get(clienteId)
 
           if (
             !registroAtual ||
-            new Date(registro.data_registro) > new Date(registroAtual.data_registro)
+            new Date(registro.dataRegistro) > new Date(registroAtual.dataRegistro)
           ) {
             leadsMaisRecentesMap.set(clienteId, registro)
           }
@@ -175,11 +175,11 @@ const FunilVendas: React.FC = () => {
         // Transformar apenas para LeadProps usando os registros mais recentes
         const leadsComCategoria: LeadProps[] = Array.from(leadsMaisRecentesMap.values()).map((registro: any) => ({
           id: registro.cliente.id,
-          NomeFantasia: registro.cliente.NomeFantasia,
-          ContatoResponsavel: registro.cliente.ContatoResponsavel,
+          nomeFantasia: registro.cliente.nomeFantasia,
+          contatoResponsavel: registro.cliente.contatoResponsavel,
           CNPJ: registro.cliente.CNPJ,
-          EmailResponsavel: registro.cliente.EmailResponsavel,
-          Categoria: registro.categoria?.categoria || 'null',
+          emailResponsavel: registro.cliente.emailResponsavel,
+          categoria: registro.categoria?.categoria || 'null',
         }));
         setLeads(leadsComCategoria)
       } catch (err) {
@@ -209,21 +209,21 @@ const FunilVendas: React.FC = () => {
       const dataFormatada = dataAgora.toISOString().slice(0, 19).replace('T', ' ')
 
       const body = {
-        cliente_id: parseInt(leadId),
-        categoria_id: categoriaId,
-        data_registro: dataFormatada,
+        clienteId: parseInt(leadId),
+        categoriaId: categoriaId,
+        dataRegistro: dataFormatada,
         observacao: `Lead movido para ${novaCategoria}`
       }
 
       console.log("Enviando novo registro de interação:", body)
 
-      await instance.post('/registro_cliente', body)
+      await instance.post('/registroCliente', body)
 
       // Atualiza o estado local (frontend)
       setLeads(prevLeads =>
         prevLeads.map(lead =>
           lead.id === parseInt(leadId)
-            ? { ...lead, Categoria: novaCategoria }
+            ? { ...lead, categoria: novaCategoria }
             : lead
         )
       )
@@ -242,7 +242,7 @@ const FunilVendas: React.FC = () => {
   }
 
   const getLeadsByCategoria = (categoria: string) => {
-    return leads.filter((lead) => lead.Categoria === categoria)
+    return leads.filter((lead) => lead.categoria === categoria)
   }
 
   const renderContent = () => {

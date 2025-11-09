@@ -1,8 +1,8 @@
 export interface LeadProps {
     id: number
-    NomeFantasia: string
-    ContatoResponsavel: string
+    nomeFantasia: string
+    contatoResponsavel: string
     CNPJ?: string
-    EmailResponsavel?: string
-    Categoria: string
+    emailResponsavel?: string
+    categoria: string
   }
