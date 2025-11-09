@@ -39,7 +39,7 @@ export const createUsuario = async (req: Request, res: Response) => {
 
         if(!validarCPF(data.cpf)){
             res.status(400).json({
-                mesage:'CPF inválido!'
+                message:'CPF inválido!'
             })
             return
         }

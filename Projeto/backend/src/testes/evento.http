@@ -122,7 +122,7 @@ Content-Type: application/json
 }
 
 ### CONFIRMAR CONVITE
-PATCH http://localhost:8080/admin/events/7/convidado/1
+PATCH http://localhost:8080/admin/events/7/convidado/2
 Content-Type: application/json
 
 {
@@ -168,7 +168,7 @@ POST {{api}}admin/events/respostas/10/participante/11
 Content-Type: application/json
 
 {
-  "titulo_evento": "Feedback do bootcamp",
+  "tituloEvento": "Feedback do bootcamp",
   "objetivo": "Treinar exercicios",
   "comentarios": "Ótimas dinâmicas e aprendizado",
   "avaliacao": 3

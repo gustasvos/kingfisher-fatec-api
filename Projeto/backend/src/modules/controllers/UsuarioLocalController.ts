@@ -101,11 +101,11 @@ export const getEstatisticasLocais = async (req: Request, res: Response) => {
     const fim = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 23, 59, 59, 999)
 
     const registros = await usuarioLocalRepository
-      .createQueryBuilder("usuario_local")
-      .select("usuario_local.local", "local")
-      .addSelect("COUNT(usuario_local.id)", "quantidade")
-      .where("usuario_local.data BETWEEN :inicio AND :fim", { inicio, fim })
-      .groupBy("usuario_local.local")
+      .createQueryBuilder("usuarioLocal")
+      .select("usuarioLocal.local", "local")
+      .addSelect("COUNT(usuarioLocal.id)", "quantidade")
+      .where("usuarioLocal.data BETWEEN :inicio AND :fim", { inicio, fim })
+      .groupBy("usuarioLocal.local")
       .getRawMany()
 
     return res.json(registros)

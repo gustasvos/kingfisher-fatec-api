@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { AppDataSource } from '../../config/database';
 import { Evento } from '../models/Evento';
 import { User } from '../models/usuario';
@@ -316,7 +316,7 @@ export const listEventoRespostas = async (req: Request, res: Response) => {
     // remover campos do usuário
     const respostasLimpa = respostas.map((r) => {
       if (r.usuario) {
-        const { senha, genero, role, data_contratacao, data_nascimento, ...usuarioFiltrado } = r.usuario
+        const { senha, genero, role, dataContratacao, dataNascimento, ...usuarioFiltrado } = r.usuario
         return {
           ...r,
           usuario: usuarioFiltrado
@@ -354,8 +354,8 @@ export const getEventoRespostaById = async (req: Request, res: Response) => {
 
     return res.json({
       id: resposta.id,
-      titulo_evento: resposta.titulo_evento,
-      data_evento: resposta.data_evento,
+      tituloEvento: resposta.tituloEvento,
+      dataEvento: resposta.dataEvento,
       objetivo: resposta.objetivo,
       comentarios: resposta.comentarios,
       avaliacao: resposta.avaliacao,
@@ -381,7 +381,7 @@ export const getEventoRespostaById = async (req: Request, res: Response) => {
 export const createEventoResposta = async (req: Request, res: Response) => {
   try {
     const { eventoId, usuarioId } = req.params;
-    const { titulo_evento, objetivo, comentarios, avaliacao } = req.body;
+    const { tituloEvento, objetivo, comentarios, avaliacao } = req.body;
 
     if (!eventoId || !usuarioId) {
       return res.status(400).json({ error: 'IDs de evento e usuário são obrigatórios' });
@@ -408,8 +408,8 @@ export const createEventoResposta = async (req: Request, res: Response) => {
     }
 
     const resposta = respostaRepo().create({
-      titulo_evento: titulo_evento ?? evento.titulo,
-      data_evento: evento.dataHora,
+      tituloEvento: tituloEvento ?? evento.titulo,
+      dataEvento: evento.dataHora,
       objetivo: objetivo ?? '',
       comentarios: comentarios ?? '',
       avaliacao,
@@ -421,8 +421,8 @@ export const createEventoResposta = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       id: saved.id,
-      titulo_evento: saved.titulo_evento,
-      data_evento: saved.data_evento,
+      tituloEvento: saved.tituloEvento,
+      dataEvento: saved.dataEvento,
       objetivo: saved.objetivo,
       comentarios: saved.comentarios,
       avaliacao: saved.avaliacao,

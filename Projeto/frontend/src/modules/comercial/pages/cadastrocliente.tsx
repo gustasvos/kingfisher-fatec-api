@@ -29,16 +29,16 @@ interface CadastroClienteProps {
 
 export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
 
-  // 🔹 Dados do usuário logado
+  // Dados do usuário logado
   const storedUser = localStorage.getItem("user");
   const parsedUser = storedUser ? JSON.parse(storedUser) : null;
   const userId = parsedUser?.id || "";
 
   const [CNPJ, setCnpj] = useState("")
-  const [NomeFantasia, setNomeFantasia] = useState("")
-  const [PrazoFaturamento, setPrazoFaturamento] = useState("")
-  const [ContatoResponsavel, setContatoResponsavel] = useState("")
-  const [EmailResponsavel, setEmailResponsavel] = useState("")
+  const [nomeFantasia, setNomeFantasia] = useState("")
+  const [prazoFaturamento, setPrazoFaturamento] = useState("")
+  const [contatoResponsavel, setContatoResponsavel] = useState("")
+  const [emailResponsavel, setEmailResponsavel] = useState("")
   const [CNAE, setCnae] = useState("")
   const [descricaoCNAE, setDescricaoCNAE] = useState("")
   const [erro, setErro] = useState<string | null>(null);
@@ -89,18 +89,18 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
     };
 
     // Normaliza o formato antes de enviar
-    const prazoISO = new Date(PrazoFaturamento).toISOString().split("T")[0]; // "2025-11-30"
+    const prazoISO = new Date(prazoFaturamento).toISOString().split("T")[0]; // "2025-11-30"
 
 
     const payload = {
       CNPJ: CNPJ.replace(/\D/g, ""),
-      NomeFantasia: limparTexto(NomeFantasia),
-      PrazoFaturamento: prazoISO,
-      ContatoResponsavel: limparTexto(ContatoResponsavel),
-      EmailResponsavel: EmailResponsavel,
+      nomeFantasia: limparTexto(nomeFantasia),
+      prazoFaturamento: prazoISO,
+      contatoResponsavel: limparTexto(contatoResponsavel),
+      emailResponsavel: emailResponsavel,
       CNAE: CNAE,
       descricaoCNAE: descricaoCNAE,
-      colaborador_id: userId
+      colaboradorId: userId
     };
 
     try {
@@ -185,7 +185,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
             <input
               type="text"
               placeholder="Digite o nome fantasia"
-              value={NomeFantasia}
+              value={nomeFantasia}
               onChange={(e) => setNomeFantasia(e.target.value)}
               className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
             />
@@ -199,7 +199,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               placeholder="DD/MM/AAAA"
               required
               maxLength={10}
-              value={PrazoFaturamento ? formatarDataParaPtBr(PrazoFaturamento) : ""}
+              value={prazoFaturamento ? formatarDataParaPtBr(prazoFaturamento) : ""}
               style={{ outline: 'none', boxShadow: 'none' }}
               onAccept={(value: string) => {
                 if (isValidDataPtBr(value)) {
@@ -220,7 +220,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
             <input
               type="text"
               placeholder="Digite o nome do responsável"
-              value={ContatoResponsavel}
+              value={contatoResponsavel}
               onChange={(e) => setContatoResponsavel(e.target.value)}
               className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
             />
@@ -234,7 +234,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
             <input
               type="email"
               placeholder="Digite o e-mail"
-              value={EmailResponsavel}
+              value={emailResponsavel}
               onChange={(e) => setEmailResponsavel(e.target.value)}
               className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
             />

@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
 import { CategoriaFunil } from '../../utils/enums/categoriaFunil'
 import { RegistroCliente } from './registroCliente';
 
-@Entity('cliente_categoria')
+@Entity('clienteCategoria')
 export class ClienteCategoria {
     @PrimaryGeneratedColumn()
     id: number

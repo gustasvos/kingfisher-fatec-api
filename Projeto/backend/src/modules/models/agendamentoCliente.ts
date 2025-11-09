@@ -1,20 +1,19 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm'
-import { CategoriaFunil } from '../../utils/enums/categoriaFunil'
 import { Cliente } from './cliente'
 
-@Entity('agendamento_cliente')
+@Entity('agendamentoCliente')
 export class AgendamentoCliente {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    cliente_id: number
+    clienteId: number
 
     @Column({ type: 'varchar', length: 50 })
     titulo: string
 
     @Column({ type: 'datetime' })
-    data_agendamento: Date
+    dataAgendamento: Date
 
     @Column({ type: 'varchar', length: 500})
     descricao?: string
@@ -23,7 +22,7 @@ export class AgendamentoCliente {
     localizacao: string
 
     @ManyToOne(() => Cliente, (cliente) => cliente.id, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'cliente_id' })
+    @JoinColumn({ name: 'clienteId' })
     cliente: Cliente
 
 }

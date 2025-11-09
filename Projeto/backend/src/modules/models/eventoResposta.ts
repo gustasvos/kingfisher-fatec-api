@@ -2,16 +2,16 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Evento } from './Evento';
 import { User } from './usuario';
 
-@Entity('evento_resposta')
+@Entity('eventoResposta')
 export class EventoResposta{
     @PrimaryGeneratedColumn()
     id: number
 
     @Column({type: 'varchar', length: 255})
-    titulo_evento: string
+    tituloEvento: string
 
     @Column({type: 'date'})
-    data_evento: Date
+    dataEvento: Date
 
     @Column({type: 'varchar', length: 255})
     objetivo: string

@@ -104,7 +104,7 @@ export const listClientesComUltimoStatus = async (req: Request, res: Response) =
 
         let clientes: Cliente[] = []
 
-        clientes = await clienteRepository.find({ where: { colaborador_id: parseInt(id!) } })
+        clientes = await clienteRepository.find({ where: { colaboradorId: parseInt(id!) } })
 
 
         if (clientes.length === 0) {
@@ -118,8 +118,8 @@ export const listClientesComUltimoStatus = async (req: Request, res: Response) =
             .createQueryBuilder("registro")
             .leftJoinAndSelect("registro.categoria", "categoria")
             .leftJoinAndSelect("registro.cliente", "cliente")
-            .where("registro.cliente_id IN (:...clienteIds)", { clienteIds })
-            .orderBy("registro.data_registro", "DESC")
+            .where("registro.clienteId IN (:...clienteIds)", { clienteIds })
+            .orderBy("registro.dataRegistro", "DESC")
             .getMany()
 
         // Mapear último status por cliente
@@ -134,13 +134,13 @@ export const listClientesComUltimoStatus = async (req: Request, res: Response) =
         const resposta = clientes.map(c => ({
             id: c.id,
             CNPJ: c.CNPJ,
-            NomeFantasia: c.NomeFantasia,
-            PrazoFaturamento: c.PrazoFaturamento,
-            ContatoResponsavel: c.ContatoResponsavel,
-            EmailResponsavel: c.EmailResponsavel,
+            NomeFantasia: c.nomeFantasia,
+            PrazoFaturamento: c.prazoFaturamento,
+            ContatoResponsavel: c.contatoResponsavel,
+            EmailResponsavel: c.emailResponsavel,
             CNAE: c.CNAE,
             descricao_CNAE: c.descricaoCNAE,
-            colaborador_id: c.colaborador_id,
+            colaboradorId: c.colaboradorId,
             ultimaCategoria: ultimoStatusMap.get(c.id) || null
         }))
 

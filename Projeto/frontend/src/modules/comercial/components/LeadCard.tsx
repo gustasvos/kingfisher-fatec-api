@@ -58,10 +58,10 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead, isSelected, onSelect }) => {
       `}
     >
       <h4 className="font-semibold text-sm text-gray-900">
-        {lead.NomeFantasia}
+        {lead.nomeFantasia}
       </h4>
       <p className="text-xs text-gray-500 mt-1">
-        {lead.ContatoResponsavel}
+        {lead.contatoResponsavel}
       </p>
     </div>
   )

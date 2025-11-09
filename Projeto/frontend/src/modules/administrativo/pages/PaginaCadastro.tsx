@@ -28,9 +28,9 @@ const formatarDataParaPtBr = (dataIso: string): string => {
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
-  const [data_nascimento, setData_nascimento] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
   const [genero, setGenero] = useState("");
-  const [data_contratacao, setDataContratacao] = useState("");
+  const [dataContratacao, setDataContratacao] = useState("");
   const [cargo, setCargo] = useState("");
   const [setor, setSetor] = useState("");
   const [senha, setSenha] = useState("");
@@ -55,10 +55,10 @@ export default function Cadastro() {
     nome: limparTexto(nome),
     cpf: cpf.replace(/\D/g, ""),
     genero: genero.trim().charAt(0).toUpperCase(),
-    data_nascimento,
+    dataNascimento,
     cargo: limparTexto(cargo),
     senha,
-    data_contratacao,
+    dataContratacao,
     role,
     setor: limparTexto(setor)
   };
@@ -73,11 +73,6 @@ export default function Cadastro() {
     } catch (error) {
       setErro("Erro ao cadastrar. Verifique os dados e tente novamente.");
     }
-  };
-
-  const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setRole(value);
   };
 
   return (
@@ -117,10 +112,10 @@ export default function Cadastro() {
             placeholder="DD/MM/AAAA"
             required
             maxLength={10}
-            value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
+            value={dataNascimento ? formatarDataParaPtBr(dataNascimento) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
-                setData_nascimento(dataLimpa(value));
+                setDataNascimento(dataLimpa(value));
               }
             }}
             onPaste={(e) => {
@@ -145,7 +140,7 @@ export default function Cadastro() {
             placeholder="DD/MM/AAAA"
             required
             maxLength={10}
-            value={data_contratacao ? formatarDataParaPtBr(data_contratacao) : ""}
+            value={dataContratacao ? formatarDataParaPtBr(dataContratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
                 setDataContratacao(dataLimpa(value));
