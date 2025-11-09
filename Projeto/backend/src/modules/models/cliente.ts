@@ -1,7 +1,5 @@
-import { IsDate, isDate } from "class-validator";
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, ManyToOne, JoinColumn } from "typeorm";
-import { CategoriaFunil } from "../../utils/enums/categoriaFunil";
-import { User } from "./usuario";
+import { IsDate } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity('cliente')
 export class Cliente {
@@ -12,17 +10,17 @@ export class Cliente {
     CNPJ: string
 
     @Column({ type: 'varchar', length: 255 })
-    NomeFantasia: string
+    nomeFantasia: string
 
     @IsDate()
     @Column({ type: 'date', default: '2000-01-01' })
-    PrazoFaturamento: Date
+    prazoFaturamento: Date
 
     @Column({ type: 'varchar', length: 255  })
-    ContatoResponsavel: string
+    contatoResponsavel: string
 
     @Column({ type: 'varchar', length: 255 })
-    EmailResponsavel: string
+    emailResponsavel: string
 
     @Column({ type: 'varchar', length: 10 })
     CNAE: string
@@ -30,7 +28,6 @@ export class Cliente {
     @Column({ type: 'varchar', length: 255 })
     descricaoCNAE: string
 
-
-    @Column({ name: 'colaborador_id', type: 'int' })
-    colaborador_id: number
+    @Column({ type: 'int' })
+    colaboradorId: number
 }
