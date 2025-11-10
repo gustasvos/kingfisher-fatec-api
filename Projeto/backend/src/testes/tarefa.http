@@ -1,0 +1,37 @@
+### Criar uma nova tarefa
+POST http://localhost:8080/tarefas
+Content-Type: application/json
+
+{
+  "cliente_id": 1,
+  "vendedor_id": 1,
+  "titulo": "Reunião de acompanhamento",
+  "data": "2025-11-15T14:30:00.000Z",
+  "status": "pendente",
+  "tipo": "reunião",
+  "descricao": "Reunião para acompanhar o andamento do projeto"
+}
+
+### Buscar tarefas pendentes do vendedor
+GET http://localhost:8080/tarefas/pendentes?vendedor_id=1
+Content-Type: application/json
+
+### Buscar uma tarefa específica
+GET http://localhost:8080/tarefas/1
+Content-Type: application/json
+
+### Atualizar uma tarefa
+PUT http://localhost:8080/tarefas/1
+Content-Type: application/json
+
+{
+  "titulo": "Reunião de acompanhamento - ATUALIZADA",
+  "data": "2025-11-16T15:00:00.000Z",
+  "status": "em_andamento",
+  "tipo": "reunião",
+  "descricao": "Reunião remota via Teams"
+}
+
+### Deletar uma tarefa
+DELETE http://localhost:8080/tarefas/1
+Content-Type: application/json
