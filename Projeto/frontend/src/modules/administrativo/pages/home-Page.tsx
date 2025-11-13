@@ -59,7 +59,7 @@ export default function HomePage() {
   }, [user, userId, token]);
 
   return (
-    <div className="min-h-screen flex bg-[var(--bg)] font-sans">
+    <div className="min-h-screen flex bg-slate-50 font-sans">
       <Navbar />
       <main className="flex-1 px-6 py-8">
         <Header user={user} />
@@ -68,6 +68,7 @@ export default function HomePage() {
         <section className="grid grid-cols-12 gap-6 mt-6">
           {/* Lado esquerdo */}
           <div className="col-span-4 space-y-6">
+            <div className="shadow-md">
             <CalendarioHome
               currentMonth={currentMonth}
               currentYear={currentYear}
@@ -75,19 +76,22 @@ export default function HomePage() {
               todayMonth={new Date().getMonth() + 1}
               todayYear={new Date().getFullYear()}
             />
+            </div>
+            <div className="shadow-md">
             <ContadorHome eventos={eventos} />
+            </div>
           </div>
 
           <div className="col-span-8">
             <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white rounded-[12px] shadow-lg p-6 flex flex-col items-center justify-center">
+              <div className="bg-white rounded-[12px] shadow-md p-6 flex flex-col items-center justify-center">
                 <h3 className="font-semibold mb-4 text-black">Locais de Trabalho (Hoje)</h3>
                 <div className="h-[250px] w-full flex items-center justify-center">
                   <GraficoLocalTrabalho periodo="hoje" titulo={""} />
                 </div>
               </div>
 
-              <div className="bg-white rounded-[12px] shadow-lg p-6 flex flex-col items-center justify-center">
+              <div className="bg-white rounded-[12px] shadow-md p-6 flex flex-col items-center justify-center">
                 <h3 className="font-semibold mb-4 text-black">Locais de Trabalho (Últimos 30 dias)</h3>
                 <div className="h-[250px] w-full flex items-center justify-center">
                   <GraficoLocalTrabalho periodo="30dias" titulo={""} />
