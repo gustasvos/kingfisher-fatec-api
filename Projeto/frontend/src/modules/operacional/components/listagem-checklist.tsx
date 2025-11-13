@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Navbar from "../../../shared/components/navbar";
 import instance from "./../../../services/api";
 import { format } from "date-fns";
+import Modal from "../../../shared/components/modal";
+import FormAberturaPage from "../pages/form-abertura-page";
 
 type Checklist = {
   id: string;
@@ -21,6 +23,15 @@ export default function ListagemChecklist() {
   const storedUser = localStorage.getItem("user");
   const parsedUser = storedUser ? JSON.parse(storedUser) : null;
   const userId = parsedUser?.id || "";
+  const [abertoModal, setAbertoModal] = useState(false);
+  const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);
+
+  const abrirModalAbertura = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setConteudoModal(<FormAberturaPage />);
+    setAbertoModal(true);
+  };
+
 
   useEffect(() => {
     if (!userId) return;
@@ -106,7 +117,7 @@ export default function ListagemChecklist() {
               { nome: "Checklist Veículo", link: "/check-veiculo", copiar: true },
               { nome: "Checklist Moto", link: "/check-moto", copiar: true },
               { nome: "Checklist Diário", link: "/check-diario", copiar: false },
-              { nome: "Formulário de Abertura", link: "/form-abertura", copiar: false },
+              { nome: "Formulário de Abertura", acao: abrirModalAbertura, copiar: false },
               { nome: "Formulário de Fechamento", link: "/form-fechamento", copiar: false },
             ].map((form) => (
               <div
@@ -126,14 +137,21 @@ export default function ListagemChecklist() {
                   >
                     Copiar link
                   </button>
-                ) : (
-                  <a
-                    href={form.link}
-                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm text-center"
-                  >
-                    Abrir página
-                  </a>
-                )}
+                ) : form.acao ? ( 
+                    <button
+                      onClick={form.acao}
+                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm text-center"
+                    >
+                      Abrir formulário
+                    </button>
+                  ) : (
+                    <a
+                      href={form.link}
+                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm text-center"
+                    >
+                      Abrir página
+                    </a>
+                  )}
               </div>
             ))}
           </div>
@@ -144,31 +162,28 @@ export default function ListagemChecklist() {
 
         <div className="flex gap-4 mb-4">
           <button
-            className={`px-4 py-2 rounded ${
-              filtro === "diario"
-                ? "bg-[#007bff] text-white"
-                : "bg-white text-black border border-gray-300"
-            }`}
+            className={`px-4 py-2 rounded ${filtro === "diario"
+              ? "bg-[#007bff] text-white"
+              : "bg-white text-black border border-gray-300"
+              }`}
             onClick={() => setFiltro("diario")}
           >
             Hoje
           </button>
           <button
-            className={`px-4 py-2 rounded ${
-              filtro === "semanal"
-                ? "bg-[#007bff] text-white"
-                : "bg-white text-black border border-gray-300"
-            }`}
+            className={`px-4 py-2 rounded ${filtro === "semanal"
+              ? "bg-[#007bff] text-white"
+              : "bg-white text-black border border-gray-300"
+              }`}
             onClick={() => setFiltro("semanal")}
           >
             Semana
           </button>
           <button
-            className={`px-4 py-2 rounded ${
-              filtro === "mensal"
-                ? "bg-[#007bff] text-white"
-                : "bg-white text-black border border-gray-300"
-            }`}
+            className={`px-4 py-2 rounded ${filtro === "mensal"
+              ? "bg-[#007bff] text-white"
+              : "bg-white text-black border border-gray-300"
+              }`}
             onClick={() => setFiltro("mensal")}
           >
             Mês
@@ -190,9 +205,8 @@ export default function ListagemChecklist() {
             {checklistsFiltrados.map((c, idx) => (
               <div
                 key={c.id}
-                className={`border-b border-gray-200 ${
-                  idx % 2 === 0 ? "bg-[#f8fbff]" : "bg-white"
-                }`}
+                className={`border-b border-gray-200 ${idx % 2 === 0 ? "bg-[#f8fbff]" : "bg-white"
+                  }`}
               >
                 <div className="grid grid-cols-5 gap-4 px-4 py-2 text-left text-black">
                   <div>{c.checklist}</div>
@@ -226,6 +240,9 @@ export default function ListagemChecklist() {
           </div>
         )}
       </main>
+      <Modal aberto={abertoModal} onFechar={() => setAbertoModal(false)}>
+        {conteudoModal}
+      </Modal>
     </section>
   );
 }

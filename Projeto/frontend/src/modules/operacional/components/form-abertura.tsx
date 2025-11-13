@@ -10,7 +10,6 @@ export default function FormAbertura({ form }: FormAberturaProps) {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const [quemEstaPreenchendo, setQuemEstaPreenchendo] = useState("");
   const [dataAbertura, setDataAbertura] = useState("");
   const [cadeadoFrenteEmp, setCadeadoFrenteEmp] = useState<string | null>(null);
   const [portaoSocial, setPortaoSocial] = useState<string | null>(null);
@@ -48,7 +47,6 @@ export default function FormAbertura({ form }: FormAberturaProps) {
         return valor.includes('-sim') ? 'SIM' : 'NÃO';
       };
 
-      if (quemEstaPreenchendo) formData.append('quem-esta-preenchendo', quemEstaPreenchendo);
       if (dataAbertura) formData.append('data-abertura-empresa', dataAbertura);
       if (cadeadoFrenteEmp) formData.append('abriu-cadeado-correntes-frente', converterParaSimNao(cadeadoFrenteEmp));
       if (portaoSocial) formData.append('abriu-portao-social', converterParaSimNao(portaoSocial));
@@ -97,7 +95,7 @@ export default function FormAbertura({ form }: FormAberturaProps) {
   };
 
   return (
-    <div className="w-full flex justify-center mt-8 px-4">
+    <div className=" flex justify-center mt-8 px-4">
       <div className="bg-white shadow-lg rounded-3xl w-full max-w-5xl h-[90vh] border border-gray-100 overflow-hidden">
         <div className="h-full overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
           <h1 className="text-3xl font-semibold text-gray-800 mb-4 text-center tracking-tight">
@@ -111,17 +109,6 @@ export default function FormAbertura({ form }: FormAberturaProps) {
           </p>
 
           <form onSubmit={enviaForm} className="space-y-6">
-
-            <InputLine
-              type="text"
-              id="quem-esta-preenchendo"
-              htmlFor="quem-esta-preenchendo"
-              required
-              value={quemEstaPreenchendo}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setQuemEstaPreenchendo(e.target.value)}
-            >
-              Quem está preenchendo?
-            </InputLine>
 
             <InputLine
               type="date"
