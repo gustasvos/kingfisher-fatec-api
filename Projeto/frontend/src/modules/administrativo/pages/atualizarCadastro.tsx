@@ -43,9 +43,9 @@ interface AtualizarCadastroProps {
 export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
-  const [data_nascimento, setData_nascimento] = useState("");
+  const [dataNascimento, setdataNascimento] = useState("");
   const [genero, setGenero] = useState("");
-  const [data_contratacao, setDataContratacao] = useState("");
+  const [dataContratacao, setDataContratacao] = useState("");
   const [cargo, setCargo] = useState("");
   const [setor, setSetor] = useState("");
   const [senha, setSenha] = useState("");
@@ -70,9 +70,9 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
 
         setNome(usuario.nome);
         setCpf(usuario.cpf);
-        setData_nascimento(usuario.data_nascimento);
+        setdataNascimento(usuario.dataNascimento);
         setGenero(usuario.genero);
-        setDataContratacao(usuario.data_contratacao);
+        setDataContratacao(usuario.dataContratacao);
         setCargo(usuario.cargo);
         setSetor(usuario.setor);
         setRole(usuario.role || "usuario");
@@ -96,9 +96,9 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
     const payload: {
       nome: string
       cpf: string
-      data_nascimento: string
+      dataNascimento: string
       genero: string
-      data_contratacao: string
+      dataContratacao: string
       cargo: string
       setor: string
       role: string
@@ -106,9 +106,9 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
     } = {
       nome: limparTexto(nome),
       cpf: cpf.replace(/\D/g, ""),
-      data_nascimento,
+      dataNascimento,
       genero: genero.trim().charAt(0).toLowerCase(),
-      data_contratacao,
+      dataContratacao,
       cargo: limparTexto(cargo),
       setor: limparTexto(setor),
       role: limparTexto(role.toLowerCase()),
@@ -176,10 +176,10 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
             placeholder="DD/MM/AAAA"
             required
             maxLength={10}
-            value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
+            value={dataNascimento ? formatarDataParaPtBr(dataNascimento) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
-                setData_nascimento(dataLimpa(value));
+                setdataNascimento(dataLimpa(value));
               }
             }}
           />
@@ -200,7 +200,7 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
             placeholder="DD/MM/AAAA"
             required
             maxLength={10}
-            value={data_contratacao ? formatarDataParaPtBr(data_contratacao) : ""}
+            value={dataContratacao ? formatarDataParaPtBr(dataContratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
                 setDataContratacao(dataLimpa(value));
@@ -247,7 +247,6 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
               className="w-full px-4 py-2 rounded-md text-black"
             >
               <option value="">Selecione</option>
-              <option value="usuario">Usuário</option>
               <option value="admin">Administrador</option>
               <option value="comercial">Comercial</option>
               <option value="operacional">Operacional</option>
