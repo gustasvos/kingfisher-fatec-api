@@ -18,6 +18,7 @@ export default function ListaCliente() {
         instance.get<Cliente[]>(`/cliente/comercial/${userId}`)
             .then((response: any) => {
                 setCliente(response.data)
+                console.log(cliente)
             })
             .catch((error: any) =>
                 console.error("Erro ao buscar colaboradores:", error)
@@ -52,7 +53,7 @@ export default function ListaCliente() {
 
     return (
         <>
-            <section className="bg-[#d4eeff] flex">
+            <section className="flex">
                 <section>
                     <Navbar />
                 </section>
