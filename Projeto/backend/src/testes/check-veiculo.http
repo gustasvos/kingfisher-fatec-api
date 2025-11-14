@@ -116,10 +116,6 @@ Content-Disposition: form-data; name="faixas-reflexivas"
 
 SIM
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="sistema-eletrico"
-
-SIM
-------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="limpador-parabrisa"
 
 SIM
@@ -192,12 +188,22 @@ Content-Disposition: form-data; name="bota-seguranca"
 
 SIM
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="fotos-gerais"; filename="foto-geral01.jpg"
+Content-Disposition: form-data; name="fotos-frente-veiculo"; filename="foto-geral01.jpg"
 Content-Type: image/jpeg
 
 < ./img-teste/foto-geral01.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="fotos-gerais"; filename="foto-geral02.jpg"
+Content-Disposition: form-data; name="fotos-lateral-dianteira"; filename="foto-geral02.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/foto-geral02.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fotos-lateral-esquerda"; filename="foto-geral01.jpg"
+Content-Type: image/jpeg
+
+< ./img-teste/foto-geral01.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fotos-traseira-veiculo"; filename="foto-geral02.jpg"
 Content-Type: image/jpeg
 
 < ./img-teste/foto-geral02.jpg
