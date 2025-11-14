@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 't
 import { User } from './usuario'
 import { LocalTrabalho } from '../../utils/enums/usuarioLocalEnums'
 
-@Entity('usuarioLocal')
+@Entity('usuario_local')
 export class UsuarioLocal {
   @PrimaryGeneratedColumn()
   id: number
