@@ -153,29 +153,32 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
           <InputField
             label="Nome Completo"
             type="text"
-            placeholder="Digite o nome completo"
+            placeholder=""
             required
             maxLength={100}
             value={nome}
+            classNameInput='w-[400px]'
             onChange={(e) => setNome(e.target.value)}
           />
 
           <InputMaskField
             label="CPF"
             mask="000.000.000-00"
-            placeholder="Digite o CPF"
+            placeholder=""
             required
             maxLength={14}
             value={cpf}
+            classNameInput='w-[400px]'
             onAccept={(value: string) => setCpf(value)}
           />
 
           <InputMaskField
-            label="Data de Nascimento"
+            label="Data de Nascimento(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
+            classNameInput='w-[400px]'
             value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
@@ -185,21 +188,23 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
           />
 
           <InputField
-            label="Gênero"
+            label="Gênero(Ex: Masculino, Feminino, Outro)"
             type="text"
-            placeholder="Ex: Masculino, Feminino, Outro"
+            placeholder=""
             required
             maxLength={20}
             value={generoCompleto(genero)}
+            classNameInput='w-[400px]'
             onChange={(e) => setGenero(e.target.value)}
           />
 
           <InputMaskField
-            label="Data de Admissão"
+            label="Data de Admissão(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
+            classNameInput='w-[400px]'
             value={data_contratacao ? formatarDataParaPtBr(data_contratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
@@ -211,29 +216,32 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
           <InputField
             label="Cargo"
             type="text"
-            placeholder="Digite o cargo"
+            placeholder=""
             required
             maxLength={50}
             value={cargo}
+            classNameInput='w-[400px]'
             onChange={(e) => setCargo(e.target.value)}
           />
 
           <InputField
             label="Setor"
             type="text"
-            placeholder="Digite o setor"
+            placeholder=""
             required
             maxLength={50}
             value={setor}
+            classNameInput='w-[400px]'
             onChange={(e) => setSetor(e.target.value)}
           />
 
           <InputField
-            label="Senha"
+            label="Digite a nova senha"
             type="password"
-            placeholder="Digite a nova senha"
+            placeholder=""
             maxLength={100}
             value={senha}
+            classNameInput='w-[400px]'
             onChange={(e) => setSenha(e.target.value)}
           />
 
