@@ -4,6 +4,9 @@ import instance from "./../../../services/api";
 import { format } from "date-fns";
 import Modal from "../../../shared/components/modal";
 import FormAberturaPage from "../pages/form-abertura-page";
+import FormFechamentoPage from "../pages/form-fechamento-page";
+import CheckDiario from "./check-diario";
+import CheckDiarioPage from "../pages/check-diario-page";
 
 type Checklist = {
   id: string;
@@ -27,11 +30,23 @@ export default function ListagemChecklist() {
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);
 
   const abrirModalAbertura = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setConteudoModal(<FormAberturaPage />);
-    setAbertoModal(true);
-  };
+    e.preventDefault()
+    setConteudoModal(<FormAberturaPage />)
+    setAbertoModal(true)
+  }
 
+  const abrirModalFechamento = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<FormFechamentoPage/>)
+    setAbertoModal(true)
+  }
+  
+  const abrirModalDiario = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<CheckDiarioPage/>)
+    setAbertoModal(true)
+  }
+  
 
   useEffect(() => {
     if (!userId) return;
@@ -116,9 +131,9 @@ export default function ListagemChecklist() {
             {[
               { nome: "Checklist Veículo", link: "/check-veiculo", copiar: true },
               { nome: "Checklist Moto", link: "/check-moto", copiar: true },
-              { nome: "Checklist Diário", link: "/check-diario", copiar: false },
+              { nome: "Checklist Diário", acao:abrirModalDiario, copiar: false },
               { nome: "Formulário de Abertura", acao: abrirModalAbertura, copiar: false },
-              { nome: "Formulário de Fechamento", link: "/form-fechamento", copiar: false },
+              { nome: "Formulário de Fechamento", acao:abrirModalFechamento, copiar: false },
             ].map((form) => (
               <div
                 key={form.link}
