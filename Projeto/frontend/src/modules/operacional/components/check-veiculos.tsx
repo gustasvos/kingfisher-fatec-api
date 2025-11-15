@@ -255,7 +255,7 @@ export default function CheckVeiculos({ form }: FormAberturaProps) {
                 name: nomeMotorista,
                 "cpf-motorista": cpfMotorista.replace(/[.\-\/]/g, ''),
                 "email-motorista": emailMotorista.trim(),
-                "placa-veiculo": placaVeiculo.replace(/[.\-\/]/g, ''),
+                "placa-veiculo": placaVeiculo.replace(/[^A-Z0-9]/g, ""),
                 "tipo-veiculo": tipoVeiculo,
 
                 // Sessão 2: Motor
