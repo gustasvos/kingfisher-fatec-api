@@ -14,6 +14,7 @@ interface InputMaskFieldProps {
   maxLength?: number; // <- ADICIONE ESSA LINHA
   onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void;
   style?: React.CSSProperties;
+  classNameInput?: string
 }
 
 const InputMaskField: React.FC<InputMaskFieldProps> = ({
@@ -24,22 +25,36 @@ const InputMaskField: React.FC<InputMaskFieldProps> = ({
   required,
   value,
   onAccept,
-  maxLength, // <- e aqui
-  style
+  maxLength,
+  style,
+  classNameInput
 }) => {
   return (
-    <div className="input">
-      <label className={`label ${classNameLabel || ''}`}>{label}</label>
+    <div className="relative w-[300px]">
+
       <IMaskInput
         mask={mask}
         placeholder={placeholder}
         required={required}
         value={value}
         onAccept={(value: any) => onAccept(value)}
-        maxLength={maxLength} // <- aqui também
-        className="input-style"
+        maxLength={maxLength} 
+        className={`  peer
+          w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5
+          text-sm text-gray-900 border-0 border-b-2 border-gray-300
+          appearance-none focus:outline-none focus:ring-0
+          focus:border-blue-600 ${classNameInput}`}
         style={style}
       />
+      <label className={`absolute text-sm text-gray-500 duration-300 transform 
+          top-4 z-10 origin-[0] start-2.5
+          peer-focus:-translate-y-4
+          peer-focus:scale-75
+          peer-focus:text-blue-600
+          ${value ? "-translate-y-4 scale-75" : "translate-y-0 scale-100"}
+          ${classNameLabel}`}>
+        {label}
+      </label>
     </div>
   );
 };
