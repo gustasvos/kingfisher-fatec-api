@@ -68,7 +68,9 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
     const validationError = await validateFormData(fieldsToValidate, validationSchema, currentCsvPath);
     if (validationError) {
       await deleteUserUploadFolder(files);
-      return res.status(400).json({ message: validationError });
+      console.log('Erro de validação:', validationError); // debug
+      return res.status(400).json({  field: validationError.field,
+    message: validationError.message, });
     }
 
     // 4. Processamento dos arquivos
@@ -92,7 +94,8 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
           rowToSave[field.name] = filePaths.length === 1 ? filePaths[0] : JSON.stringify(filePaths);
         } else if (field.required) {
           await deleteUserUploadFolder(files);
-          return res.status(400).json({ message: `Campo de upload obrigatório "${field.name}" não preenchido.` });
+          return res.status(400).json({ field: field.name,
+            message: `Campo de upload obrigatório "${field.name}" não preenchido.` });
         }
       }
     }

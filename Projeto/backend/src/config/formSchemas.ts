@@ -30,7 +30,7 @@ const ResponsavelVistoria = [
 
 const regexTipoVeiculo = new RegExp(`^(${TipoVeiculo.map(escapeForRegex).join('|')})$`, 'i');
 const regexResponsavelVistoria = new RegExp(`^(${ResponsavelVistoria.map(escapeForRegex).join('|')})$`, 'i');
-const regexSimNaoNa = /^(SIM|NÃO|N\/A)$/i;
+const regexSimNaoNa = /^(SIM|NÃO)$/i;
 const regexSimNao = /^(SIM|NÃO)$/i;
 const regexPlaca = /^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$/i; 
 const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -87,7 +87,6 @@ export const checkVeiculosAgregadosSchema: FormField[] = [
   { name: 'amassados-ferrugens', required: true, regex: regexSimNaoNa, type: "radio" },
   { name: 'estado-assoalho', required: true, regex: regexSimNaoNa, type: "radio" },
   { name: 'faixas-reflexivas', required: true, regex: regexSimNaoNa, type: "radio" },
-  { name: 'sistema-eletrico', required: true, regex: regexSimNaoNa, type: "radio" },
   { name: 'limpador-parabrisa', required: true, regex: regexSimNaoNa, type: "radio" },
   { name: 'estado-buzina', required: true, regex: regexSimNaoNa, type: "radio" },
   { name: 'farol-alto', required: true, regex: regexSimNaoNa, type: "radio" },
@@ -106,7 +105,10 @@ export const checkVeiculosAgregadosSchema: FormField[] = [
   { name: 'capacete-seguranca', required: true, regex: regexSimNaoNa, type: "radio" },
   { name: 'colete-seguranca', required: true, regex: regexSimNaoNa, type: "radio" },
   { name: 'bota-seguranca', required: true, regex: regexSimNaoNa, type: "radio" },
-  { name: 'fotos-gerais', required: true, type: "upload" }, 
+  { name: 'fotos-frente-veiculo', required: true, type: "upload" },
+  { name: 'fotos-lateral-dianteira', required: true, type: "upload" }, 
+  { name: 'fotos-lateral-esquerda', required: true, type: "upload" },
+  { name: 'fotos-traseira-veiculo', required: true, type: "upload" },   
   { name: 'observacoes', required: false, type: "string" },
   { name: 'nome-vistor', required: true, regex: regexResponsavelVistoria, type: "radio", options: ResponsavelVistoria }, 
   { name: 'nome-vistor-outro', required: false, regex: /^[A-Za-zÀ-ú\s]{2,}$/, type: "string" } 
