@@ -187,7 +187,7 @@ export default function FormFechamento({form}: FormAberturaProps) {
     };
 
     return (
-        <div className="w-full flex justify-center mt-8 px-4">
+        <div className="flex justify-center mt-8 px-4">
         <div className="bg-white shadow-lg rounded-3xl w-full max-w-5xl h-[90vh] border border-gray-100 overflow-hidden">
         <div className="h-full overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-[#17607f] scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
         <section>
