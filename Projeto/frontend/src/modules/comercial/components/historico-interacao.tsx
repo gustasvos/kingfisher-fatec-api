@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import InteracaoManual from "./interacao-manual";
+import RegistroManual from "./registroManual";
+import instance from "../../../services/api";
 
 interface Interacao {
   id: number;
@@ -9,13 +10,21 @@ interface Interacao {
   observacao: string;
 }
 
-export const HistoricoInteracao: React.FC = () => {
+interface HistoricoInteracaoProps {
+  clienteId: number;
+}
+
+const formatDate = (isoDate: string) => {
+  const [year, month, day] = isoDate.split("-");
+  return `${day}/${month}/${year}`;
+}
+
+export const HistoricoInteracao: React.FC<HistoricoInteracaoProps> = ({ clienteId }) => {
   const [interacoes, setInteracoes] = useState<Interacao[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const handleNovaInteracao = () => {
-    console.log("Abrir modal de nova interação");
     setShowModal(true);
   };
 
@@ -24,23 +33,22 @@ export const HistoricoInteracao: React.FC = () => {
   };
 
   useEffect(() => {
-    const carregarInteracoes = async () => {
+    const carregarRegistros = async () => {
       try {
-        const response = await fetch("https://"); // substiuir pelo caminho do nosso back
-        if (!response.ok) {
-          throw new Error(`Erro HTTP: ${response.status}`);
-        }
-        const dados = await response.json();
-        setInteracoes(dados);
-      } catch (erro) {
-        console.error("Erro ao buscar dados:", erro);
+        setLoading(true);
+
+        const response = await instance.get(`/registroCliente/cliente/${clienteId}`);
+
+        setInteracoes(response.data);
+      } catch (error: any) {
+        console.error("Erro ao carregar histórico de interações:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    carregarInteracoes();
-  }, []);
+    if (clienteId) carregarRegistros();
+  }, [clienteId]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
@@ -103,7 +111,7 @@ export const HistoricoInteracao: React.FC = () => {
             >
               ✕
             </button>
-            <InteracaoManual onClose={handleCloseModal} />
+            <RegistroManual onClose={handleCloseModal} clienteId={clienteId} />
           </div>
         </div>
       )}

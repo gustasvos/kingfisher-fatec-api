@@ -25,6 +25,27 @@ const formatarDataParaPtBr = (dataIso: string): string => {
   return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
 };
 
+// Verifica se a pessoa tem pelo menos 16 anos
+const isMaiorIdade = (dataIso: string) => {
+  const hoje = new Date()
+  const nascimento = new Date(dataIso)
+
+  const limite = new Date()
+  limite.setFullYear(hoje.getFullYear() - 16)
+
+  return nascimento <= limite
+}
+
+// Verifica se a data é no futuro
+const isDataNoFuturo = (dataIso: string) => {
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+
+  const data = new Date(dataIso)
+  return data > hoje
+}
+
+
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
@@ -44,6 +65,27 @@ export default function Cadastro() {
     setErro(null);
     setSucesso(null);
 
+    // validações
+    if (!dataNascimento || !dataContratacao) {
+      setErro("Preencha as datas corretamente.")
+      return
+    }
+
+    if (isDataNoFuturo(dataNascimento)) {
+      setErro("Data de nascimento inválida.")
+      return
+    }
+
+    if (!isMaiorIdade(dataNascimento)) {
+      setErro("O usuário deve ter mais de 16 anos.")
+      return
+    }
+
+    if (isDataNoFuturo(dataContratacao)) {
+      setErro("A data de contratação inválida.")
+      return
+    }
+
     const limparTexto = (texto: string) => {
       return texto
         .replace(/[^\p{L}\sçÇ]/gu, '')
@@ -51,17 +93,17 @@ export default function Cadastro() {
         .trim();
     };
 
-  const payload = {
-    nome: limparTexto(nome),
-    cpf: cpf.replace(/\D/g, ""),
-    genero: genero.trim().charAt(0).toUpperCase(),
-    dataNascimento,
-    cargo: limparTexto(cargo),
-    senha,
-    dataContratacao,
-    role,
-    setor: limparTexto(setor)
-  };
+    const payload = {
+      nome: limparTexto(nome),
+      cpf: cpf.replace(/\D/g, ""),
+      genero: genero.trim().charAt(0).toUpperCase(),
+      dataNascimento,
+      cargo: limparTexto(cargo),
+      senha,
+      dataContratacao,
+      role,
+      setor: limparTexto(setor)
+    };
 
 
     try {
@@ -192,7 +234,6 @@ export default function Cadastro() {
               className="w-full px-4 py-2 rounded-md text-black"
             >
               <option value="">Selecione</option>
-              <option value="usuario">Usuário</option>
               <option value="admin">Administrador</option>
               <option value="comercial">Comercial</option>
               <option value="operacional">Operacional</option>

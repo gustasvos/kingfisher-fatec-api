@@ -4,6 +4,7 @@ import Modal from "../../../shared/components/modal"
 import CadastroCliente from "../pages/cadastrocliente"
 import { FiEdit2, FiTrash2, FiClock, FiCalendar } from "react-icons/fi"
 import AgendamentoCliente from "../pages/agendamento-cliente"
+import { HistoricoInteracao } from "./historico-interacao"
 
 export type ClienteCardProps = {
   cliente: Cliente
@@ -19,10 +20,13 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
     setAbertoModal(true)
   }
 
-  const abrirModalHistorico = () => {
-    alert("Abrir modal com o histórico de interações do cliente.")
+  const abrirModalHistorico = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<HistoricoInteracao clienteId={cliente.id} />)
+    setAbertoModal(true)
   }
 
+  // esse ainda nao
   const abrirModalAgendar = (e: React.MouseEvent) => {
     e.preventDefault()
     setConteudoModal(<AgendamentoCliente nomeCliente={cliente.NomeFantasia}/>)

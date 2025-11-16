@@ -5,7 +5,8 @@ import {
   listRegistroByComercial,
   updateRegistro,
   deleteRegistro,
-  createRegistro
+  createRegistro,
+  listRegistroByCliente
 } from "./../controllers/registroClienteController"
 
 const router = express.Router()
@@ -17,6 +18,8 @@ router.get(
   autorizarUsuario(["comercial", "admin-comercial"]),
   listRegistroByComercial
 )
+
+router.get("/registroCliente/cliente/:clienteId", autenticarUsuario, autorizarUsuario(["comercial", "admin-comercial"]), listRegistroByCliente)
 
 // Atualizar um registro
 router.put(

@@ -16,7 +16,7 @@ export class RegistroCliente {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     dataRegistro: Date
 
-    @Column({ type: 'varchar', length: 500 })
+    @Column({ type: 'varchar', length: 500, default: 'Novo contato registrado' })
     observacao: string
 
     @ManyToOne(() => Cliente, (cliente) => cliente.id, { onDelete: 'CASCADE' })

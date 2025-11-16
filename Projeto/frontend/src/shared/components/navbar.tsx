@@ -18,7 +18,6 @@ import imgFunilVendas from './../../assets/imgFunilVendas.png';
 // Componentes e modais
 import Modal from "./modal";
 import Cadastro from "../../modules/administrativo/pages/PaginaCadastro";
-import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
 import CadastroCliente from "../../modules/comercial/pages/cadastrocliente";
 
 export default function Navbar() {
@@ -54,7 +53,7 @@ export default function Navbar() {
   // 🔹 Renderiza menus conforme o role do usuário
   const renderMenuPorRole = () => {
     switch (role) {
-      // ------------------ ADMINISTRATIVO ------------------
+      // ------------------ ADMNISTRATIVO ------------------
       case "admin":
         return (
           <>

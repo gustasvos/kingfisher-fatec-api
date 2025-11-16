@@ -49,6 +49,50 @@ export const listRegistroByComercial = async (req: Request, res: Response) => {
     }
 }
 
+// Rota: GET /registroCliente/cliente/:clienteId
+export const listRegistroByCliente = async (req: Request, res: Response) => {
+  try {
+    const { clienteId } = req.params
+    const user = req.user // autenticado pelo middleware
+
+    const registroRepository = AppDataSource.getRepository(RegistroCliente)
+    const clienteRepository = AppDataSource.getRepository(Cliente)
+
+    // Busca cliente e valida acesso
+    const cliente = await clienteRepository.findOneBy({ id: parseInt(clienteId!) })
+    if (!cliente) {
+      return res.status(404).json({ message: "Cliente não encontrado" })
+    }
+
+    // Só o dono do cliente ou admin-comercial pode ver
+    if (user?.cargo !== "admin-comercial" && cliente.colaboradorId !== user!.id) {
+      return res.status(403).json({ message: "Acesso negado" })
+    }
+
+    // Busca registros
+    const registros = await registroRepository.find({
+      where: { cliente: { id: parseInt(clienteId!) } },
+      relations: ["cliente", "categoria"],
+      order: { dataRegistro: "DESC" },
+    })
+
+    // Mapeia para o formato usado no front
+    const resposta = registros.map((r) => ({
+      id: r.id,
+      categoria: r.categoria?.categoria || "—",
+      data: r.dataRegistro,
+      contato: r.cliente?.contatoResponsavel || "—",
+      observacao: r.observacao || "—",
+    }))
+
+    return res.status(200).json(resposta)
+  } catch (error) {
+    console.error("Erro ao listar registros por cliente:", error)
+    return res.status(500).json({ message: "Erro ao listar registros por cliente" })
+  }
+}
+
+
 export const updateRegistro = async (req: Request, res: Response) => {
   try {
     const { id_registroCliente } = req.params
