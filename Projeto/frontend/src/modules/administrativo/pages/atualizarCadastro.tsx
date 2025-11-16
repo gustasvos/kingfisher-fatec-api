@@ -22,6 +22,26 @@ const formatarDataParaPtBr = (dataIso: string): string => {
   return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
 };
 
+// Verifica se a pessoa tem pelo menos 16 anos
+const isMaiorIdade = (dataIso: string) => {
+  const hoje = new Date()
+  const nascimento = new Date(dataIso)
+
+  const limite = new Date()
+  limite.setFullYear(hoje.getFullYear() - 16)
+
+  return nascimento <= limite
+}
+
+// Verifica se a data é no futuro
+const isDataNoFuturo = (dataIso: string) => {
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+
+  const data = new Date(dataIso)
+  return data > hoje
+}
+
 const generoCompleto = (letra: string) => {
   switch (letra.toUpperCase()) {
     case 'M':
@@ -89,6 +109,27 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
     e.preventDefault();
     setErro(null);
     setSucesso(null);
+
+    // validações
+    if (!dataNascimento || !dataContratacao) {
+      setErro("Preencha as datas corretamente.")
+      return
+    }
+
+    if (isDataNoFuturo(dataNascimento)) {
+      setErro("Data de nascimento inválida.")
+      return
+    }
+
+    if (!isMaiorIdade(dataNascimento)) {
+      setErro("O usuário deve ter mais de 16 anos.")
+      return
+    }
+
+    if (isDataNoFuturo(dataContratacao)) {
+      setErro("A data de contratação inválida.")
+      return
+    }
 
     const limparTexto = (texto: string) =>
       texto.replace(/[^\p{L}\sçÇ]/gu, '').replace(/\s+/g, ' ').trim();
