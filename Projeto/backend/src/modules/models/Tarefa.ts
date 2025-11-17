@@ -1,36 +1,53 @@
-// src/modules/models/Tarefa.ts
-export interface Tarefa {
-  id?: number;
-  cliente_id: number;
-  vendedor_id: number;
-  titulo: string;
-  data: string;
-  status: 'pendente' | 'em_andamento' | 'concluida';
-  tipo?: string;
-  descricao?: string;
-  created_at?: string;
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Cliente } from './cliente';
+import { User } from './usuario';
+ 
+export enum StatusTarefa {
+    PENDENTE = 'pendente',
+    CONCLUIDA = 'concluida',
+    CANCELADA = 'cancelada',
 }
-
-export interface TarefaWithCliente extends Tarefa {
-  cliente_nome?: string;
-  ContatoResponsavel?: string;
-  NomeFantasia?: string;
+ 
+export enum TipoTarefa {
+    LIGACAO = 'ligacao',
+    EMAIL = 'email',
+    VISITA = 'visita',
+    REUNIAO = 'reuniao',
+    OUTRO = 'outro',
 }
-
-export interface CreateTarefaData {
-  cliente_id: number;
-  titulo: string;
-  data: string;
-  status?: 'pendente' | 'em_andamento' | 'concluida';
-  tipo?: string;
-  descricao?: string;
-  vendedor_id: number;
-}
-
-export interface UpdateTarefaData {
-  titulo?: string;
-  data?: string;
-  status?: 'pendente' | 'em_andamento' | 'concluida';
-  tipo?: string;
-  descricao?: string;
-}
+ 
+@Entity('tarefas')
+export class Tarefa {
+    @PrimaryGeneratedColumn()
+    id: number;
+ 
+    @Column({ type: 'varchar', length: 255 })
+    titulo: string;
+ 
+    @Column({ type: 'date' })
+    data: Date;
+ 
+    @Column({
+        type: 'enum',
+        enum: StatusTarefa,
+        default: StatusTarefa.PENDENTE,
+    })
+    status: StatusTarefa;
+ 
+    @Column({
+        type: 'enum',
+        enum: TipoTarefa,
+    })
+    tipo: TipoTarefa;
+ 
+    @Column({ type: 'text', nullable: true })
+    descricao: string;
+ 
+    @ManyToOne(() => Cliente, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'cliente_id' })
+    cliente: Cliente;
+ 
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'vendedor_id' })
+    vendedor: User;
+  }
