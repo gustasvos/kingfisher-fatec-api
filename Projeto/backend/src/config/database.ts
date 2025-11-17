@@ -14,6 +14,7 @@ import { AgendamentoCliente } from '../modules/models/agendamentoCliente'
 import { ClienteSubscriber } from "../modules/subscribers/ClienteSubscriber"
 import { seedCategorias } from "../modules/seeds/seedCategorias"
 dotenv.config()
+import { Tarefa } from '../modules/models/Tarefa'
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
@@ -24,7 +25,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME!,
     synchronize: true,
     logging: true,
-    entities: [User, Evento, EventoConvidado, EventoResposta, UsuarioLocal, Cliente, RegistroCliente, ClienteCategoria, AgendamentoCliente],
+    entities: [User, Evento, EventoConvidado, EventoResposta, UsuarioLocal, Cliente, RegistroCliente, ClienteCategoria, AgendamentoCliente, Tarefa],
     subscribers: [ClienteSubscriber],
     migrations: [__dirname + './migration/*.js'],
 })
