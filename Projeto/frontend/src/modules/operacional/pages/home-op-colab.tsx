@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import HighlightCard from '../../../shared/components/highlight-card';
 import { FaRegEdit, FaEye, FaCalendar } from 'react-icons/fa'
 import Navbar from '../../../shared/components/navbar';
 import Header from '../../../shared/components/header';
-import { Link, useNavigate } from 'react-router-dom';
-import { Subtitles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { User } from '../../../shared/components/header';
 import instance from "../../../services/api";
 import Loading from '../../../shared/components/loading';
+import Modal from '../../../shared/components/modal';
+import LocalTrabalho from '../../administrativo/components/localTrabalho';
 
 
 const HomeOpColabPage: React.FC = () => {
@@ -20,8 +21,11 @@ const HomeOpColabPage: React.FC = () => {
     "Formulário de fechamento",
     "Formulário de manutenção predial",
   ]
-
+  
   // ESTADOS
+  const [mostrarModal, setMostrarModal] = useState(false);  
+  const [localTrabalhoUpdateKey, setLocalTrabalhoUpdateKey] = useState(0);
+
   const [user, setUser] = useState<User | null>(null)
   const [checklistsPreenchidos, setChecklistsPreenchidos] = useState<number | null>(null);
   const [loadingCheck, setLoadingCheck] = useState(true);
@@ -32,7 +36,7 @@ const HomeOpColabPage: React.FC = () => {
   const [checklistsRestantes, setChecklistsRestantes] = useState(0)
   const [loadingUser, setLoadingUser] = useState(true);
   const [loadingEventos, setLoadingEventos] = useState(true);
-
+  
   // Estado calculado quando os dados mudam
   const [totalForms, setTotalForms] = useState(checklistsForms.length)
 
@@ -41,7 +45,53 @@ const HomeOpColabPage: React.FC = () => {
   const token = localStorage.getItem("token");
   const parsedUser = storedUser ? JSON.parse(storedUser) : null;
   const userId = parsedUser?.id || null;
+  
+  const checkModal = useCallback(async () => {
+    if (!userId || !token) return;
+    try {
+      const resp = await instance.get(`/usuario/${userId}/local/check`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMostrarModal(resp.data?.mostrarModal ?? false);
+    } catch (error) {
+      console.error("Erro ao checar modal:", error);
+    }
+  }, [userId, token]);
+  
+  
+  const fetchEventos = useCallback(() => {
+    if (!token) return;
+    instance
+    .get("/admin/events", { headers: { Authorization: `Bearer ${token}` } })
+    .then((res) => setEventos(res.data))
+    .catch((err) => console.error("Erro ao buscar eventos:", err));
+  }, [token]);
+  
+  useEffect(() => {
+    fetchEventos();
+  }, [token, fetchEventos]);
 
+  useEffect(() => {
+    if (user) {
+      checkModal();
+    }
+  }, [user, checkModal, localTrabalhoUpdateKey]);
+
+  const handleLocalTrabalhoClose = () => {
+    setMostrarModal(false);
+    setLocalTrabalhoUpdateKey(prev => prev + 1);
+  };
+
+  useEffect(() => {
+    if (userId) {
+      instance
+        .get(`/usuario/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setUser(res.data))
+        .catch((error) => console.error("Erro ao buscar usuário:", error));
+    }
+  }, [userId]);
   // FUNÇÕES DE NAVEGAÇÃO
   const irEventosColaborador = () => { navigate("/eventos-colaborador") }
   const irRespostaEventos = () => { navigate("/resposta-eventos") }
@@ -241,6 +291,10 @@ const HomeOpColabPage: React.FC = () => {
           onClick={irCheckColaborador}
         />
       </div >
+        {/* Modal LocalTrabalho */}
+        <Modal aberto={mostrarModal} onFechar={() => setMostrarModal(false)} modalClassName="">
+          <LocalTrabalho onFechar={handleLocalTrabalhoClose} />
+        </Modal>
 
     </>
   );
