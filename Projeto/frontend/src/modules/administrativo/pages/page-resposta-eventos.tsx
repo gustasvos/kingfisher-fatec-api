@@ -221,7 +221,7 @@ const Relatorios: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-[#eaf5fb] relative">
+    <div className="flex h-screen bg-slate-50 relative">
       <Navbar />
 
       <main className="flex-1 p-10 overflow-y-auto">
@@ -232,7 +232,7 @@ const Relatorios: React.FC = () => {
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
             className="flex-1 min-w-[250px] px-4 py-2 rounded-full border border-[#9aa7ad]
-                       bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
+                        text-[#0f5260] placeholder-[#9aa7ad]
                        focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
                        transition-colors"
           />

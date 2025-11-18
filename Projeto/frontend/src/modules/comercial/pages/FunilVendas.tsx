@@ -3,6 +3,8 @@ import { LeadProps } from '../../../types/LeadProps'
 import LeadCard from '../components/LeadCard'
 import Navbar from '../../../shared/components/navbar'
 import instance from '../../../services/api'
+import { FaFunnelDollar } from 'react-icons/fa'
+import { FunnelIcon } from 'lucide-react'
 
 // FILTRO
 const FilterIcon: React.FC = () => (
@@ -66,7 +68,7 @@ const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads, onLeadDrop, sel
       <div className="w-full lg:w-1/6 flex-shrink-0 p-2">
         <div
           className="
-            bg-slate-50 
+            bg-gray-100 
             rounded-xl 
             border
             border-slate-200
@@ -89,7 +91,7 @@ const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads, onLeadDrop, sel
             </span>
           </div>
 
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="bg-slate-100 flex-1 overflow-y-auto overflow-x-hidden">
             {leads.length > 0 ? (
               leads.map((lead) => 
               <LeadCard 
@@ -270,6 +272,7 @@ const FunilVendas: React.FC = () => {
         w-full 
         overflow-x-hidden
         pb-4
+        h-screen
         ">
         {CATEGORIAS.map((categoria) => (
           <FunilColumn
@@ -288,30 +291,11 @@ const FunilVendas: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-gray-50 min-h-screen p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <header className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-800">Funil de Vendas</h1>
-            <button className="
-              flex 
-              items-center 
-              gap-2 
-              px-4 
-              py-2 
-              bg-white 
-              border 
-              border-gray-300 
-              rounded-lg 
-              text-sm 
-              font-medium 
-              text-gray-700 
-              hover:bg-gray-50
-              hover:shadow-sm
-              transition
-              ">
-              <FilterIcon />
-              Filtros
-            </button>
+      <div className="max-h-screen p-4">
+        <div className="max-w-[90%] mx-auto">
+          <header className="p-3 flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-gray-800 drop-shadow-md">Funil de Vendas</h1>
+            
           </header>
           {renderContent()}
         </div>
