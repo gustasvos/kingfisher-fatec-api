@@ -11,7 +11,7 @@ type FormAberturaProps = {
 export default function CheckDiario({ form }: FormAberturaProps) {
     const [loading, setLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-
+    const [nomeMotorista, setNomeMotorista] = useState("")
     const [placaVeiculo, setPlacaVeiculo] = useState("");
     const [kmInicial, setKmInicial] = useState("");
     const [cidadeDestino, setCidadeDestino] = useState("");
@@ -51,6 +51,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
             const simNao = (valor: string | null) =>
                 valor ? (valor.includes("-sim") ? "SIM" : "NÃO") : "";
 
+            if (nomeMotorista) formData.append("nome-motorista", nomeMotorista);
             if (placaVeiculo) formData.append("placa-veiculo", placaVeiculo);
             if (kmInicial) formData.append("km-inicial", kmInicial);
             if (cidadeDestino) formData.append("destino", cidadeDestino);
@@ -114,6 +115,17 @@ export default function CheckDiario({ form }: FormAberturaProps) {
 
                     <form onSubmit={enviaForm} className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <InputLine
+                                type="text"
+                                id="nome-motorista"
+                                htmlfor="nome-motorista"
+                                placeholder=""
+                                value={nomeMotorista}
+                                onChange={(e) => setNomeMotorista(e.target.value)}
+                            >
+                                Nome Motorista
+                            </InputLine>
+
                             <InputMaskField
                                 label="Placa Veículo"
                                 mask="aaa-0000"

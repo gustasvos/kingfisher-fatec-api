@@ -120,7 +120,7 @@ export const checklistDiarioFrotaNeweSchema: FormField[] = [
   { name: "id-usuario", required: true, type: "string" },
   { name: "cpf-usuario", required: true, regex: regexCpf, type: "string" },
   { name: "timestamp", required: false, type: "date" },
-  // { name: "nome-motorista", required: true, type: "string" }, 
+  { name: "nome-motorista", required: true, type: "string" }, 
   { name: "placa-veiculo", required: true, regex: regexPlaca, type: "string" }, 
   { name: "km-inicial", required: true, type: "number" },
   { name: "destino", required: true, type: "string" }, 
