@@ -7,6 +7,7 @@ import FormAberturaPage from "../pages/form-abertura-page";
 import FormFechamentoPage from "../pages/form-fechamento-page";
 import CheckDiario from "./check-diario";
 import CheckDiarioPage from "../pages/check-diario-page";
+import CheckGestaoPage from "../pages/check-gestao-page";
 
 type Checklist = {
   id: string;
@@ -44,6 +45,12 @@ export default function ListagemChecklist() {
   const abrirModalDiario = (e: React.MouseEvent) => {
     e.preventDefault()
     setConteudoModal(<CheckDiarioPage/>)
+    setAbertoModal(true)
+  }
+
+  const abrirModalGestao = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<CheckGestaoPage/>)
     setAbertoModal(true)
   }
   
@@ -134,6 +141,7 @@ export default function ListagemChecklist() {
               { nome: "Checklist Diário", acao:abrirModalDiario, copiar: false },
               { nome: "Formulário de Abertura", acao: abrirModalAbertura, copiar: false },
               { nome: "Formulário de Fechamento", acao:abrirModalFechamento, copiar: false },
+              { nome: "Checklist Gestão de Coleta", acao:abrirModalGestao, copiar: false },              
             ].map((form) => (
               <div
                 key={form.link}
