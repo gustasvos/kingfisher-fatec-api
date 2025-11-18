@@ -1,4 +1,4 @@
-import CheckGestao from "../components/check-gestão";
+import CheckGestao from "../components/check-gestao";
 
 export default function CheckGestaoPage() {
     return (

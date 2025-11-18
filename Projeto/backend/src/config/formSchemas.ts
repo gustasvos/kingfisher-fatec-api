@@ -143,6 +143,8 @@ export const checklistDiarioFrotaNeweSchema: FormField[] = [
 // Forms de gestão de coleta
 export const formsGestaoColetaSchema: FormField[] = [
   { name: 'formTitle', required: true, type: "string" }, // Identificador (não deve ir para o CSV)
+  { name: "id-usuario", required: true, type: "string" },
+  { name: "cpf-usuario", required: true, regex: regexCpf, type: "string" },
   { name: "timestamp", required: false, type: "date" },
   { name: 'email', required: true, regex: regexEmail, type: "string" },
   { name: 'qual-cliente', required: true, type: "string" },
@@ -310,10 +312,6 @@ export const formularioManutencaoPredialSchema: FormField[] = [
   { name: "detalhe_adicional", required: false, type: "string" }
 ];
 
-
-
-
-// ... (Adicione os demais schemas aqui)
 
 // ------------------------------------------
 // Mapa Centralizado de Schemas

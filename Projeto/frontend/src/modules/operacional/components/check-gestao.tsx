@@ -21,15 +21,75 @@ export default function CheckGestao({ form }: FormAberturaProps) {
     const [obs, setObs] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const enviaForm = (e: React.FormEvent<HTMLFormElement>) => {
+    const enviaForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
 
-        setTimeout(() => {
-            alert("Formulário enviado!");
+        try {
+            // 🔹 Dados do usuário logado
+            const storedUser = localStorage.getItem("user");
+            const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+            const userId = parsedUser?.id || "";
+            const userCpf = parsedUser?.cpf || "";
+
+            // Monta endereço coleta
+            const localColeta = `${logradouroColeta}, ${numeroColeta} - ${bairroColeta} - ${cidadeColeta}/${ufColeta} - ${cepColeta}`;
+
+            // Monta endereço entrega
+            const localEntrega = `${logradouroEntrega}, ${numeroEntrega} - ${bairroEntrega} - ${cidadeEntrega}/${ufEntrega} - ${cepEntrega}`;
+
+            // Converte valor do frete (ex.: "1.234,56" -> 1234.56)
+            const valorFreteNumber = Number(
+                valorFrete
+                    ?.replace(/\./g, "")  // remove separador milhar
+                    ?.replace(",", ".")   // troca vírgula por ponto
+            );
+
+            const payload = {
+                formTitle: "Checklist, Forms de gestão de coleta",
+                timestamp: new Date().toISOString(),
+
+                email: email.trim(),
+                "qual-cliente": cliente,
+                "quem-solicita": quemSolicita,
+                "oc-pedido-nf": nf,
+
+                "data-horario-coleta": dataHoraColeta,
+                "local-coleta": localColeta,
+
+                "data-hora-entrega": dataHoraEntrega,
+                "local-entrega": localEntrega,
+
+                "peso-estimado": Number(peso),
+                "tipo-veiculo-coleta": tipoVeiculo,
+                "valor-frete-cobrado": valorFreteNumber,
+
+                "observacoes-equipe-adicional": obs || "",
+                "id-usuario": "",
+                "cpf-usuario": ""
+            };
+            payload["id-usuario"] = userId;
+            payload["cpf-usuario"] = userCpf;
+
+            const response = await fetch("http://localhost:8080/submit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro ao enviar: ${response.status}`);
+            }
+
+            alert("Formulário enviado com sucesso!");
+
+        } catch (error) {
+            console.error("Erro no envio:", error);
+            alert("Falha ao enviar o formulário.");
+        } finally {
             setLoading(false);
-        }, 2000);
-    }
+        }
+    };
 
     // Coleta
     const [cepColeta, setCepColeta] = useState('')
@@ -47,7 +107,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
     const [ufEntrega, setUfEntrega] = useState('')
     const [numeroEntrega, setNumeroEntrega] = useState('')
 
-    const handleCepColetaChange = async (novoCep) => {
+    const handleCepColetaChange = async (novoCep: string) => {
         setCepColeta(novoCep)
         const cepLimpo = novoCep.replace(/\D/g, '')
 
@@ -84,7 +144,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
         }
     }
 
-    const handleCepEntregaChange = async (novoCep) => {
+    const handleCepEntregaChange = async (novoCep: string) => {
         setCepEntrega(novoCep)
         const cepLimpo = novoCep.replace(/\D/g, '')
 
@@ -126,7 +186,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
     const labelClasses = "absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
 
     return (
-        <div className="w-full flex justify-center mt-8 px-4">
+        <div className="flex justify-center mt-8 px-4">
             <div className="bg-white shadow-lg rounded-3xl w-full max-w-5xl h-[90vh] border border-gray-100 overflow-hidden">
                 <div className="h-full overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-[#17607f] scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
 
@@ -135,7 +195,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                     </section>
 
                     <section>
-                        <form onSubmit={enviaForm} action="" className="space-y-8 mt-6">
+                        <form onSubmit={enviaForm} className="space-y-8 mt-6">
                             <section className="space-y-6">
                                 <div className="grid grid-cols-2 gap-6">
                                     <InputLine type="email" placeholder="" id='email' htmlfor="email" value={email} onChange={(e) => setEmail(e.target.value)} required>E-mail</InputLine>
@@ -263,20 +323,20 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                                     </section>
                                 </div>
 
-                                 <div className="pt-6 flex justify-center">
-                            <BotaoSubmit
-                                loading={loading}
-                                label={loading ? "Enviando..." : "Enviar"}
-                                type="submit"
-                                className="bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
-                            />
-                        </div>
-                                </section>
+                                <div className="pt-6 flex justify-center">
+                                    <BotaoSubmit
+                                        loading={loading}
+                                        label={loading ? "Enviando..." : "Enviar"}
+                                        type="submit"
+                                        className="bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
+                                    />
+                                </div>
+                            </section>
                         </form>
                     </section>
                 </div>
             </div>
-            </div>
+        </div>
 
     )
 
