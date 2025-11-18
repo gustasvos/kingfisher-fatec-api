@@ -11,6 +11,21 @@ export async function validateFormData(
   schema: FormField[],
   csvPath: string
 ): Promise<ValidationError | null> {
+  // Regra especial: CPF ou CNPJ obrigatório
+  const cpf =
+    String(data["cpf"] ?? "").trim() ||
+    String(data["cpf-motorista"] ?? "").trim() ||
+    String(data["cpf-usuario"] ?? "").trim();
+    
+  const cnpj = String(data["cnpj"] ?? "").trim();
+
+  if (!cpf && !cnpj) {
+    return {
+      field: "cpf/cnpj",
+      message: "É necessário preencher CPF ou CNPJ."
+    };
+  }
+
   // Lê dados salvos
   const registros = await readCsv(csvPath);
 

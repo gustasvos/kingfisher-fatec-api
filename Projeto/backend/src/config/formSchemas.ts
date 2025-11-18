@@ -224,7 +224,7 @@ export const cadastroAgregadoMotoSchema: FormField[] = [
   { name: "genero", required: true, type: "radio" }, // opções: Masculino, Feminino, Prefiro não informar
   { name: "nome-completo-motorista", required: true, type: "string" },
   { name: "cnpj", required: false, type: "string" },
-  { name: "cpf", required: true, type: "string" },
+  { name: "cpf", required: false, type: "string" },
   { name: "data-nascimento", required: true, type: "date" },
   { name: "cidade-nascimento", required: true, type: "string" },
   { name: "telefone", required: true, type: "string" },
