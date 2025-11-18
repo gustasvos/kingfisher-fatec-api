@@ -124,7 +124,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`${aberto ? "w-auto" : "w-[60px]"} bg-[#135b78] flex flex-col items-center min-h-screen text-white py-6 justify-between fixed top-0 z-10 transition-all duration-300`}>
+    <nav className={`${aberto ? "w-auto" : "w-[60px]"} bg-[#135b78] flex border-r border-black/50 shadow-lg flex-col items-center min-h-screen text-white py-6 justify-between fixed top-0 z-10 transition-all duration-300`}>
 
       {/*SEÇÃO SUPERIOR (Menu)*/}
       <div className="flex flex-col items-center w-full gap-6">
