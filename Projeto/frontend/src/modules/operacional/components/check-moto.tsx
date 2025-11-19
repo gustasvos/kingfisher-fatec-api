@@ -1,9 +1,7 @@
 import { useState, ChangeEvent, FormEvent, ReactNode } from "react"
 import instance from "../../../services/api";
+import InputMaskField from "../../administrativo/components/InputMaskField";
 
-// --- Início dos Componentes Simulados ---
-// Recriei seus componentes aqui para que o código possa compilar,
-// mas mantendo suas classes de estilo originais.
 
 // Suas classes de estilo originais
 const inputClasses = "w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -22,6 +20,11 @@ interface InputLineProps {
     checked?: boolean;
     readOnly?: boolean;
     placeholder?: string;
+}
+
+interface ValidationError {
+    field: string;
+    message: string;
 }
 
 const InputLine = ({
@@ -135,6 +138,9 @@ type FormAberturaProps = {
 }
 
 export default function CheckMoto({ form }: FormAberturaProps) {
+    const [erro, setErro] = useState<ValidationError | string>('')
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
     const [formTitle, setFormTitle] = useState(form)
 
     // Dados pessoais
@@ -256,6 +262,7 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                             onSubmit={async (e: FormEvent) => {
                                 e.preventDefault();
                                 setLoading(true);
+                                setErro('');
 
                                 try {
                                     const payload = {
@@ -268,15 +275,15 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                         cpf: tipoPessoa === 'pf' ? documento.replace(/\D/g, '') : "",
                                         "data-nascimento": new Date(dataNascimento).toISOString(),
                                         "cidade-nascimento": cidadeNatal,
-                                        telefone: celular,
+                                        telefone: celular.replace(/\D/g, ''),
                                         email,
-                                        rg,
+                                        rg: rg.replace(/\D/g, ''),
                                         "data-emissao-rg": new Date(dataEmissao).toISOString(),
                                         "orgao-expedidor": orgaoExp,
                                         "nome-do-pai": nomePai,
                                         "nome-da-mae": nomeMae,
-                                        "pis-pasep": pisPasep,
-                                        cep,
+                                        "pis-pasep": pisPasep.replace(/\D/g, ''),
+                                        cep:cep.replace(/\D/g, ''),
                                         endereco: `${logradouro}, ${numero} - ${bairro}, ${cidade} - ${uf}`,
                                         "nome-proprietario-veiculo": nomeProprietarioVeiculo,
                                         placa,
@@ -294,15 +301,14 @@ export default function CheckMoto({ form }: FormAberturaProps) {
 
                                     const response = await instance.post("/submit", payload);
 
-                                    console.log("Enviado com sucesso:", response.data);
-                                    alert("Formulário enviado com sucesso!");
-
-                                    // Se quiser limpar o formulário:
-                                    // window.location.reload();
+                                    setShowSuccess(true);
+                                    setTimeout(() => setShowSuccess(false), 3000);
 
                                 } catch (error: any) {
-                                    console.error("Erro ao enviar formulário:", error);
-                                    alert("Erro ao enviar formulário. Verifique os dados e tente novamente.");
+                                        const erroDetalhado = error.response?.data?.message
+                                        setErro(erroDetalhado);
+                                        setShowError(true);
+                                        setTimeout(() => setShowError(false), 3000);
                                 } finally {
                                     setLoading(false);
                                 }
@@ -314,19 +320,19 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                             </h2>
 
                             <section id="sessao-1-dados-pessoais" className="flex flex-col gap-6">
-                                <InputLine type="text" placeholder="" id='nome' htmlfor="nome" value={nome} onChange={(e) => setNome(e.target.value)} required>Nome Completo</InputLine>
+                                <InputLine type="text" placeholder="" id='nome' htmlFor="nome" value={nome} onChange={(e) => setNome(e.target.value)} required>Nome Completo</InputLine>
 
                                 <fieldset className="border border-gray-200 rounded-xl p-4 w-[300px]">
                                     <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Pessoa Física ou Jurídica</legend>
                                     <div className="flex items-center space-x-3 mt-3">
                                         <InputLine
-                                            type="radio" name="pf-pj" value="pf" id='pf' htmlfor="pf" required
+                                            type="radio" name="pf-pj" value="pf" id='pf' htmlFor="pf" required
                                             checked={tipoPessoa === 'pf'}
                                             onChange={handleTipoPessoaChange}>
                                             Pessoa Física
                                         </InputLine>
                                         <InputLine
-                                            type="radio" name="pf-pj" value="pj" id='pj' htmlfor="pj" required
+                                            type="radio" name="pf-pj" value="pj" id='pj' htmlFor="pj" required
                                             checked={tipoPessoa === 'pj'}
                                             onChange={handleTipoPessoaChange}>
                                             Pessoa Jurídica
@@ -337,78 +343,108 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                 <div className="relative">
                                     {tipoPessoa === 'pf' && (
                                         <div className="relative mb-6">
-                                            <IMaskInput
-                                                mask={"000.000.000-00"} placeholder="" id="cpf" className={inputClasses} required
+                                            <InputMaskField
+                                                label="CPF"
+                                                mask="000.000.000-00"
+                                                placeholder=""
+                                                required
+                                                maxLength={14}
                                                 value={documento}
-                                                onAccept={(value: string) => setDocumento(value)} />
-                                            <label htmlFor="cpf" className={labelClasses}>CPF</label>
+                                                onAccept={(value: string) => {
+                                                    const cpfLimpo = value.replace("-.", "").toUpperCase()
+                                                    setDocumento(cpfLimpo)
+                                                }}
+                                            />
                                         </div>
                                     )}
 
                                     {tipoPessoa === 'pj' && (
                                         <div className="relative mb-6">
-                                            <IMaskInput
-                                                mask={"00.000.000/0000-00"} placeholder="" id="cnpj"
-                                                value={documento} onAccept={(value: string) => setDocumento(value)} required
-                                                className={inputClasses}
+                                            <InputMaskField
+                                                label="CNPJ"
+                                                mask="00.000.000/0000-00"
+                                                placeholder=""
+                                                required
+                                                maxLength={18}
+                                                value={documento}
+                                                onAccept={(value: string) => {
+                                                    const cnpjLimpo = value.replace("/.", "").toUpperCase()
+                                                    setDocumento(cnpjLimpo)
+                                                }}
                                             />
-                                            <label htmlFor="cnpj" className={labelClasses}>CNPJ</label>
                                         </div>
                                     )}
                                 </div>
 
-                                <InputLine type="date" placeholder="" id='data-nascimento' htmlfor="data-nascimento" value={dataNascimento} onChange={(e) => setDataNasc(e.target.value)} required>Data de Nascimento</InputLine>
-                                <InputLine type="text" placeholder="" id='cidade-natal' htmlfor="cidade-natal" value={cidadeNatal} onChange={(e) => setCidadeNatal(e.target.value)} required>Cidade natal</InputLine>
+                                <InputLine type="date" placeholder="" id='data-nascimento' htmlFor="data-nascimento" value={dataNascimento} onChange={(e) => setDataNasc(e.target.value)} required>Data de Nascimento</InputLine>
+                                <InputLine type="text" placeholder="" id='cidade-natal' htmlFor="cidade-natal" value={cidadeNatal} onChange={(e) => setCidadeNatal(e.target.value)} required>Cidade natal</InputLine>
 
                                 <div className="relative mb-6">
-                                    <IMaskInput
-                                        placeholder="" id="celular" className={inputClasses} required
+                                    <InputMaskField
+                                        label="Celular"
+                                        placeholder="" required
                                         mask={"(00) 00000-0000"}
                                         value={celular}
-                                        onAccept={(value: string) => setCelular(value)} />
-                                    <label htmlFor="celular" className={labelClasses}>Celular</label>
+                                        onAccept={(value: string) => {
+                                            const celLimpo = value.replace("()-", "").toUpperCase()
+                                            setCelular(celLimpo)
+                                        }}
+                                    />
                                 </div>
 
-                                <InputLine type="email" placeholder="" id='email' htmlfor="email" value={email} onChange={(e) => setEmail(e.target.value)} required>E-mail</InputLine>
+                                <InputLine type="email" placeholder="" id='email' htmlFor="email" value={email} onChange={(e) => setEmail(e.target.value)} required>E-mail</InputLine>
 
                                 <div className="relative mb-6">
-                                    <IMaskInput
-                                        mask={"00.000.000-0"} placeholder="" id="rg" className={inputClasses} required
+                                    <InputMaskField
+                                        label="RG"
+                                        mask={"00.000.000-0"} placeholder="" required
                                         value={rg}
-                                        onAccept={(value: string) => setRg(value)} />
-                                    <label htmlFor="rg" className={labelClasses}>RG</label>
+                                        onAccept={(value: string) => {
+                                            const rgLimpo = value.replace(".-", "").toUpperCase()
+                                            setRg(rgLimpo)
+                                        }} />
                                 </div>
 
-                                <InputLine type="date" placeholder="" id='data-emissao' htmlfor="data-emissao" value={dataEmissao} onChange={(e) => setDataEmissao(e.target.value)} required>Data de Emissão</InputLine>
-                                <InputLine type="text" placeholder="" id='orgao-exp' htmlfor="orgao-exp" value={orgaoExp} onChange={(e) => setOrgaoExp(e.target.value)} required>Órgão Expeditor</InputLine>
+                                <InputLine type="date" placeholder="" id='data-emissao' htmlFor="data-emissao" value={dataEmissao} onChange={(e) => setDataEmissao(e.target.value)} required>Data de Emissão</InputLine>
+                                <InputLine type="text" placeholder="" id='orgao-exp' htmlFor="orgao-exp" value={orgaoExp} onChange={(e) => setOrgaoExp(e.target.value)} required>Órgão Expeditor</InputLine>
 
-                                <InputLine type="text" placeholder="" id='nome-pai' htmlfor="nome-pai" value={nomePai} onChange={(e) => setNomePai(e.target.value)} required>Nome do Pai</InputLine>
-                                <InputLine type="text" placeholder="" id='nome-mae' htmlfor="nome-mae" value={nomeMae} onChange={(e) => setNomeMae(e.target.value)} required>Nome da Mãe</InputLine>
-                                <InputLine type="text" placeholder="" id='pis-pasep' htmlfor="pis-pasep" value={pisPasep} onChange={(e) => setPisPasep(e.target.value)} required>PIS/PASEP</InputLine>
-
+                                <InputLine type="text" placeholder="" id='nome-pai' htmlFor="nome-pai" value={nomePai} onChange={(e) => setNomePai(e.target.value)} required>Nome do Pai</InputLine>
+                                <InputLine type="text" placeholder="" id='nome-mae' htmlFor="nome-mae" value={nomeMae} onChange={(e) => setNomeMae(e.target.value)} required>Nome da Mãe</InputLine>
+                                <InputMaskField
+                                    label="PIS/PASEP"
+                                    mask={"000.00000.00-0"}
+                                    placeholder=""
+                                    required
+                                    value={pisPasep}
+                                    maxLength={14}
+                                    onAccept={(value: string) => {
+                                        const pisLimpo = value.replace(".-", "").toUpperCase()
+                                        setPisPasep(pisLimpo)
+                                    }}
+                                />
 
                                 <h3 className="text-lg font-semibold text-gray-700 mt-8">Endereço</h3>
                                 <div className="relative mb-6">
-                                    <IMaskInput
-                                        mask={"00000-000"} placeholder="" id="cep-input" className={inputClasses} required
+                                    <InputMaskField
+                                        label="CEP"
+                                        mask={"00000-000"} placeholder="" required
                                         value={cep}
                                         onAccept={handleCepChange} />
-                                    <label htmlFor="cep-input" className={labelClasses}>CEP</label>
                                     {loading && <p className="text-blue-500 text-xs mt-1">Buscando...</p>}
                                 </div>
 
                                 <InputLine
-                                    type="text" placeholder="" id='logradouro' htmlfor="logradouro" required
+                                    type="text" placeholder="" id='logradouro' htmlFor="logradouro" required
                                     value={logradouro}
                                     onChange={(e) => setLogradouro(e.target.value)}
                                     readOnly={!!logradouro}>
                                     Logradouro
                                 </InputLine>
 
-                                <InputLine type="number" placeholder="" id='numero' htmlfor="numero" value={numero} onChange={(e) => setNumero(e.target.value)} required>Número</InputLine>
+                                <InputLine type="number" placeholder="" id='numero' htmlFor="numero" value={numero} onChange={(e) => setNumero(e.target.value)} required>Número</InputLine>
 
                                 <InputLine
-                                    type="text" placeholder="" id='bairro' htmlfor="bairro" required
+                                    type="text" placeholder="" id='bairro' htmlFor="bairro" required
                                     value={bairro}
                                     onChange={(e) => setBairro(e.target.value)}
                                     readOnly={!!bairro}>
@@ -416,7 +452,7 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                 </InputLine>
 
                                 <InputLine
-                                    type="text" placeholder="" id='cidade' htmlfor="cidade" required
+                                    type="text" placeholder="" id='cidade' htmlFor="cidade" required
                                     value={cidade}
                                     onChange={(e) => setCidade(e.target.value)}
                                     readOnly={!!cidade}>
@@ -424,7 +460,7 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                 </InputLine>
 
                                 <InputLine
-                                    type="text" placeholder="" id='uf' htmlfor="uf" required
+                                    type="text" placeholder="" id='uf' htmlFor="uf" required
                                     value={uf}
                                     onChange={(e) => setUf(e.target.value)}
                                     readOnly={!!uf}>
@@ -434,17 +470,17 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                 <fieldset className="border border-gray-200 rounded-xl p-4 w-[400px]">
                                     <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Gênero</legend>
                                     <div className="flex items-center space-x-3 mt-3">
-                                        <InputLine type="radio" name="genero" id='masculino' htmlfor="masculino" required value="masculino"
+                                        <InputLine type="radio" name="genero" id='masculino' htmlFor="masculino" required value="masculino"
                                             checked={genero === 'masculino'}
                                             onChange={handleGeneroChange}>
                                             Masculino
                                         </InputLine>
-                                        <InputLine type="radio" name="genero" id='feminino' htmlfor="feminino" required value="feminino"
+                                        <InputLine type="radio" name="genero" id='feminino' htmlFor="feminino" required value="feminino"
                                             checked={genero === 'feminino'}
                                             onChange={handleGeneroChange}>
                                             Feminino
                                         </InputLine>
-                                        <InputLine type="radio" name="genero" id='pref-n-informar' htmlfor="pref-n-informar" required value="pref-n-informar"
+                                        <InputLine type="radio" name="genero" id='pref-n-informar' htmlFor="pref-n-informar" required value="pref-n-informar"
                                             checked={genero === 'pref-n-informar'}
                                             onChange={handleGeneroChange}>
                                             Prefiro não informar
@@ -457,22 +493,33 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                     Sessão 2: Dados do Veículo
                                 </h2>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <InputLine type="text" placeholder="" id='nome-proprietario-veiculo' htmlfor="nome-proprietario-veiculo" value={nomeProprietarioVeiculo} required onChange={(e) => setNomeProprietarioVeiculo(e.target.value)}>Nome completo do Proprietário do Veículo</InputLine>
-                                    <InputLine type="text" placeholder="" id='placa' htmlfor="placa" value={placa} required onChange={(e) => setPlaca(e.target.value)}>Placa</InputLine>
-                                    <InputLine type="text" placeholder="" id='marca' htmlfor="marca" value={marca} required onChange={(e) => setMarca(e.target.value)}>Marca</InputLine>
-                                    <InputLine type="text" placeholder="" id='modelo' htmlfor="modelo" value={modelo} required onChange={(e) => setModelo(e.target.value)}>Modelo</InputLine>
-                                    <InputLine type="text" placeholder="" id='cor' htmlfor="cor" value={cor} required onChange={(e) => setCor(e.target.value)}>Cor</InputLine>
-                                    <InputLine type="text" placeholder="" id='ano-fabricacao' htmlfor="ano-fabricacao" value={anoFabricacao} required onChange={(e) => setAnoFabricacao(e.target.value)}>Ano fabricação</InputLine>
-                                    <InputLine type="text" placeholder="" id='cilindrada' htmlfor="cilindrada" value={cilindrada} required onChange={(e) => setCilindrada(e.target.value)}>Cilindrada</InputLine>
+                                    <InputLine type="text" placeholder="" id='nome-proprietario-veiculo' htmlFor="nome-proprietario-veiculo" value={nomeProprietarioVeiculo} required onChange={(e) => setNomeProprietarioVeiculo(e.target.value)}>Nome completo do Proprietário do Veículo</InputLine>
+                                   <InputMaskField
+                                        label="Placa Veículo"
+                                        mask="aaa-0000"
+                                        placeholder=""
+                                        required
+                                        maxLength={8}
+                                        value={placa}
+                                        onAccept={(value: string) => {
+                                            const placaLimpa = value.replace("-", "").toUpperCase()
+                                            setPlaca(placaLimpa)
+                                        }}
+                                    />
+                                    <InputLine type="text" placeholder="" id='marca' htmlFor="marca" value={marca} required onChange={(e) => setMarca(e.target.value)}>Marca</InputLine>
+                                    <InputLine type="text" placeholder="" id='modelo' htmlFor="modelo" value={modelo} required onChange={(e) => setModelo(e.target.value)}>Modelo</InputLine>
+                                    <InputLine type="text" placeholder="" id='cor' htmlFor="cor" value={cor} required onChange={(e) => setCor(e.target.value)}>Cor</InputLine>
+                                    <InputLine type="text" placeholder="" id='ano-fabricacao' htmlFor="ano-fabricacao" value={anoFabricacao} required onChange={(e) => setAnoFabricacao(e.target.value)}>Ano fabricação</InputLine>
+                                    <InputLine type="text" placeholder="" id='cilindrada' htmlFor="cilindrada" value={cilindrada} required onChange={(e) => setCilindrada(e.target.value)}>Cilindrada</InputLine>
                                     <fieldset className="border border-gray-200 rounded-xl p-4">
                                         <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Possui báu ou suporte para carga?</legend>
                                         <div className="flex items-center space-x-3 mt-3">
-                                            <InputLine type="radio" name="bau" value="sim" id='bau-sim' htmlfor="bau-sim" required
+                                            <InputLine type="radio" name="bau" value="sim" id='bau-sim' htmlFor="bau-sim" required
                                                 checked={bau === 'sim'}
                                                 onChange={handleBauChange}>
                                                 Sim
                                             </InputLine>
-                                            <InputLine type="radio" name="bau" value="nao" id='bau-nao' htmlfor="bau-nao" required
+                                            <InputLine type="radio" name="bau" value="nao" id='bau-nao' htmlFor="bau-nao" required
                                                 checked={bau === 'nao'}
                                                 onChange={handleBauChange}>Não</InputLine>
                                         </div>
@@ -480,13 +527,13 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                     <fieldset className="border border-gray-200 rounded-xl p-4">
                                         <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Possui seguro?</legend>
                                         <div className="flex items-center space-x-3 mt-3">
-                                            <InputLine type="radio" name="seguro" id='seguro-sim' htmlfor="seguro-sim" required value="sim"
+                                            <InputLine type="radio" name="seguro" id='seguro-sim' htmlFor="seguro-sim" required value="sim"
                                                 checked={seguro === 'sim'}
                                                 onChange={handleSeguroChange}>
                                                 Sim
                                             </InputLine>
 
-                                            <InputLine type="radio" name="seguro" id='seguro-nao' htmlfor="seguro-nao" required value="nao"
+                                            <InputLine type="radio" name="seguro" id='seguro-nao' htmlFor="seguro-nao" required value="nao"
                                                 checked={seguro === 'nao'}
                                                 onChange={handleSeguroChange}>
                                                 Não
@@ -498,17 +545,17 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                             <section id="sessao-3-dados-frete" className="grid grid-cols-1 gap-4">
                                 <h2 style={{ color: "#000000", fontSize: "1.3rem", fontWeight: 700 }} className="mt-8 mb-4 border-b pb-2">
                                     Sessão 3: Dados do Frete</h2>
-                                <InputLine type="text" placeholder="" id='valor-saida' htmlfor="valor-saida" value={valorSaida} required onChange={(e) => setValorSaida(e.target.value)}>Qual valor mínimo você cobraria por saída?</InputLine>
-                                <InputLine type="text" placeholder="" id='valor-km-rodado' htmlfor="valor-km-rodado" value={valorKmRodado} required onChange={(e) => setKmRodado(e.target.value)}>Qual valor mínimo você cobraria por Km rodado?</InputLine>
+                                <InputLine type="text" placeholder="" id='valor-saida' htmlFor="valor-saida" value={valorSaida} required onChange={(e) => setValorSaida(e.target.value)}>Qual valor mínimo você cobraria por saída?</InputLine>
+                                <InputLine type="text" placeholder="" id='valor-km-rodado' htmlFor="valor-km-rodado" value={valorKmRodado} required onChange={(e) => setKmRodado(e.target.value)}>Qual valor mínimo você cobraria por Km rodado?</InputLine>
                                 <fieldset className="border border-gray-200 rounded-xl p-4 w-[300px]">
                                     <legend className="text-gray-700 mb-0 font-medium text-xs leading-none h-2 ">Possui curso moto frete?</legend>
                                     <div className="flex items-center space-x-3 mt-3">
-                                        <InputLine type="radio" name="possui-curso" id='possui-curso-sim' htmlfor="possui-curso-sim" required value="sim"
+                                        <InputLine type="radio" name="possui-curso" id='possui-curso-sim' htmlFor="possui-curso-sim" required value="sim"
                                             checked={possuiCurso === 'sim'}
                                             onChange={handlePossuiCursoChange}>
                                             Sim
                                         </InputLine>
-                                        <InputLine type="radio" name="possui-curso" id='possui-curso-nao' htmlfor="possui-curso-nao" required value="nao"
+                                        <InputLine type="radio" name="possui-curso" id='possui-curso-nao' htmlFor="possui-curso-nao" required value="nao"
                                             checked={possuiCurso === 'nao'}
                                             onChange={handlePossuiCursoChange}>
                                             Não
@@ -523,6 +570,19 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                     </section>
                 </div>
             </div>
+            {showSuccess && (
+                <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+                    Formulário enviado com sucesso!
+                </div>
+            )
+            }
+
+            {showError && (
+                <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+                    {typeof erro === 'string' ? erro : erro.message}
+                </div>
+            )
+            }
         </div>
     )
 }

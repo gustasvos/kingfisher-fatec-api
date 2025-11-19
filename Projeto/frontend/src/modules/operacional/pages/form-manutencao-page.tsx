@@ -1,9 +1,15 @@
 import FormManutencao from "../components/form-manutencao";
 
-export default function FormManutencaoPage(){
+type CheckManutencaoPageProps = {
+    onAcaoConcluida?: () => void;
+}
+
+export default function FormManutencaoPage({ onAcaoConcluida }: CheckManutencaoPageProps){
     return(
         <>
-            <FormManutencao form="Formulário de manutenção predial"/>
+            <FormManutencao form="Formulário de manutenção predial"
+            onAcaoConcluida={onAcaoConcluida}
+            />
         </>
     )
 }
