@@ -1,5 +1,5 @@
 ### Criar super usuário
-POST http://35.232.26.46:8080/usuario/create
+POST http://localhost:8080/usuario/create
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ### login Adiministrador Thiago
 # @name login
-POST http://35.232.26.46:8080/login
+POST http://localhost:8080/login
 Content-Type: application/json
 
 {

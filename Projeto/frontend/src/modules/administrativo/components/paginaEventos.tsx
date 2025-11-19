@@ -133,9 +133,11 @@ function PaginaEventos() {
         }}
       >
         <div className="top-bar mb-5 flex items-center gap-4">
-          <button onClick={abrirModalCriarEvento} className="btn">
-            Criar Evento
-          </button>
+          {user?.role === "admin" && (
+            <button onClick={abrirModalCriarEvento} className="btn">
+              Criar Evento
+            </button>
+          )}
           <input
             type="search"
             id="searchInput"
