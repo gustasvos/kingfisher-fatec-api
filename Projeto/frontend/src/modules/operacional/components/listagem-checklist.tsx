@@ -23,7 +23,8 @@ const CHECKLIST_TIPO_OPCOES = [
   { value: 'Checklist Diário - Frota Newe', label: 'Checklist Diário' },
   { value: 'Formulário de abertura', label: 'Form. Abertura' },
   { value: 'Formulário de fechamento', label: 'Form. Fechamento' },
-  { value: 'formsGestaoColetaSchema', label: 'Checklist Gestão' },
+  { value: 'Checklist, Forms de gestão de coleta', label: 'Checklist Gestão de Coleta' },
+  { value: 'Formulário de manutenção predial', label: 'Form. Manutenção Predial' },
 ]
 
 export default function ListagemChecklist() {
@@ -40,36 +41,40 @@ export default function ListagemChecklist() {
 
   const abrirModalAbertura = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<FormAberturaPage />)
+    setConteudoModal(<FormAberturaPage onAcaoConcluida={fecharModalEAtualizar} />)
     setAbertoModal(true)
   }
 
+  const fecharModalEAtualizar = () => {
+    setAbertoModal(false);
+    buscaCheklists();
+  };
+
   const abrirModalFechamento = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<FormFechamentoPage />)
+    setConteudoModal(<FormFechamentoPage onAcaoConcluida={fecharModalEAtualizar} />)
     setAbertoModal(true)
   }
 
   const abrirModalDiario = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<CheckDiarioPage />)
+    setConteudoModal(<CheckDiarioPage onAcaoConcluida={fecharModalEAtualizar} />)
     setAbertoModal(true)
   }
 
   const abrirModalGestao = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<CheckGestaoPage />)
+    setConteudoModal(<CheckGestaoPage onAcaoConcluida={fecharModalEAtualizar} />)
     setAbertoModal(true)
   }
 
   const abrirModalManutencao = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<CheckManutencao/>)
+    setConteudoModal(<CheckManutencao onAcaoConcluida={fecharModalEAtualizar} />)
     setAbertoModal(true)
   }
-  
 
-  useEffect(() => {
+  const buscaCheklists = () => {
     if (!userId) return;
 
     setLoading(true);
@@ -103,15 +108,27 @@ export default function ListagemChecklist() {
       })
       .catch((err) => console.error("Erro ao buscar checklists:", err))
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    buscaCheklists()
   }, [userId]);
 
+
   const checklistsFiltrados = useMemo(() => {
-    return checklists.filter((c) => {
 
-      const matchesTipo = filtroTipo === '' || c.checklist === filtroTipo
+      const filtrados = checklists.filter((c) => {
+        const matchesTipo = filtroTipo === '' || c.checklist === filtroTipo
+        return matchesTipo
+      })
 
-      return matchesTipo
-    })
+      return filtrados.slice().sort((a, b) => {
+        const dateA = new Date(a.timestamp).getTime();
+        const dateB = new Date(b.timestamp).getTime();
+
+        return dateB - dateA;
+      });
+
   }, [checklists, filtroTipo])
 
   const toggleDetalhes = (id: string) => {
@@ -183,6 +200,57 @@ export default function ListagemChecklist() {
     "acendeu-luzes-armazem": "Acendeu luzes do armazém",
     "acionou-alarme": "Acionou o alarme",
     "trancou-cadeado-correntes": "Trancou cadeado das correntes",
+    "qual-cliente": "Qual o Cliente",
+    "quem-solicita": "Quem Solicita",
+    "oc-pedido-nf": "OC/Pedido/NF",
+    "data-horario-coleta": "Data/Horário de Coleta",
+    "local-coleta": "Local de Coleta",
+    "data-hora-entrega": "Data/Hora de Entrega",
+    "local-entrega": "Local de Entrega",
+    "peso-estimado": "Peso Estimado",
+    "tipo-veiculo-coleta": "Tipo de Veículo para Coleta",
+    "valor-frete-cobrado": "Valor do Frete Cobrado",
+    "observacoes-equipe-adicional": "Observações Adicionais para Equipe",
+    "condicoes_piso_escritorio": "Condições do Piso (Escritório)",
+    "condicoes_piso_operacional": "Condições do Piso (Operacional)",
+    "condicoes_piso_galpao": "Condições do Piso (Galpão)",
+    "condicoes_piso_refeitorio": "Condições do Piso (Refeitório)",
+    "condicoes_forro_escritorio": "Condições do Forro (Escritório)",
+    "condicoes_forro_operacional": "Condições do Forro (Operacional)",
+    "condicoes_forro_galpao": "Condições do Forro (Galpão)",
+    "condicoes_forro_refeitorio": "Condições do Forro (Refeitório)",
+    "estado_geral_instalacoes_eletricas": "Estado Geral das Instalações Elétricas",
+    "estado_geral_protecao_raios": "Estado Geral da Proteção Contra Raios",
+    "carga_ar_condicionado_sala_adm": "Carga do Ar Condicionado (Sala Adm)",
+    "carga_ar_condicionado_sala_diretoria": "Carga do Ar Condicionado (Sala Diretoria)",
+    "carga_ar_condicionado_sala_reuniao": "Carga do Ar Condicionado (Sala Reunião)",
+    "carga_ar_condicionado_sala_operacional": "Carga do Ar Condicionado (Sala Operacional)",
+    "lampadas_sala_adm": "Lâmpadas (Sala Adm)",
+    "lampadas_sala_diretoria": "Lâmpadas (Sala Diretoria)",
+    "lampadas_sala_reuniao": "Lâmpadas (Sala Reunião)",
+    "lampadas_sala_operacional": "Lâmpadas (Sala Operacional)",
+    "lampadas_galpao": "Lâmpadas (Galpão)",
+    "lampadas_refeitorio": "Lâmpadas (Refeitório)",
+    "lampadas_banheiro_feminino": "Lâmpadas (Banheiro Feminino)",
+    "lampadas_banheiro_masculino": "Lâmpadas (Banheiro Masculino)",
+    "macanetas_portas": "Maçanetas das Portas",
+    "mesas_operacional": "Mesas (Operacional)",
+    "condicoes_paleteiras_carrinho": "Condições das Paleteiras e Carrinhos",
+    "organizacao_locais_trabalho": "Organização dos Locais de Trabalho",
+    "cameras_seguranca": "Câmeras de Segurança",
+    "condicoes_balanca_piso": "Condições da Balança de Piso",
+    "data_ultima_afericao_balanca": "Data da Última Aferição da Balança",
+    "condicoes_mictorios_lavatorios": "Condições dos Mictórios e Lavatórios",
+    "data_ultima_limpeza_bebedouro": "Data da Última Limpeza do Bebedouro",
+    "data_proxima_dedetizacao": "Data da Próxima Dedetização",
+    "data_ultima_recarga_extintores": "Data da Última Recarga dos Extintores",
+    "data_proxima_recarga_extintores": "Data da Próxima Recarga dos Extintores",
+    "data_ultima_limpeza_caixa_dagua": "Data da Última Limpeza da Caixa D'Água",
+    "data_proxima_limpeza_caixa_dagua": "Data da Próxima Limpeza da Caixa D'Água",
+    "cadeira_ma_condicao": "Cadeira em Má Condição",
+    "descricao_cadeira_ma_condicao": "Descrição da Cadeira em Má Condição",
+    "detalhe_adicional": "Detalhe Adicional",
+    "data_verificacao": "Data de verificação",
   }
 
 
@@ -202,9 +270,9 @@ export default function ListagemChecklist() {
               { nome: "Checklist Moto", link: "/check-moto", copiar: true },
               { nome: "Checklist Diário", acao: abrirModalDiario, copiar: false },
               { nome: "Formulário de Abertura", acao: abrirModalAbertura, copiar: false },
-              { nome: "Formulário de Fechamento", acao:abrirModalFechamento, copiar: false },
-              { nome: "Checklist Gestão de Coleta", acao:abrirModalGestao, copiar: false },              
-              { nome: "Formulário de manutenção predial", acao:abrirModalManutencao, copiar: false },              
+              { nome: "Formulário de Fechamento", acao: abrirModalFechamento, copiar: false },
+              { nome: "Checklist Gestão de Coleta", acao: abrirModalGestao, copiar: false },
+              { nome: "Formulário de manutenção predial", acao: abrirModalManutencao, copiar: false },
             ].map((form) => (
               <div
                 key={form.link}
@@ -323,7 +391,7 @@ export default function ListagemChecklist() {
           </div>
         )}
       </main>
-      <Modal aberto={abertoModal} onFechar={() => setAbertoModal(false)}>
+      <Modal aberto={abertoModal} onFechar={fecharModalEAtualizar}>
         {conteudoModal}
       </Modal>
     </section>
@@ -339,11 +407,20 @@ function getWeekNumber(d: Date) {
 }
 
 function formatValue(key: string, value: any) {
-  const isDate = String(value).includes("T") && !isNaN(Date.parse(value));
   const stringValue = String(value)
 
-  if (isDate) {
-    return format(new Date(value), "dd/MM/yyyy HH:mm");
+  const isDateTime = stringValue.includes("T") && !isNaN(Date.parse(stringValue))
+
+  const isDate = /^\d{4}-\d{2}-\d{2}$/.test(stringValue) && !isNaN(Date.parse(stringValue))
+
+  if (isDateTime || isDate) {
+    const dateObject = new Date(stringValue)
+    if (isDateTime) {
+      return format(dateObject, "dd/MM/yyyy HH:mm")
+    }
+    if (isDate) {
+      return format(dateObject, "dd/MM/yyyy")
+    }
   }
 
   if (key === "cpf-usuario") {
