@@ -58,11 +58,11 @@ export default function ListaCliente() {
     }, [user, checkModal, localTrabalhoUpdateKey]);
 
 
-    useEffect(() => {
+    const fetchClients = useCallback(() => {
+        setCarregando(true)
         instance.get<Cliente[]>(`/cliente/comercial/${userId}`)
             .then((response: any) => {
                 setCliente(response.data)
-                console.log(cliente)
             })
             .catch((error: any) =>
                 console.error("Erro ao buscar colaboradores:", error)
@@ -71,6 +71,19 @@ export default function ListaCliente() {
                 setCarregando(false)
             })
     }, [userId])
+
+    const handleClientCategoryUpdate = useCallback((newCategory: string, clientId: number) => {
+        setCliente(prevClientes => 
+            prevClientes.map(c => 
+                c.id === clientId ? { ...c, ultimaCategoria: newCategory } : c
+            )
+        )
+        fetchClients()
+    }, [fetchClients])
+
+    useEffect(() => {
+        fetchClients()
+    }, [fetchClients])
 
     const excluirCliente = async (id: number) => {
         if (window.confirm("Tem certeza que deseja excluir esse cliente?")) {
@@ -114,7 +127,7 @@ export default function ListaCliente() {
 
                     <div className="grid grid-cols-2 gap-2">
                         {clienteFiltrados.map((c) => (
-                            <CardCliente key={c.id} cliente={c} excluir={excluirCliente} />
+                            <CardCliente key={c.id} cliente={c} excluir={excluirCliente} onUpdate={handleClientCategoryUpdate} />
                         ))}
                     </div>
                 </section>

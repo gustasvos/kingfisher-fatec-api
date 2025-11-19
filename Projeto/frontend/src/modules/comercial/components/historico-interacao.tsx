@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import RegistroManual from "./registroManual";
 import instance from "../../../services/api";
 
@@ -12,43 +12,74 @@ interface Interacao {
 
 interface HistoricoInteracaoProps {
   clienteId: number;
+  onClose: () => void;
+  onCategoryUpdated: (newCategory: string) => void;
 }
 
-const formatDate = (isoDate: string) => {
-  const [year, month, day] = isoDate.split("-");
-  return `${day}/${month}/${year}`;
-}
+// Função para formatar a data (dd/mm/aaaa)
+const formatDate = (isoDate: string | undefined): string => {
+  if (!isoDate) return '—';
+  const dataPart = isoDate.split('T')[0];
+  const partes = dataPart.split("-");
 
-export const HistoricoInteracao: React.FC<HistoricoInteracaoProps> = ({ clienteId }) => {
+  if (partes.length === 3) {
+      const [year, month, day] = partes;
+      return `${day}/${month}/${year}`;
+  }
+  return dataPart;
+};
+
+export const HistoricoInteracao: React.FC<HistoricoInteracaoProps> = ({ clienteId, onClose, onCategoryUpdated }) => {
   const [interacoes, setInteracoes] = useState<Interacao[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showRegistroModal, setShowRegistroModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const handleNovaInteracao = () => {
-    setShowModal(true);
-  };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
-  useEffect(() => {
-    const carregarRegistros = async () => {
-      try {
-        setLoading(true);
-
-        const response = await instance.get(`/registroCliente/cliente/${clienteId}`);
-
-        setInteracoes(response.data);
-      } catch (error: any) {
-        console.error("Erro ao carregar histórico de interações:", error);
-      } finally {
+  const carregarRegistros = useCallback(async () => {
+    if (!clienteId) {
         setLoading(false);
-      }
-    };
+        return;
+    }
+ 
+    setLoading(true);
 
-    if (clienteId) carregarRegistros();
+    try {
+      console.log(`[DIAGNOSTICO] Buscando histórico para cliente ID: ${clienteId}`); 
+      
+      const response = await instance.get(`/registroCliente/cliente/${clienteId}`);
+      
+   
+      setInteracoes(Array.isArray(response.data) ? response.data : []);
+      
+    } catch (error: any) {
+      console.error("Erro ao carregar histórico de interações:", error);
+      setInteracoes([]); 
+    } finally {
+
+      setLoading(false); 
+      console.log("[DIAGNOSTICO] Carregamento finalizado. Loading = false");
+    }
   }, [clienteId]);
+
+
+  const handleRegistrationSuccess = useCallback((newCategory: string) => {
+    onCategoryUpdated(newCategory); 
+    carregarRegistros();
+    handleCloseRegistroModal(); 
+  }, [carregarRegistros, onCategoryUpdated]);
+
+  
+  useEffect(() => {
+    carregarRegistros();
+  }, [carregarRegistros]); 
+
+  const handleNovaInteracao = () => {
+    setShowRegistroModal(true);
+  };
+
+  const handleCloseRegistroModal = () => {
+    setShowRegistroModal(false);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
@@ -90,7 +121,7 @@ export const HistoricoInteracao: React.FC<HistoricoInteracaoProps> = ({ clienteI
                     className="hover:bg-gray-50 even:bg-gray-50 transition-colors"
                   >
                     <td className="py-2 px-3 border-b">{item.categoria}</td>
-                    <td className="py-2 px-3 border-b">{item.data}</td>
+                    <td className="py-2 px-3 border-b">{formatDate(item.data)}</td>
                     <td className="py-2 px-3 border-b">{item.contato}</td>
                     <td className="py-2 px-3 border-b">{item.observacao}</td>
                   </tr>
@@ -101,17 +132,21 @@ export const HistoricoInteracao: React.FC<HistoricoInteracaoProps> = ({ clienteI
         </div>
       </div>
 
-      {showModal && (
+      {showRegistroModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="relative">
             <button
-              onClick={handleCloseModal}
+              onClick={onClose} 
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
               aria-label="Fechar modal"
             >
               ✕
             </button>
-            <RegistroManual onClose={handleCloseModal} clienteId={clienteId} />
+            <RegistroManual 
+              onClose={handleCloseRegistroModal} 
+              clienteId={clienteId}
+              onSuccess={handleRegistrationSuccess} 
+            />
           </div>
         </div>
       )}
