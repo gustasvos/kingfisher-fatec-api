@@ -5,9 +5,9 @@ import Loading from "../../../shared/components/loading";
 import Modal from "../../../shared/components/modal";
 import EventoDetalhe from "./eventoDetalhe";
 import RelatorioAproveitamento from "./relatorio-aproveitamento";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AxiosError } from "axios";
-
+ 
 interface Evento {
   id: number;
   conviteId: number;
@@ -18,19 +18,19 @@ interface Evento {
   statusConvite?: string;
   motivo?: string | null;
 }
-
+ 
 export default function ListagemEventos() {
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+ 
   const [abertoModal, setAbertoModal] = useState(false);
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);;
   const userString = localStorage.getItem("user");
   const userId = userString ? JSON.parse(userString).id : null;
   const navigate = useNavigate();
-
+ 
   // Função para fechar o modal e atualizar a lista
   const fecharModalEAtualizar = useCallback(() => {
     setAbertoModal(false);
@@ -38,7 +38,7 @@ export default function ListagemEventos() {
       fetchEventos(userId);
     }
   }, [userId]);
-
+ 
   // Buscar eventos do usuário
   const fetchEventos = useCallback(async (currentUserId: string) => {
     setLoading(true);
@@ -46,13 +46,13 @@ export default function ListagemEventos() {
     try {
       const res = await instance.get(`/admin/events/convidado/${currentUserId}`);
       console.log("Convites recebidos da API:", res.data);
-
+ 
       // Se não vier nenhum evento, apenas limpa a lista e sai
       if (!res.data || res.data.length === 0) {
         navigate("/eventos");
         return;
       }
-
+ 
       // Mapeia os dados recebidos para a interface Evento
       const eventosMapeados = res.data.map((convite: any) => ({
         ...convite.evento,
@@ -60,7 +60,7 @@ export default function ListagemEventos() {
         statusConvite: convite.status,
         motivo: convite.motivo,
       }));
-
+ 
       setEventos(eventosMapeados);
     } catch (error: unknown) {
       console.error("Erro ao buscar eventos:", error);
@@ -77,11 +77,11 @@ export default function ListagemEventos() {
       setLoading(false);
     }
   }, [navigate]);
-
+ 
   // Abrir modal conforme status do convite
   const abrirModalEvento = (evento: Evento) => {
     const status = evento.statusConvite?.toUpperCase() || "";
-
+ 
     switch (status) {
       case "PENDENTE":
         setConteudoModal(
@@ -94,7 +94,7 @@ export default function ListagemEventos() {
           />
         );
         break;
-
+ 
       case "CONFIRMADO":
       case "APROVADO":
         setConteudoModal(
@@ -106,7 +106,7 @@ export default function ListagemEventos() {
           />
         );
         break;
-
+ 
       case "RECUSADO":
         setConteudoModal(
           <EventoDetalhe
@@ -118,7 +118,7 @@ export default function ListagemEventos() {
           />
         );
         break;
-
+ 
       default:
         setConteudoModal(
           <EventoDetalhe
@@ -131,10 +131,10 @@ export default function ListagemEventos() {
         );
         break;
     }
-
+ 
     setAbertoModal(true);
   };
-
+ 
   useEffect(() => {
     if (userId) {
       fetchEventos(userId);
@@ -143,7 +143,7 @@ export default function ListagemEventos() {
       setLoading(false);
     }
   }, [userId, fetchEventos]);
-
+ 
   // Formata a data para exibição
   const formatarDataHora = (data: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -156,7 +156,7 @@ export default function ListagemEventos() {
     };
     return new Date(data).toLocaleString("pt-BR", options);
   };
-
+ 
   // Define cor do status
   const getStatusColor = (status: string | undefined) => {
     switch (status?.toUpperCase()) {
@@ -171,20 +171,23 @@ export default function ListagemEventos() {
         return "text-gray-500";
     }
   };
-
+ 
   if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
-
+ 
   const eventosFiltrados = eventos.filter(
     (e) =>
       e.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
       e.localizacao.toLowerCase().includes(searchTerm.toLowerCase())
   );
+ 
+  const location = useLocation();
+  const isEventoColaborado = location.pathname.toLowerCase().includes("/eventos-colaborador");
 
   return (
     <>
       <Navbar />
-      <main className="p-8 min-h-screen bg-slate-50">
+      <main className="p-8 min-h-screen bg-[#d8ecf3]">
         <form className="w-full mb-8" onSubmit={(e) => e.preventDefault()}>
           <input
             type="text"
@@ -192,12 +195,12 @@ export default function ListagemEventos() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-6 py-3 rounded-full border border-[#9aa7ad]
-               text-[#0f5260] placeholder-[#9aa7ad]
+              bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
               focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
               transition-colors text-lg"
           />
         </form>
-
+ 
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {eventosFiltrados.length > 0 ? (
             eventosFiltrados.map((evento) => (
@@ -209,11 +212,11 @@ export default function ListagemEventos() {
                   <h2 className="text-xl font-semibold text-gray-800 mb-2">
                     {evento.titulo}
                   </h2>
-
+ 
                   {evento.descricao && (
                     <p className="text-gray-700 mb-4">{evento.descricao}</p>
                   )}
-
+ 
                   <div className="flex flex-col gap-2 mt-2">
                     <div className="flex items-center gap-2 text-gray-800">
                       <svg
@@ -232,7 +235,7 @@ export default function ListagemEventos() {
                       </svg>
                       <span>{evento.localizacao}</span>
                     </div>
-
+ 
                     {/* Data */}
                     <div className="flex items-center gap-2 text-gray-800">
                       <svg
@@ -251,7 +254,7 @@ export default function ListagemEventos() {
                       </svg>
                       <span>{formatarDataHora(evento.dataHora)}</span>
                     </div>
-
+ 
                     <div className="mt-2">
                       <span className="text-sm font-semibold text-gray-700">
                         Status:{" "}
@@ -262,15 +265,17 @@ export default function ListagemEventos() {
                     </div>
                   </div>
                 </div>
-
+ 
                 <button
                   onClick={() => abrirModalEvento(evento)}
                   className="mt-6 bg-[#135b78] hover:bg-[#114a5f] text-white px-4 py-2 rounded-lg shadow transition-all duration-200 w-full"
                 >
-                  {evento.statusConvite === "PENDENTE"
-                    ? "Responder Convite"
-                    : "Ver Detalhes"}
-                </button>
+                 {evento.statusConvite?.toUpperCase() === "PENDENTE"
+                 ? "Responder Convite"
+                 : isEventoColaborado && evento.statusConvite?.toUpperCase() === "CONFIRMADO"
+                ? "Preencher Relatório"
+                : "Ver Detalhes"}
+           </button>
               </div>
             ))
           ) : (
@@ -280,7 +285,7 @@ export default function ListagemEventos() {
           )}
         </div>
       </main>
-
+ 
       <Modal aberto={abertoModal} onFechar={fecharModalEAtualizar}>
         {conteudoModal}
       </Modal>
