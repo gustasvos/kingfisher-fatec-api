@@ -209,6 +209,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                                         <IMaskInput
                                             id="valor-frete"
                                             className={inputClasses}
+                                            placeholder=""
                                             required
                                             value={valorFrete}
                                             onAccept={(value) => setValorFrete(value)}
@@ -238,6 +239,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                                         <div className="relative mb-6">
                                             <IMaskInput
                                                 mask={"00000-000"} id="cep-input-coleta"
+                                                placeholder=""
                                                 className={inputClasses} required
                                                 value={cepColeta}
                                                 onAccept={handleCepColetaChange} />
@@ -285,6 +287,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                                         <div className="relative mb-6">
                                             <IMaskInput
                                                 mask={"00000-000"} id="cep-input-entrega"
+                                                placeholder=""
                                                 className={inputClasses} required
                                                 value={cepEntrega}
                                                 onAccept={handleCepEntregaChange} />
@@ -323,20 +326,20 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                                     </section>
                                 </div>
 
-                                <div className="pt-6 flex justify-center">
-                                    <BotaoSubmit
-                                        loading={loading}
-                                        label={loading ? "Enviando..." : "Enviar"}
-                                        type="submit"
-                                        className="bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
-                                    />
-                                </div>
-                            </section>
+                                 <div className="pt-6 flex justify-center">
+                            <BotaoSubmit
+                                loading={loading}
+                                label={loading ? "Enviando..." : "Enviar"}
+                                type="submit"
+                                className="bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
+                            />
+                        </div>
+                                </section>
                         </form>
                     </section>
                 </div>
             </div>
-        </div>
+            </div>
 
     )
 
