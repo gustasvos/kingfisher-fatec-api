@@ -47,6 +47,26 @@ const buildISODateTime = (dataRaw: string, horarioRaw: string): string | null =>
   return dt.toISOString(); // ex: 2025-09-30T14:30:00.000Z
 };
 
+const isDataNoFuturo = (data: string, horario: string): boolean => {
+  // normaliza para YYYY-MM-DD
+  const dataIso = data.includes("/") ? dataLimpa(data) : data;
+  if (!dataIso || !horario) return false;
+
+  const [ano, mes, dia] = dataIso.split("-").map(Number);
+  const [hh, mm] = horario.split(":").map(Number);
+
+  // data do evento
+  const evento = new Date(ano, mes - 1, dia, hh, mm, 0, 0);
+
+  // data atual
+  const agora = new Date();
+  agora.setSeconds(0);
+  agora.setMilliseconds(0);
+
+  return evento.getTime() > agora.getTime();
+};
+
+
 export default function NovoEvento({ onFechar }: { onFechar: () => void }) {
 
   const [titulo, setTiulo] = useState('')
@@ -82,6 +102,11 @@ export default function NovoEvento({ onFechar }: { onFechar: () => void }) {
       setErro("Data/Horário inválidos.");
       return;
     }
+
+     if (!isDataNoFuturo(data, horario)) {
+    setErro("A data/hora do evento não pode ser no passado.");
+    return; // impede o envio
+  }
 
     try {
       // envia convidados como array de ids (números)
