@@ -144,13 +144,16 @@ export default function EventoDetalhe({ eventoId, conviteId, onFechar, statusCon
                                     </ul>
 
                                     {/* Se for recusado, mostra o motivo */}
-                                    {(statusConvite?.toUpperCase() === "RECUSADO" && motivoConvite) && (
-                                        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                                            <p className="font-sans text-[15px] font-bold text-red-700 pb-2">Motivo da Recusa:</p>
-                                            <p className="font-sans text-[15px] text-red-600 whitespace-pre-wrap">{motivoConvite}</p>
-                                        </div>
-                                    )}
-
+                                    {statusConvite?.toUpperCase() === "RECUSADO" && motivoConvite && (
+                                        <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-md shadow-sm">
+                                            <p className="font-sans text-sm font-semibold text-red-800 mb-2">
+                                             Motivo da Recusa:
+                                            </p>
+                                            <p className="font-sans text-sm text-red-700 whitespace-pre-wrap leading-relaxed">
+                                            {motivoConvite}
+                                            </p>
+                                        </div>
+                                    )}
                                 </section>
 
                                 <span className="row-start-1 row-span-3 w-[2px] h-full bg-[#C2E8FF]" />
