@@ -9,11 +9,17 @@ import { HistoricoInteracao } from "./historico-interacao"
 export type ClienteCardProps = {
   cliente: Cliente
   excluir: (id: number) => void
+  onUpdate: (newCategory: string, clienteId: number) => void
 }
 
-export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
+export default function CardCliente({ cliente, excluir, onUpdate }: ClienteCardProps) {
   const [abertoModal, setAbertoModal] = useState(false)
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
+
+  const handleCategoryUpdate = (newCategory: string) => {
+    onUpdate(newCategory, cliente.id)
+    setAbertoModal(false)
+  }
 
   const abrirModalEditar = () => {
     setConteudoModal(<CadastroCliente clienteId={cliente.id} />)
@@ -22,7 +28,7 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
 
   const abrirModalHistorico = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<HistoricoInteracao clienteId={cliente.id} />)
+    setConteudoModal(<HistoricoInteracao clienteId={cliente.id} onCategoryUpdated={handleCategoryUpdate} onClose={() => setAbertoModal(false)} />)
     setAbertoModal(true)
   }
 

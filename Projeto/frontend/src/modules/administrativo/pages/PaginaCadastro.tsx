@@ -4,6 +4,7 @@ import InputMaskField from '../components/InputMaskField.tsx';
 import './PaginaCadastro.css';
 import { useNavigate } from 'react-router-dom';
 import instance from "../../../services/api";
+import InputLine from '../../../shared/components/inputLine.tsx';
 
 
 // Regex simples para validar formato DD/MM/YYYY
@@ -131,29 +132,32 @@ export default function Cadastro() {
           <InputField
             label="Nome Completo"
             type="text"
-            placeholder="Digite o nome completo"
+            placeholder=""
             required
             maxLength={100}
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            classNameInput='w-[400px]'
           />
-
+          
           <InputMaskField
             label="CPF"
             mask="000.000.000-00"
-            placeholder="Digite o CPF"
+            placeholder=""
             required
             maxLength={14}
             value={cpf}
             onAccept={(value: string) => setCpf(value)}
+            classNameInput='w-[400px]'
           />
 
           <InputMaskField
-            label="Data de Nascimento"
+            label="Data de Nascimento(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
+            classNameInput='w-[400px]'
             value={dataNascimento ? formatarDataParaPtBr(dataNascimento) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
@@ -167,21 +171,23 @@ export default function Cadastro() {
           />
 
           <InputField
-            label="Gênero"
+            label="Gênero(Ex: Masculino, Feminino, Outro)"
             type="text"
-            placeholder="Ex: Masculino, Feminino, Outro"
+            placeholder=""
             required
             maxLength={20}
             value={genero}
+            classNameInput='w-[400px]'
             onChange={(e) => setGenero(e.target.value)}
           />
 
           <InputMaskField
-            label="Data de Contratação"
+            label="Data de Contratação(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
+            classNameInput='w-[400px]'
             value={dataContratacao ? formatarDataParaPtBr(dataContratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
@@ -197,30 +203,33 @@ export default function Cadastro() {
           <InputField
             label="Cargo"
             type="text"
-            placeholder="Digite o cargo"
+            placeholder=""
             required
             maxLength={50}
             value={cargo}
+            classNameInput='w-[400px]'
             onChange={(e) => setCargo(e.target.value)}
           />
 
           <InputField
             label="Setor"
             type="text"
-            placeholder="Digite o setor"
+            placeholder=""
             required
             maxLength={50}
             value={setor}
+            classNameInput='w-[400px]'
             onChange={(e) => setSetor(e.target.value)}
           />
 
           <InputField
-            label="Senha"
+            label="Digite uma senha segura"
             type="password"
-            placeholder="Digite uma senha segura"
+            placeholder=""
             required
             maxLength={100}
             value={senha}
+            classNameInput='w-[400px]'
             onChange={(e) => setSenha(e.target.value)}
           />
 

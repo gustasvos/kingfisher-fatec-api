@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom';
 import instance from "../../../services/api";
 import InputMaskField from '../../administrativo/components/InputMaskField'
+import InputField from "../../administrativo/components/InputField";
 
 // Regex simples para validar formato DD/MM/YYYY
 const isValidDataPtBr = (data: string): boolean => {
@@ -125,10 +126,10 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
   };
 
   const handleDescartar = () => {
-      fetchCliente();
-      setErro(null);
-      setSucesso(null);
-    };
+    fetchCliente();
+    setErro(null);
+    setSucesso(null);
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -144,10 +145,11 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               label="CNPJ"
               classNameLabel="!text-[#015084]"
               mask="00.000.000/0000-00"
-              placeholder="Digite o CNPJ"
+              placeholder=""
               required
               maxLength={18}
               value={CNPJ}
+              classNameInput='w-[400px]'
               onAccept={(value: string) => setCnpj(value)}
               style={{ outline: 'none', boxShadow: 'none' }}
             />
@@ -157,48 +159,48 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               label="CNAE"
               classNameLabel="!text-[#015084]"
               mask="00.000-0/00"
-              placeholder="Digite o CNAE"
+              placeholder=""
               required
               maxLength={11}
               value={CNAE}
+              classNameInput='w-[400px]'
               onAccept={(value: string) => setCnae(value)}
               style={{ outline: 'none', boxShadow: 'none' }}
             />
           </div>
           <div className="mb-4">
-            <label className="block font-medium text-[#015084] mb-1">
-              Descrição do CNAE
-            </label>
-            <input
+            <InputField
+              label="Descrição do CNAE"              
+              classNameLabel="!text-[#015084]"
               type="text"
-              placeholder="Digite a descrição do CNAE"
+              placeholder=""
               value={descricaoCNAE}
+              classNameInput='w-[400px]'
               onChange={(e) => setDescricaoCNAE(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
             />
           </div>
 
           <div>
-            <label className="block font-medium text-[#015084] mb-1">
-              Nome Fantasia
-            </label>
-            <input
+            <InputField
+              label="Nome Fantasia"              
+              classNameLabel="!text-[#015084]"
               type="text"
-              placeholder="Digite o nome fantasia"
+              placeholder=""
               value={nomeFantasia}
-              onChange={(e) => setNomeFantasia(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
+              classNameInput='w-[400px]'
+              onChange={(e) => setNomeFantasia(e.target.value)}                         
             />
           </div>
 
           <div>
             <InputMaskField
-              label="Prazo de Faturamento"
+              label="Prazo de Faturamento(DD/MM/AAAA)"
               classNameLabel="!text-[#015084]"
               mask="00/00/0000"
-              placeholder="DD/MM/AAAA"
+              placeholder=""
               required
               maxLength={10}
+              classNameInput='w-[400px]'
               value={prazoFaturamento ? formatarDataParaPtBr(prazoFaturamento) : ""}
               style={{ outline: 'none', boxShadow: 'none' }}
               onAccept={(value: string) => {
@@ -214,29 +216,27 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
           </div>
 
           <div>
-            <label className="block font-medium text-[#015084] mb-1">
-              Contato do Responsável
-            </label>
-            <input
+            <InputField
+              label="Contato do Responsável"              
+              classNameLabel="!text-[#015084]"
               type="text"
-              placeholder="Digite o nome do responsável"
+              placeholder=""
               value={contatoResponsavel}
-              onChange={(e) => setContatoResponsavel(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
+              classNameInput='w-[400px]'
+              onChange={(e) => setContatoResponsavel(e.target.value)}                        
             />
           </div>
 
 
           <div>
-            <label className="block font-medium text-[#015084] mb-1">
-              E-mail do Responsável
-            </label>
-            <input
-              type="email"
-              placeholder="Digite o e-mail"
-              value={emailResponsavel}
+            <InputField
+              label="E-mail do Responsável"              
+              classNameLabel="!text-[#015084]"
+              type="text"
+              placeholder=""
+              value={emailResponsavel}              
+              classNameInput='w-[400px]'
               onChange={(e) => setEmailResponsavel(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
             />
           </div>
 

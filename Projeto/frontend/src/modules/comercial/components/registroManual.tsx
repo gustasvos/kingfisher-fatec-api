@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import instance from "../../../services/api";
 
 interface RegistroManualProps {
-  onClose: () => void;
+  onClose: () => void
   clienteId: number
+  onSuccess: (newCategory: string) => void
 }
 
 const categoriaMap: Record<string, number> = {
@@ -15,7 +16,7 @@ const categoriaMap: Record<string, number> = {
   "Follow Up": 6,
 }
 
-const RegistroManual: React.FC<RegistroManualProps> = ({ onClose, clienteId }) => {
+const RegistroManual: React.FC<RegistroManualProps> = ({ onClose, clienteId, onSuccess }) => {
   const [categoria, setCategoria] = useState("");
   const [dataRegistro, setDataRegistro] = useState("");
   const [observacao, setObservacao] = useState("")
@@ -39,6 +40,7 @@ const RegistroManual: React.FC<RegistroManualProps> = ({ onClose, clienteId }) =
       await instance.post("/registroCliente", body);
 
       alert("Interação registrada com sucesso!");
+      onSuccess(categoria)
       onClose();
     } catch (err) {
       console.error("Erro ao registrar interação:", err);

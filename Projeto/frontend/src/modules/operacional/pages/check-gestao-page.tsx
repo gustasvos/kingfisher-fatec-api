@@ -1,7 +1,14 @@
-import CheckGestao from "../components/check-gestão";
+import CheckGestao from "../components/check-gestao";
 
-export default function CheckGestaoPage() {
+type CheckGestaoPageProps = {
+    onAcaoConcluida?: () => void;
+}
+
+export default function CheckGestaoPage({ onAcaoConcluida }: CheckGestaoPageProps) {
     return (
-        <CheckGestao form="Checklist, Forms de gestão de coleta"/>
+        <CheckGestao 
+        form="Checklist, Forms de gestão de coleta"
+        onAcaoConcluida={onAcaoConcluida}
+        />
     )
 }

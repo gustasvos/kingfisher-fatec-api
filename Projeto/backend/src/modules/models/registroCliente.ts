@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 't
 import { Cliente } from './cliente'
 import { ClienteCategoria } from './clienteCategoria'
 
-@Entity('registroCliente')
+@Entity('registro_cliente')
 export class RegistroCliente {
     @PrimaryGeneratedColumn()
     id: number

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm'
 import { Cliente } from './cliente'
 
-@Entity('agendamentoCliente')
+@Entity('agendamento_cliente')
 export class AgendamentoCliente {
     @PrimaryGeneratedColumn()
     id: number

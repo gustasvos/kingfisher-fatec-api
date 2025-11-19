@@ -8,7 +8,7 @@ export enum StatusConvite {
   RECUSADO = 'RECUSADO'
 }
 
-@Entity('eventoConvidado')
+@Entity('evento_convidado')
 export class EventoConvidado {
   @PrimaryGeneratedColumn()
   id: number
