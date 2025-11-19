@@ -7,6 +7,7 @@ import HomeOpColabPage from "../modules/operacional/pages/home-op-colab"
 import FormFechamentoPage from "../modules/operacional/pages/form-fechamento-page"
 import PrivateWrapper from "./../shared/components/PrivateWrapper";
 import ListagemChecklist from "../modules/operacional/components/listagem-checklist";
+import ConfirmaDados from "../modules/operacional/components/confirma-dados"
 
 export default function RotasOp(){
     return(
@@ -18,6 +19,7 @@ export default function RotasOp(){
             <Route path="/home-colab" element={<PrivateWrapper roles={['operacional']}><HomeOpColabPage /></PrivateWrapper>}/>
             <Route path="/form-fechamento" element={<PrivateWrapper roles={['operacional']}><FormFechamentoPage /></PrivateWrapper>}/>
             <Route path="/lista-check-colaborador" element={<PrivateWrapper roles={['operacional']}><ListagemChecklist /></PrivateWrapper>} />
+            <Route path="/confirma-dados" element={<PrivateWrapper roles={['operacional']}><ConfirmaDados /></PrivateWrapper>} />
         </>
     )
 }
