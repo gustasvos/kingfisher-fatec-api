@@ -5,9 +5,12 @@ import EventoRoutes from './modules/routers/EventoRoutes';
 import clienteRoutes from './modules/routers/clienteRoutes';
 import dashboardOpRoutes from './modules/routers/dashboardOpRoutes';
 import formRoutes from './modules/routers/formRoutes'
+import registroClienteRoutes from './modules/routers/registroClienteRoutes';
+import tarefaRoutes from './modules/routers/tarefa.Routes'
 import path from 'path';
 import { uploadsDir,dataDir } from './config/paths'
 import { initFolders } from './utils/initFolders';
+
 initFolders();
 const cors = require('cors');
 
@@ -24,8 +27,10 @@ app.use('/',EventoRoutes)
 app.use('/',usuariosRoutes)
 app.use('/',clienteRoutes)
 app.use("/uploads", express.static(uploadsDir));
+app.use("/", tarefaRoutes);
 app.use("/data", express.static(dataDir));
 app.use("/", formRoutes);
+app.use("/", registroClienteRoutes);
 app.get('/', (req:Request, res:Response) =>{
     res.send('Bem Vindo')
 })

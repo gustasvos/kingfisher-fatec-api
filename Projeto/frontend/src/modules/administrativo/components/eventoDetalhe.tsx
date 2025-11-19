@@ -106,11 +106,11 @@ export default function EventoDetalhe({ eventoId, conviteId, onFechar, statusCon
         <>
             {mostrarModal && (
                 <section
-                    className="flex justify-center items-center z-50 fixed top-0 left-0 w-full h-full bg-transparent"
+                    className="flex justify-center items-center min-h-screen z-50 fixed inset-0 bg-transparent"
                     onClick={onFechar}
                 >
                     <div
-                        className="max-w-[800px] w-[90%] rounded-[15px] overflow-hidden shadow-lg"
+                        className="max-w-[800px] w-[90%] rounded-[15px] shadow-lg"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <Container>
@@ -142,24 +142,27 @@ export default function EventoDetalhe({ eventoId, conviteId, onFechar, statusCon
                                         </li>
                                         <li className="font-sans text-[15px] font-semibold">{evento ? evento.localizacao : "Carregando..."}</li>
                                     </ul>
-
-                                    {/* Se for recusado, mostra o motivo */}
-                                    {(statusConvite?.toUpperCase() === "RECUSADO" && motivoConvite) && (
-                                        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                                            <p className="font-sans text-[15px] font-bold text-red-700 pb-2">Motivo da Recusa:</p>
-                                            <p className="font-sans text-[15px] text-red-600 whitespace-pre-wrap">{motivoConvite}</p>
-                                        </div>
-                                    )}
-
                                 </section>
 
                                 <span className="row-start-1 row-span-3 w-[2px] h-full bg-[#C2E8FF]" />
 
                                 {/* --- DIREITA (CONFIRMAÇÃO/STATUS) --- */}
-                                <section className="flex flex-col items-center relative col-start-3 row-span-3 pt-[30px] space-y-5">
+                                <section className="flex flex-col items-center relative col-start-3 row-span-3 pt-[30px] space-y-5 w-full">
                                     <p className="font-sans text-[18px] font-semibold pb-[10px]">
                                         Status: {isRespondido ? getStatusLabel(statusConvite) : "Confirmação"}
                                     </p>
+
+                                     {/* Se for recusado, mostra o motivo */}
+                                     {statusConvite?.toUpperCase() === "RECUSADO" && motivoConvite && (
+                                        <div className="mt-2 p-4 bg-red-50 border-l-4 border-red-400 rounded-md shadow-sm w-[90%] break-words">
+                                            <p className="font-sans text-sm font-semibold text-red-800 mb-2">
+                                             Motivo da Recusa:
+                                            </p>
+                                            <p className="font-sans text-sm text-red-700 whitespace-pre-wrap leading-relaxed">
+                                            {motivoConvite}
+                                            </p>
+                                        </div>
+                                    )}
 
                                     {/* Lógica de botões SÓ se for PENDENTE */}
                                     {isPendente && (

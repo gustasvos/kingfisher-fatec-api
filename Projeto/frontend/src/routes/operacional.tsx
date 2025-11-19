@@ -17,7 +17,6 @@ export default function RotasOp(){
             <Route path="/form-abertura" element={<PrivateWrapper roles={['operacional']}><FormAberturaPage/></PrivateWrapper>}/>
             <Route path="/home-colab" element={<PrivateWrapper roles={['operacional']}><HomeOpColabPage /></PrivateWrapper>}/>
             <Route path="/form-fechamento" element={<PrivateWrapper roles={['operacional']}><FormFechamentoPage /></PrivateWrapper>}/>
-            <Route path="/check-veiculo" element={<PrivateWrapper roles={['operacional']}><CheckVeiculosPage/></PrivateWrapper>}/>
             <Route path="/lista-check-colaborador" element={<PrivateWrapper roles={['operacional']}><ListagemChecklist /></PrivateWrapper>} />
         </>
     )

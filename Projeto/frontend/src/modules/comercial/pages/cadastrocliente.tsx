@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom';
 import instance from "../../../services/api";
 import InputMaskField from '../../administrativo/components/InputMaskField'
+import InputField from "../../administrativo/components/InputField";
 
 // Regex simples para validar formato DD/MM/YYYY
 const isValidDataPtBr = (data: string): boolean => {
@@ -29,11 +30,18 @@ interface CadastroClienteProps {
 
 export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
 
+  // Dados do usuário logado
+  const storedUser = localStorage.getItem("user");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const userId = parsedUser?.id || "";
+
   const [CNPJ, setCnpj] = useState("")
-  const [NomeFantasia, setNomeFantasia] = useState("")
-  const [PrazoFaturamento, setPrazoFaturamento] = useState("")
-  const [ContatoResponsavel, setContatoResponsavel] = useState("")
-  const [EmailResponsavel, setEmailResponsavel] = useState("")
+  const [nomeFantasia, setNomeFantasia] = useState("")
+  const [prazoFaturamento, setPrazoFaturamento] = useState("")
+  const [contatoResponsavel, setContatoResponsavel] = useState("")
+  const [emailResponsavel, setEmailResponsavel] = useState("")
+  const [CNAE, setCnae] = useState("")
+  const [descricaoCNAE, setDescricaoCNAE] = useState("")
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -59,6 +67,8 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
       setPrazoFaturamento(cliente.PrazoFaturamento);
       setContatoResponsavel(cliente.ContatoResponsavel);
       setEmailResponsavel(cliente.EmailResponsavel);
+      setCnae(cliente.CNAE)
+      setDescricaoCNAE(cliente.descricaoCNAE)
       console.log('cliente:', cliente)
 
     } catch (error) {
@@ -80,15 +90,17 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
     };
 
     // Normaliza o formato antes de enviar
-    const prazoISO = new Date(PrazoFaturamento).toISOString().split("T")[0]; // "2025-11-30"
-
+    const prazoISO = prazoFaturamento;
 
     const payload = {
       CNPJ: CNPJ.replace(/\D/g, ""),
-      NomeFantasia: limparTexto(NomeFantasia),
+      NomeFantasia: limparTexto(nomeFantasia),
       PrazoFaturamento: prazoISO,
-      ContatoResponsavel: limparTexto(ContatoResponsavel),
-      EmailResponsavel: EmailResponsavel
+      ContatoResponsavel: limparTexto(contatoResponsavel),
+      EmailResponsavel: emailResponsavel,
+      CNAE: CNAE,
+      descricaoCNAE: descricaoCNAE,
+      colaboradorId: userId
     };
 
     try {
@@ -113,10 +125,10 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
   };
 
   const handleDescartar = () => {
-      fetchCliente();
-      setErro(null);
-      setSucesso(null);
-    };
+    fetchCliente();
+    setErro(null);
+    setSucesso(null);
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -132,74 +144,100 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               label="CNPJ"
               classNameLabel="!text-[#015084]"
               mask="00.000.000/0000-00"
-              placeholder="Digite o CNPJ"
+              placeholder=""
               required
               maxLength={18}
               value={CNPJ}
+              classNameInput='w-[400px]'
               onAccept={(value: string) => setCnpj(value)}
               style={{ outline: 'none', boxShadow: 'none' }}
             />
           </div>
+          <div>
+            <InputMaskField
+              label="CNAE"
+              classNameLabel="!text-[#015084]"
+              mask="00.000-0/00"
+              placeholder=""
+              required
+              maxLength={11}
+              value={CNAE}
+              classNameInput='w-[400px]'
+              onAccept={(value: string) => setCnae(value)}
+              style={{ outline: 'none', boxShadow: 'none' }}
+            />
+          </div>
+          <div className="mb-4">
+            <InputField
+              label="Descrição do CNAE"              
+              classNameLabel="!text-[#015084]"
+              type="text"
+              placeholder=""
+              value={descricaoCNAE}
+              classNameInput='w-[400px]'
+              onChange={(e) => setDescricaoCNAE(e.target.value)}
+            />
+          </div>
 
           <div>
-            <label className="block font-medium text-[#015084] mb-1">
-              Nome Fantasia
-            </label>
-            <input
+            <InputField
+              label="Nome Fantasia"              
+              classNameLabel="!text-[#015084]"
               type="text"
-              placeholder="Digite o nome fantasia"
-              value={NomeFantasia}
-              onChange={(e) => setNomeFantasia(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
+              placeholder=""
+              value={nomeFantasia}
+              classNameInput='w-[400px]'
+              onChange={(e) => setNomeFantasia(e.target.value)}                         
             />
           </div>
 
           <div>
             <InputMaskField
-              label="Prazo de Faturamento"
+              label="Prazo de Faturamento(DD/MM/AAAA)"
               classNameLabel="!text-[#015084]"
               mask="00/00/0000"
-              placeholder="DD/MM/AAAA"
+              placeholder=""
               required
               maxLength={10}
-              value={PrazoFaturamento ? formatarDataParaPtBr(PrazoFaturamento) : ""}              
+              classNameInput='w-[400px]'
+              value={prazoFaturamento ? formatarDataParaPtBr(prazoFaturamento) : ""}
               style={{ outline: 'none', boxShadow: 'none' }}
-              onAccept={(value: string) => {
-                if (isValidDataPtBr(value)) {
-                  setPrazoFaturamento(dataLimpa(value));
-                }
-              }}
-              onPaste={(e) => {
-                const pastedData = e.clipboardData.getData('Text');
-                if (!isValidDataPtBr(pastedData)) e.preventDefault();
-              }}
-            />
-          </div>
+
+            onAccept={(value: string) => {
+  
+          if (isValidDataPtBr(value)) {
+           setPrazoFaturamento(dataLimpa(value));
+         }
+       }}
+        onPaste={(e) => {
+         const pastedData = e.clipboardData.getData('Text');
+         if (!isValidDataPtBr(pastedData)) e.preventDefault();
+        }}
+          />
+        </div>
 
           <div>
-            <label className="block font-medium text-[#015084] mb-1">
-              Contato do Responsável
-            </label>
-            <input
+            <InputField
+              label="Contato do Responsável"              
+              classNameLabel="!text-[#015084]"
               type="text"
-              placeholder="Digite o nome do responsável"
-              value={ContatoResponsavel}
-              onChange={(e) => setContatoResponsavel(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
+              placeholder=""
+              value={contatoResponsavel}
+              classNameInput='w-[400px]'
+              onChange={(e) => setContatoResponsavel(e.target.value)}                        
             />
           </div>
 
 
           <div>
-            <label className="block font-medium text-[#015084] mb-1">
-              E-mail do Responsável
-            </label>
-            <input
-              type="email"
-              placeholder="Digite o e-mail"
-              value={EmailResponsavel}
+            <InputField
+              label="E-mail do Responsável"              
+              classNameLabel="!text-[#015084]"
+              type="text"
+              placeholder=""
+              value={emailResponsavel}              
+              classNameInput='w-[400px]'
               onChange={(e) => setEmailResponsavel(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 outline-[#015084] text-black"
             />
           </div>
 

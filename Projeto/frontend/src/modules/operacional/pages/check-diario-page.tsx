@@ -1,7 +1,13 @@
 import CheckDiario from "../components/check-diario";
 
-export default function CheckDiarioPage(){
-    return(
-        <CheckDiario form="Checklist Diário - Frota Newe"/>
+type CheckDiarioPageProps = {
+    onAcaoConcluida?: () => void;
+}
+
+export default function CheckDiarioPage({ onAcaoConcluida }: CheckDiarioPageProps) {
+    return (
+        <CheckDiario form="Checklist Diário - Frota Newe"
+            onAcaoConcluida={onAcaoConcluida}
+        />
     )
 }

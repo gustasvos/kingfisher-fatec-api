@@ -1,7 +1,13 @@
 import FormFechamento from "../components/form-fechamento";
 
-export default function FormFechamentoPage(){
+type CheckFechamentoPageProps = {
+    onAcaoConcluida?: () => void;
+}
+
+export default function FormFechamentoPage({ onAcaoConcluida }: CheckFechamentoPageProps){
     return(
-        <FormFechamento form="Formulário de fechamento"/>
+        <FormFechamento form="Formulário de fechamento"
+        onAcaoConcluida={onAcaoConcluida}
+        />
     )    
 }

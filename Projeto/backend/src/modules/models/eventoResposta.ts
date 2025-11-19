@@ -8,10 +8,10 @@ export class EventoResposta{
     id: number
 
     @Column({type: 'varchar', length: 255})
-    titulo_evento: string
+    tituloEvento: string
 
     @Column({type: 'date'})
-    data_evento: Date
+    dataEvento: Date
 
     @Column({type: 'varchar', length: 255})
     objetivo: string

@@ -21,7 +21,17 @@ type DetalhesRelatorio = {
   avaliacao?: number;
 };
 
+const formatarData = (data: string | undefined): string => {
+  if (!data) return "Não disponível";
+  const dataParte = data.split('T')[0];
+  const partes = dataParte.split('-');
 
+  if (partes.length === 3) {
+    const [ano, mes, dia] = partes;
+    return `${dia}/${mes}/${ano}`;
+  }
+  return dataParte;
+};
 
 const FiltroDropdown: React.FC<{
   filtro: "todos" | "enviado" | "nao_enviado";
@@ -96,7 +106,7 @@ const Modal: React.FC<{
               {relatorio.titulo}
             </h2>
             <p className="text-gray-600 mb-2">
-              <strong>Data do Evento:</strong> {relatorio.dataEnvio || "Não disponível"}
+              <strong>Data do Evento:</strong> {formatarData(relatorio.dataEnvio)}
             </p>
             <p className="text-gray-600 mb-2">
               <strong>Objetivo:</strong> {relatorio.objetivo || "Não informado"}
@@ -174,7 +184,7 @@ const Relatorios: React.FC = () => {
         id: d.id,
         titulo: d.evento?.titulo || d.titulo_evento || "Sem título",
         descricao: d.comentarios || "Sem comentários.",
-        dataEnvio: d.dataEnvio || d.data_resposta || d.data_evento || "",
+        dataEnvio: d.dataEvento || d.evento?.dataHora || "Não disponível",
         setor: d.usuario?.setor || "Não informado",
         enviado: true,
         objetivo: d.objetivo || "",
@@ -221,7 +231,7 @@ const Relatorios: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-[#eaf5fb] relative">
+    <div className="flex h-screen bg-slate-50 relative">
       <Navbar />
 
       <main className="flex-1 p-10 overflow-y-auto">
@@ -232,7 +242,7 @@ const Relatorios: React.FC = () => {
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
             className="flex-1 min-w-[250px] px-4 py-2 rounded-full border border-[#9aa7ad]
-                       bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
+                        text-[#0f5260] placeholder-[#9aa7ad]
                        focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
                        transition-colors"
           />

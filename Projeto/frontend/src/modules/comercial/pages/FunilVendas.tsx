@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LeadProps } from '../../../types/LeadProps'
 import LeadCard from '../components/LeadCard'
 import Navbar from '../../../shared/components/navbar'
 import instance from '../../../services/api'
+import { FaFunnelDollar } from 'react-icons/fa'
+import { FunnelIcon } from 'lucide-react'
 
 // FILTRO
 const FilterIcon: React.FC = () => (
@@ -66,7 +68,7 @@ const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads, onLeadDrop, sel
       <div className="w-full lg:w-1/6 flex-shrink-0 p-2">
         <div
           className="
-            bg-slate-50 
+            bg-gray-100 
             rounded-xl 
             border
             border-slate-200
@@ -89,7 +91,7 @@ const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads, onLeadDrop, sel
             </span>
           </div>
 
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="bg-slate-100 flex-1 overflow-y-auto overflow-x-hidden">
             {leads.length > 0 ? (
               leads.map((lead) => 
               <LeadCard 
@@ -117,18 +119,70 @@ const FunilVendas: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null)
+  const storedUser = localStorage.getItem("user");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const userId = parsedUser?.id || "";
+
+  // Depois de buscar as categorias do backend ou usar os enums do frontend
+  const CATEGORIA_MAP: Record<string, number> = {
+    'Prospect': 1,
+    'Inicial': 2,
+    'Potencial': 3,
+    'Manutenção': 4,
+    'Em Negociação': 5,
+    'Follow Up': 6
+  }
+
+  // Tipo auxiliar para o retorno da API
+  interface RegistroLeadAPI {
+    id: number
+    clienteId: number
+    categoriaId: number
+    dataRegistro: string
+    observacao?: string
+    cliente: {
+      id: number
+      NomeFantasia: string
+      ContatoResponsavel: string
+      CNPJ?: string
+      EmailResponsavel?: string
+    }
+    categoria?: {
+      categoria: string
+    }
+  }
 
   useEffect(() => {
     const fetchLeads = async () => {
       try {
         setLoading(true)
         setError(null)
-        const response = await instance.get<LeadProps[]>('/cliente/list')
-        const leadsComCategoria = response.data.map(lead => ({
-          ...lead,
-          categoria: lead.Categoria || 'null',
-        }))
+        
+        const response = await instance.get(`/registroCliente/comercial/${userId}`)
+        // Criar um Map para pegar apenas o registro mais recente de cada cliente
+        const leadsMaisRecentesMap = new Map<number, any>()
 
+        response.data.forEach((registro: any) => {
+          const clienteId = registro.clienteId
+          const registroAtual = leadsMaisRecentesMap.get(clienteId)
+
+          if (
+            !registroAtual ||
+            new Date(registro.dataRegistro) > new Date(registroAtual.dataRegistro)
+          ) {
+            leadsMaisRecentesMap.set(clienteId, registro)
+          }
+        })
+
+        // Transformar apenas para LeadProps usando os registros mais recentes
+        const leadsComCategoria: LeadProps[] = Array.from(leadsMaisRecentesMap.values()).map((registro: any) => ({
+          id: registro.cliente.id,
+          nomeFantasia: registro.cliente.nomeFantasia,
+          contatoResponsavel: registro.cliente.contatoResponsavel,
+          CNPJ: registro.cliente.CNPJ,
+          emailResponsavel: registro.cliente.emailResponsavel,
+          categoria: registro.categoria?.categoria || 'null',
+        }));
         setLeads(leadsComCategoria)
       } catch (err) {
         console.error("Erro ao buscar clientes:", err)
@@ -141,20 +195,46 @@ const FunilVendas: React.FC = () => {
     fetchLeads()
   }, [])
 
-  const handleLeadDrop = (leadId: string, novaCategoria: string) => {
-    instance.patch(`/cliente/${leadId}/categoria`, { categoria: novaCategoria })
-      .then(response => {
-        setLeads(prevLeads =>
-          prevLeads.map(lead =>
-            lead.id === parseInt(leadId)
-              ? { ...lead, Categoria: novaCategoria }
-              : lead
-          )
+  const handleLeadDrop = async (leadId: string, novaCategoria: string) => {
+    const categoriaId = CATEGORIA_MAP[novaCategoria]
+
+    if (!categoriaId) {
+      console.error("Categoria desconhecida:", novaCategoria)
+      return
+    }
+
+    try {
+      // Criar a data local no fuso horário do Brasil
+      const dataAgora = new Date()
+      const offset = -3 // UTC-3
+      dataAgora.setHours(dataAgora.getHours() + offset)
+      const dataFormatada = dataAgora.toISOString().slice(0, 19).replace('T', ' ')
+
+      const body = {
+        clienteId: parseInt(leadId),
+        categoriaId: categoriaId,
+        dataRegistro: dataFormatada,
+        observacao: `Lead movido para ${novaCategoria}`
+      }
+
+      console.log("Enviando novo registro de interação:", body)
+
+      await instance.post('/registroCliente', body)
+
+      // Atualiza o estado local (frontend)
+      setLeads(prevLeads =>
+        prevLeads.map(lead =>
+          lead.id === parseInt(leadId)
+            ? { ...lead, categoria: novaCategoria }
+            : lead
         )
-      })
-      .catch(err => {
-        console.error("Erro ao mover o lead", err)
-      })
+      )
+
+      console.log(`Lead ${leadId} movido para ${novaCategoria}`)
+
+    } catch (err) {
+      console.error("Erro ao criar novo registro de interação:", err)
+    }
   }
 
   const handleSelectLead = (id: number) => {
@@ -164,7 +244,7 @@ const FunilVendas: React.FC = () => {
   }
 
   const getLeadsByCategoria = (categoria: string) => {
-    return leads.filter((lead) => lead.Categoria === categoria)
+    return leads.filter((lead) => lead.categoria === categoria)
   }
 
   const renderContent = () => {
@@ -192,6 +272,7 @@ const FunilVendas: React.FC = () => {
         w-full 
         overflow-x-hidden
         pb-4
+        h-screen
         ">
         {CATEGORIAS.map((categoria) => (
           <FunilColumn
@@ -210,30 +291,11 @@ const FunilVendas: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-gray-50 min-h-screen p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <header className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-800">Funil de Vendas</h1>
-            <button className="
-              flex 
-              items-center 
-              gap-2 
-              px-4 
-              py-2 
-              bg-white 
-              border 
-              border-gray-300 
-              rounded-lg 
-              text-sm 
-              font-medium 
-              text-gray-700 
-              hover:bg-gray-50
-              hover:shadow-sm
-              transition
-              ">
-              <FilterIcon />
-              Filtros
-            </button>
+      <div className="max-h-screen p-4">
+        <div className="max-w-[90%] mx-auto">
+          <header className="p-3 flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-gray-800 drop-shadow-md">Funil de Vendas</h1>
+            
           </header>
           {renderContent()}
         </div>

@@ -2,16 +2,17 @@ import { useState, FormEvent, ChangeEvent } from "react";
 import BotaoSubmit from "../../../shared/components/botao-submit";
 import InputLine from "../../../shared/components/inputLine";
 import instance from "../../../services/api";
+import InputMaskField from "../../administrativo/components/InputMaskField";
 
 type FormAberturaProps = {
     form: string;
+    onAcaoConcluida?: () => void
 };
 
-export default function CheckDiario({ form }: FormAberturaProps) {
+export default function CheckDiario({ form, onAcaoConcluida }: FormAberturaProps) {
     const [loading, setLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-
-    const [nomeMotorista, setNomeMotorista] = useState("");
+    const [nomeMotorista, setNomeMotorista] = useState("")
     const [placaVeiculo, setPlacaVeiculo] = useState("");
     const [kmInicial, setKmInicial] = useState("");
     const [cidadeDestino, setCidadeDestino] = useState("");
@@ -47,11 +48,11 @@ export default function CheckDiario({ form }: FormAberturaProps) {
             const dataEnvio = new Date().toISOString();
 
             formData.append("formTitle", "Checklist Diário - Frota Newe");
-            if (nomeMotorista) formData.append("nome-motorista", nomeMotorista);
 
             const simNao = (valor: string | null) =>
                 valor ? (valor.includes("-sim") ? "SIM" : "NÃO") : "";
 
+            if (nomeMotorista) formData.append("nome-motorista", nomeMotorista);
             if (placaVeiculo) formData.append("placa-veiculo", placaVeiculo);
             if (kmInicial) formData.append("km-inicial", kmInicial);
             if (cidadeDestino) formData.append("destino", cidadeDestino);
@@ -71,7 +72,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
             if (estadoPneus) formData.append("estado-pneus-ok", simNao(estadoPneus));
             if (limpeza) formData.append("limpeza-bau-sider-cabine-ok", simNao(limpeza));
             if (lubrificacaoSuspensoes)
-    formData.append("lubrificacao-suspensoes-ok", simNao(lubrificacaoSuspensoes));
+                formData.append("lubrificacao-suspensoes-ok", simNao(lubrificacaoSuspensoes));
             if (macaco) formData.append("macaco-ok", simNao(macaco));
             if (chaveRoda) formData.append("chave-roda-ok", simNao(chaveRoda));
             if (documentoVigente)
@@ -79,8 +80,8 @@ export default function CheckDiario({ form }: FormAberturaProps) {
 
             // 🔹 Adiciona campos automáticos
             formData.append("id-usuario", userId);
-            formData.append("cpf-usuario", userCpf); 
-            formData.append("timestamp", dataEnvio); 
+            formData.append("cpf-usuario", userCpf);
+            formData.append("timestamp", dataEnvio);
 
             // 🔹 Envio usando Axios instance
             const response = await instance.post("/submit", formData, {
@@ -89,7 +90,10 @@ export default function CheckDiario({ form }: FormAberturaProps) {
 
             if (response.status === 201 || response.status === 200) {
                 setShowSuccess(true);
-                setTimeout(() => setShowSuccess(false), 3000);
+                setTimeout(() => {
+                    setShowSuccess(false)
+                    onAcaoConcluida && onAcaoConcluida()
+                }, 1000)
             } else {
                 alert(`Erro ${response.status}: ${response.statusText}`);
             }
@@ -106,7 +110,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
             setter(e.target.value);
 
     return (
-        <div className="w-full flex justify-center mt-8 px-4">
+        <div className="flex justify-center mt-8 px-4">
             <div className="bg-white shadow-lg rounded-3xl w-full max-w-5xl h-[90vh] border border-gray-100 overflow-hidden">
                 <div className="h-full overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-[#17607f] scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
                     <h1 className="text-3xl font-semibold text-[#17607f] mb-8 text-center tracking-tight">
@@ -119,27 +123,31 @@ export default function CheckDiario({ form }: FormAberturaProps) {
                                 type="text"
                                 id="nome-motorista"
                                 htmlfor="nome-motorista"
-                                required
+                                placeholder=""
                                 value={nomeMotorista}
                                 onChange={(e) => setNomeMotorista(e.target.value)}
                             >
-                                Nome do motorista
+                                Nome Motorista
                             </InputLine>
 
-                            <InputLine
-                                type="text"
-                                id="placa-veiculo"
-                                htmlfor="placa-veiculo"
+                            <InputMaskField
+                                label="Placa Veículo"
+                                mask="aaa-0000"
+                                placeholder=""
+                                required
+                                maxLength={8}
                                 value={placaVeiculo}
-                                onChange={(e) => setPlacaVeiculo(e.target.value)}
-                            >
-                                Placa do veículo
-                            </InputLine>
+                                onAccept={(value: string) => {
+                                    const placaLimpa = value.replace("-", "").toUpperCase()
+                                    setPlacaVeiculo(placaLimpa)
+                                }}
+                            />
 
                             <InputLine
                                 type="number"
                                 id="km-inicial"
                                 htmlfor="km-inicial"
+                                placeholder=""
                                 value={kmInicial}
                                 onChange={(e) => setKmInicial(e.target.value)}
                             >
@@ -150,6 +158,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
                                 type="text"
                                 id="cidade-destino"
                                 htmlfor="cidade-destino"
+                                placeholder=""
                                 value={cidadeDestino}
                                 onChange={(e) => setCidadeDestino(e.target.value)}
                             >
@@ -160,6 +169,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
                                 type="number"
                                 id="km-final"
                                 htmlfor="km-final"
+                                placeholder=""
                                 value={kmFinal}
                                 onChange={(e) => setKmFinal(e.target.value)}
                             >
@@ -266,6 +276,7 @@ export default function CheckDiario({ form }: FormAberturaProps) {
                                 type="text"
                                 id="observacoes"
                                 htmlfor="observacoes"
+                                placeholder=""
                                 required
                                 value={observacoes}
                                 onChange={(e) => setObservacoes(e.target.value)}

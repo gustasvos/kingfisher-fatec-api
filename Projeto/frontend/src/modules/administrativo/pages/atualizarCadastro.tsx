@@ -22,6 +22,26 @@ const formatarDataParaPtBr = (dataIso: string): string => {
   return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
 };
 
+// Verifica se a pessoa tem pelo menos 16 anos
+const isMaiorIdade = (dataIso: string) => {
+  const hoje = new Date()
+  const nascimento = new Date(dataIso)
+
+  const limite = new Date()
+  limite.setFullYear(hoje.getFullYear() - 16)
+
+  return nascimento <= limite
+}
+
+// Verifica se a data é no futuro
+const isDataNoFuturo = (dataIso: string) => {
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+
+  const data = new Date(dataIso)
+  return data > hoje
+}
+
 const generoCompleto = (letra: string) => {
   switch (letra.toUpperCase()) {
     case 'M':
@@ -43,9 +63,9 @@ interface AtualizarCadastroProps {
 export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
-  const [data_nascimento, setData_nascimento] = useState("");
+  const [dataNascimento, setdataNascimento] = useState("");
   const [genero, setGenero] = useState("");
-  const [data_contratacao, setDataContratacao] = useState("");
+  const [dataContratacao, setDataContratacao] = useState("");
   const [cargo, setCargo] = useState("");
   const [setor, setSetor] = useState("");
   const [senha, setSenha] = useState("");
@@ -70,9 +90,9 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
 
         setNome(usuario.nome);
         setCpf(usuario.cpf);
-        setData_nascimento(usuario.data_nascimento);
+        setdataNascimento(usuario.dataNascimento);
         setGenero(usuario.genero);
-        setDataContratacao(usuario.data_contratacao);
+        setDataContratacao(usuario.dataContratacao);
         setCargo(usuario.cargo);
         setSetor(usuario.setor);
         setRole(usuario.role || "usuario");
@@ -90,15 +110,36 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
     setErro(null);
     setSucesso(null);
 
+    // validações
+    if (!dataNascimento || !dataContratacao) {
+      setErro("Preencha as datas corretamente.")
+      return
+    }
+
+    if (isDataNoFuturo(dataNascimento)) {
+      setErro("Data de nascimento inválida.")
+      return
+    }
+
+    if (!isMaiorIdade(dataNascimento)) {
+      setErro("O usuário deve ter mais de 16 anos.")
+      return
+    }
+
+    if (isDataNoFuturo(dataContratacao)) {
+      setErro("A data de contratação inválida.")
+      return
+    }
+
     const limparTexto = (texto: string) =>
       texto.replace(/[^\p{L}\sçÇ]/gu, '').replace(/\s+/g, ' ').trim();
 
     const payload: {
       nome: string
       cpf: string
-      data_nascimento: string
+      dataNascimento: string
       genero: string
-      data_contratacao: string
+      dataContratacao: string
       cargo: string
       setor: string
       role: string
@@ -106,9 +147,9 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
     } = {
       nome: limparTexto(nome),
       cpf: cpf.replace(/\D/g, ""),
-      data_nascimento,
+      dataNascimento,
       genero: genero.trim().charAt(0).toLowerCase(),
-      data_contratacao,
+      dataContratacao,
       cargo: limparTexto(cargo),
       setor: limparTexto(setor),
       role: limparTexto(role.toLowerCase()),
@@ -153,54 +194,59 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
           <InputField
             label="Nome Completo"
             type="text"
-            placeholder="Digite o nome completo"
+            placeholder=""
             required
             maxLength={100}
             value={nome}
+            classNameInput='w-[400px]'
             onChange={(e) => setNome(e.target.value)}
           />
 
           <InputMaskField
             label="CPF"
             mask="000.000.000-00"
-            placeholder="Digite o CPF"
+            placeholder=""
             required
             maxLength={14}
             value={cpf}
+            classNameInput='w-[400px]'
             onAccept={(value: string) => setCpf(value)}
           />
 
           <InputMaskField
-            label="Data de Nascimento"
+            label="Data de Nascimento(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
-            value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
+            classNameInput='w-[400px]'
+            value={dataNascimento ? formatarDataParaPtBr(dataNascimento) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
-                setData_nascimento(dataLimpa(value));
+                setdataNascimento(dataLimpa(value));
               }
             }}
           />
 
           <InputField
-            label="Gênero"
+            label="Gênero(Ex: Masculino, Feminino, Outro)"
             type="text"
-            placeholder="Ex: Masculino, Feminino, Outro"
+            placeholder=""
             required
             maxLength={20}
             value={generoCompleto(genero)}
+            classNameInput='w-[400px]'
             onChange={(e) => setGenero(e.target.value)}
           />
 
           <InputMaskField
-            label="Data de Admissão"
+            label="Data de Admissão(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
-            value={data_contratacao ? formatarDataParaPtBr(data_contratacao) : ""}
+            classNameInput='w-[400px]'
+            value={dataContratacao ? formatarDataParaPtBr(dataContratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
                 setDataContratacao(dataLimpa(value));
@@ -211,29 +257,32 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
           <InputField
             label="Cargo"
             type="text"
-            placeholder="Digite o cargo"
+            placeholder=""
             required
             maxLength={50}
             value={cargo}
+            classNameInput='w-[400px]'
             onChange={(e) => setCargo(e.target.value)}
           />
 
           <InputField
             label="Setor"
             type="text"
-            placeholder="Digite o setor"
+            placeholder=""
             required
             maxLength={50}
             value={setor}
+            classNameInput='w-[400px]'
             onChange={(e) => setSetor(e.target.value)}
           />
 
           <InputField
-            label="Senha"
+            label="Digite a nova senha"
             type="password"
-            placeholder="Digite a nova senha"
+            placeholder=""
             maxLength={100}
             value={senha}
+            classNameInput='w-[400px]'
             onChange={(e) => setSenha(e.target.value)}
           />
 
@@ -247,7 +296,6 @@ export default function AtualizarCadastro({ id }: AtualizarCadastroProps) {
               className="w-full px-4 py-2 rounded-md text-black"
             >
               <option value="">Selecione</option>
-              <option value="usuario">Usuário</option>
               <option value="admin">Administrador</option>
               <option value="comercial">Comercial</option>
               <option value="operacional">Operacional</option>

@@ -4,9 +4,10 @@ import BotaoSubmit from "../../../shared/components/botao-submit";
 
 type FormAberturaProps = {
   form: string;
+  onAcaoConcluida?: () => void
 };
 
-export default function FormManutencao({ form }: FormAberturaProps) {
+export default function FormManutencao({ form, onAcaoConcluida }: FormAberturaProps) {
   const [mostraCadeira, setMostraCadeira] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -66,26 +67,108 @@ export default function FormManutencao({ form }: FormAberturaProps) {
     setMostraCadeira(e.target.value === "sim");
   };
 
-  const enviaForm = (e: React.FormEvent<HTMLFormElement>) => {
+  const enviaForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      // 🔹 Dados do usuário logado
+      const storedUser = localStorage.getItem("user");
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+      const userId = parsedUser?.id || "";
+      const userCpf = parsedUser?.cpf || "";
+
+      // Montagem do payload
+      const payload = {
+        "formTitle": "Formulário de manutenção predial",
+        "data_verificacao": dataVerificacao,
+
+        "condicoes_piso_escritorio": condicaoPisoEscritorio,
+        "condicoes_piso_operacional": condicaoPisoOperacional,
+        "condicoes_piso_galpao": condicaoPisoGalpao,
+        "condicoes_piso_refeitorio": condicaoPisoRefeitorio,
+
+        "condicoes_forro_escritorio": condicaoForroEscritorio,
+        "condicoes_forro_operacional": condicaoForroOperacional,
+        "condicoes_forro_galpao": condicaoForroGalpao,
+        "condicoes_forro_refeitorio": condicaoForroRefeitorio,
+
+        "estado_geral_instalacoes_eletricas": estadoGeralEletrica,
+        "estado_geral_protecao_raios": protecaoRaio,
+
+        "carga_ar_condicionado_sala_adm": arAdm,
+        "carga_ar_condicionado_sala_diretoria": arDiretoria,
+        "carga_ar_condicionado_sala_reuniao": arReuniao,
+        "carga_ar_condicionado_sala_operacional": arOperacional,
+
+        "lampadas_sala_adm": lampadaAdm,
+        "lampadas_sala_diretoria": lampadaDiretoria,
+        "lampadas_sala_reuniao": lampadaReuniao,
+        "lampadas_sala_operacional": lampadaOperacional,
+        "lampadas_galpao": lampadaGalpao,
+        "lampadas_refeitorio": lampadaRefeitorio,
+        "lampadas_banheiro_feminino": lampadaBanheiroFem,
+        "lampadas_banheiro_masculino": lampadaBanheiroMasc,
+
+        "macanetas_portas": macanetaBoa,
+        "mesas_operacional": mesaOpProtegida,
+        "condicoes_paleteiras_carrinho": condicaoPratileira,
+        "organizacao_locais_trabalho": organizacaoSegura,
+        "cameras_seguranca": cameraFunciona,
+        "condicoes_balanca_piso": balancaPiso,
+        "data_ultima_afericao_balanca": dataBalanca,
+        "condicoes_mictorios_lavatorios": condicaoMicLav,
+        "data_ultima_limpeza_bebedouro": dataBebedouro,
+        "data_proxima_dedetizacao": dataProximaDetetizacao,
+        "data_ultima_recarga_extintores": dataUltimoExtintor,
+        "data_proxima_recarga_extintores": dataProximoExtintor,
+        "data_ultima_limpeza_caixa_dagua": dataUltimaCaixaAgua,
+        "data_proxima_limpeza_caixa_dagua": dataProximaCaixaAgua,
+        "cadeira_ma_condicao": cadeiraRuim,
+        "descricao_cadeira_ma_condicao": setorCadeiraRuim,
+        "detalhe_adicional": detalheAdd,
+
+        "id-usuario": userId,
+        "cpf-usuario": userCpf
+      };
+
+      const response = await fetch("http://localhost:8080/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao enviar: ${response.status}`);
+      }
+
+      if (response.status === 201 || response.status === 200) {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false)
+          onAcaoConcluida && onAcaoConcluida()
+        }, 1000)
+      } else {
+        alert(`Erro ${response.status}: ${response.statusText}`);
+      }
+
+    } catch (error) {
+      console.error("Erro no envio:", error);
+      alert("Falha ao enviar o formulário.");
+    } finally {
       setLoading(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-    }, 2000);
+    }
   };
 
   return (
     <section className="flex justify-center p-6 bg-gray-100">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg p-6 overflow-y-auto h-[90vh] 
         scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-gray-200 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-        
+
         <h1 className="text-blue-600 text-3xl font-bold mb-4 text-center">
           Formulário de manutenção predial
         </h1>
-        
+
         <p className="text-black mb-6 text-center">
           Esse formulário tem o objetivo de verificar as condições do local afim de manter segurança, funcionalidade e conservação do ambiente de trabalho
         </p>
@@ -128,10 +211,10 @@ export default function FormManutencao({ form }: FormAberturaProps) {
             Proteção contra raios
           </InputLine>
 
-          {[ { nome: "Administrativo", valor: arAdm, setValor: setArAdm },
-             { nome: "Diretoria", valor: arDiretoria, setValor: setArDiretoria },
-             { nome: "Reunião", valor: arReuniao, setValor: setArReuniao },
-             { nome: "Operacional", valor: arOperacional, setValor: setArOperacional }
+          {[{ nome: "Administrativo", valor: arAdm, setValor: setArAdm },
+          { nome: "Diretoria", valor: arDiretoria, setValor: setArDiretoria },
+          { nome: "Reunião", valor: arReuniao, setValor: setArReuniao },
+          { nome: "Operacional", valor: arOperacional, setValor: setArOperacional }
           ].map(({ nome, valor, setValor }) => (
             <fieldset key={nome}>
               <legend className="text-black">Ar-condicionado - Sala {nome}</legend>
@@ -140,14 +223,14 @@ export default function FormManutencao({ form }: FormAberturaProps) {
             </fieldset>
           ))}
 
-          {[ { nome: "ADM", valor: lampadaAdm, setValor: setLampadaAdm },
-             { nome: "Diretoria", valor: lampadaDiretoria, setValor: setLampadaDiretoria },
-             { nome: "Reunião", valor: lampadaReuniao, setValor: setLampadaReuniao },
-             { nome: "Operacional", valor: lampadaOperacional, setValor: setLampadaOperacional },
-             { nome: "Galpão", valor: lampadaGalpao, setValor: setLampadaGalpao },
-             { nome: "Refeitório", valor: lampadaRefeitorio, setValor: setLampadaRefeitorio },
-             { nome: "Banheiro Fem.", valor: lampadaBanheiroFem, setValor: setLampadaBanheiroFem },
-             { nome: "Banheiro Masc.", valor: lampadaBanheiroMasc, setValor: setLampadaBanheiroMasc }
+          {[{ nome: "ADM", valor: lampadaAdm, setValor: setLampadaAdm },
+          { nome: "Diretoria", valor: lampadaDiretoria, setValor: setLampadaDiretoria },
+          { nome: "Reunião", valor: lampadaReuniao, setValor: setLampadaReuniao },
+          { nome: "Operacional", valor: lampadaOperacional, setValor: setLampadaOperacional },
+          { nome: "Galpão", valor: lampadaGalpao, setValor: setLampadaGalpao },
+          { nome: "Refeitório", valor: lampadaRefeitorio, setValor: setLampadaRefeitorio },
+          { nome: "Banheiro Fem.", valor: lampadaBanheiroFem, setValor: setLampadaBanheiroFem },
+          { nome: "Banheiro Masc.", valor: lampadaBanheiroMasc, setValor: setLampadaBanheiroMasc }
           ].map(({ nome, valor, setValor }) => (
             <fieldset key={nome}>
               <legend className="text-black">Lâmpadas - {nome}</legend>
@@ -207,7 +290,7 @@ export default function FormManutencao({ form }: FormAberturaProps) {
             Detalhes adicionais
           </InputLine>
 
-         <div className="col-span-1 md:col-span-2 flex justify-center">
+          <div className="col-span-1 md:col-span-2 flex justify-center">
             <BotaoSubmit
               loading={loading}
               className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300"

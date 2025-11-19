@@ -1,24 +1,49 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "./../../contexts/AuthContext";
+import { FaBars, FaHome, FaUserPlus, FaCalendarAlt, FaBell, FaUsers, FaClipboardList, FaListUl, FaFilter, FaEdit } from "react-icons/fa";
+import { MdDashboard, MdLogout, MdPersonAdd } from "react-icons/md";
+import { FaListCheck } from "react-icons/fa6";
 
-// Imagens
-import imgLogin from './../../assets/imgLoginKey.svg';
-import imgHome from './../../assets/imgHomepage.png';
-import imgUser from './../../assets/imgAddUserMale.png';
-import imgCalendar from './../../assets/imgTearOffCalendar.png';
-import imgNotification from './../../assets/imgDoorbell.png';
-import imgColab from './../../assets/imgTeam.svg';
-import imgAddCliente from './../../assets/imgAddCliente.png';
-import imgListaCliente from './../../assets/imgListaCliente.png';
-import imgRespostaEvento from './../../assets/imgRespostaEvento.png';
-import imgDashboard from './../../assets/imgDashboard.png';
 
 // Componentes e modais
 import Modal from "./modal";
 import Cadastro from "../../modules/administrativo/pages/PaginaCadastro";
-import EventoDetalhe from "../../modules/administrativo/components/eventoDetalhe";
 import CadastroCliente from "../../modules/comercial/pages/cadastrocliente";
+
+interface NavItemProps {
+  to?: string;
+  onClick?: (e: React.MouseEvent) => void;
+  icon: React.ReactNode;
+  label: string;
+  aberto: boolean;
+}
+
+// Componente auxiliar para os links (evita repetição de classes CSS)
+const NavItem = ({ to, onClick, icon, label, aberto }: NavItemProps) => {
+  const baseClasses = "rounded-md flex items-center p-2 hover:bg-[#1b7091d8] w-full transition-colors duration-200";
+
+  const content = (
+    <>
+      <span className="text-2xl">{icon}</span>
+      {aberto && <p className="pl-3 text-[15px] font-semibold whitespace-nowrap">{label}</p>}
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button onClick={onClick} className={`${baseClasses} text-left`}>
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <NavLink to={to || "#"} className={baseClasses}>
+      {content}
+    </NavLink>
+  );
+};
 
 export default function Navbar() {
   const [aberto, setAberto] = useState(false);
@@ -26,9 +51,9 @@ export default function Navbar() {
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null);
   const [role, setRole] = useState<string | null>(null);
 
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
-  // 🔹 Recupera o usuário logado e define o papel (role)
+  // Recupera o usuário logado e define o papel (role)
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -37,7 +62,7 @@ export default function Navbar() {
     }
   }, []);
 
-  // 🔹 Funções para abrir modais
+  // Funções para abrir modais
   const abrirModalCadastro = (e: React.MouseEvent) => {
     e.preventDefault();
     setConteudoModal(<Cadastro />);
@@ -50,99 +75,44 @@ export default function Navbar() {
     setAbertoModal(true);
   };
 
-  // 🔹 Renderiza menus conforme o role do usuário
+  // Renderiza menus conforme o role do usuário
   const renderMenuPorRole = () => {
     switch (role) {
-      // ------------------ ADMINISTRATIVO ------------------
+      // ------------------ ADMNISTRATIVO ------------------
       case "admin":
         return (
-          <>
-            <NavLink to="/home" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgHome} alt="Home" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Home</p>}
-            </NavLink>
-
-            <NavLink to="#" className="rounded-md flex items-center hover:bg-[#1b7091d8]" onClick={abrirModalCadastro}>
-              <img src={imgUser} alt="Cadastrar Usuário" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Cadastrar Usuário</p>}
-            </NavLink>
-
-            <NavLink to="/eventos" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgCalendar} alt="Calendário de Eventos" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Calendário de Eventos</p>}
-            </NavLink>
-
-            <NavLink to="/eventos-colaborador" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgNotification} alt="Convites" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Convites</p>}
-            </NavLink>
-
-            <NavLink to="/colaboradores" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgColab} alt="Colaboradores" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Colaboradores</p>}
-            </NavLink>
-
-            <NavLink to="/resposta-eventos" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgRespostaEvento} alt="Relatório" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Relatório de Aproveitamento</p>}
-            </NavLink>
-
-            <NavLink to="/home-op-admin" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgDashboard} alt="Home" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Dashboard</p>}
-            </NavLink>
-          </>
+          <div className="flex flex-col gap-2 w-full px-2">
+            <NavItem to="/home" icon={<FaHome />} label="Home" aberto={aberto} />
+            <NavItem onClick={abrirModalCadastro} icon={<FaUserPlus />} label="Cadastrar Usuário" aberto={aberto} />
+            <NavItem to="/eventos" icon={<FaCalendarAlt />} label="Calendário de Eventos" aberto={aberto} />
+            <NavItem to="/eventos-colaborador" icon={<FaBell />} label="Convites" aberto={aberto} />
+            <NavItem to="/colaboradores" icon={<FaUsers />} label="Colaboradores" aberto={aberto} />
+            <NavItem to="/resposta-eventos" icon={<FaClipboardList />} label="Relatório de Aproveitamento" aberto={aberto} />
+            {/* <NavItem to="/home-op-admin" icon={<MdDashboard />} label="Dashboard" aberto={aberto} /> */}
+          </div>
         );
 
       // ------------------ OPERACIONAL ------------------
       case "operacional":
         return (
-          <>
-            <NavLink to="/home-colab" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgHome} alt="Home" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Home</p>}
-            </NavLink>
-
-            <NavLink to="/eventos" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgCalendar} alt="Calendário" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Calendário de Eventos</p>}
-            </NavLink>
-
-            <NavLink to="/eventos-colaborador" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgNotification} alt="Convites" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Convites</p>}
-            </NavLink>
-          </>
+          <div className="flex flex-col gap-2 w-full px-2">
+            <NavItem to="/home-colab" icon={<FaHome />} label="Home" aberto={aberto} />
+            <NavItem to="/eventos" icon={<FaCalendarAlt />} label="Calendário de Eventos" aberto={aberto} />
+            <NavItem to="/eventos-colaborador" icon={<FaBell />} label="Convites" aberto={aberto} />
+            <NavItem to="/lista-check-colaborador" icon={<FaListCheck />} label="Checklists" aberto={aberto} />
+          </div>
         );
 
       // ------------------ COMERCIAL ------------------
       case "comercial":
         return (
-          <>
-            {/* <NavLink to="/home" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgHome} alt="Home" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Home</p>}
-            </NavLink> */}
-            <NavLink to="/eventos" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgCalendar} alt="Calendário" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Calendário de Eventos</p>}
-            </NavLink>
-
-            <NavLink to="/eventos-colaborador" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgNotification} alt="Convites" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Convites</p>}
-            </NavLink>
-
-            <NavLink to="#" className="rounded-md flex items-center hover:bg-[#1b7091d8]" onClick={abrirModalCadastroCliente}>
-              <img src={imgAddCliente} alt="Adicionar Cliente" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Adicionar Cliente</p>}
-            </NavLink>
-
-            <NavLink to="/listaCliente" className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-              <img src={imgListaCliente} alt="Clientes" className="w-7 h-7" />
-              {aberto && <p className="pl-2 text-[15px] font-semibold">Clientes</p>}
-            </NavLink>
-          </>
+          <div className="flex flex-col gap-2 w-full px-2">
+            <NavItem onClick={abrirModalCadastroCliente} icon={<MdPersonAdd />} label="Adicionar Cliente" aberto={aberto} />
+            <NavItem to="/eventos" icon={<FaCalendarAlt />} label="Calendário de Eventos" aberto={aberto} />
+            <NavItem to="/listaCliente" icon={<FaListUl />} label="Clientes" aberto={aberto} />
+            <NavItem to="/eventos-colaborador" icon={<FaBell />} label="Convites" aberto={aberto} />
+            <NavItem to="/funilVendas" icon={<FaFilter />} label="Funil de Vendas" aberto={aberto} />
+          </div>
         );
 
       // ------------------ DEFAULT (caso sem role) ------------------
@@ -154,25 +124,41 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`${aberto ? "w-[200px]" : "w-[60px]"} bg-[#135b78] flex flex-col items-center min-h-screen text-white py-6 gap-6 fixed top-0 z-10`}>
-      {/* Botão hamburguer */}
-      <section
-        className={`${aberto ? "self-start flex flex-col justify-start space-y-1 pl-6" : "flex flex-col justify-start space-y-1"} cursor-pointer`}
-        onClick={() => setAberto(!aberto)}
-      >
-        <span className="w-6 h-[3px] bg-white" />
-        <span className="w-6 h-[3px] bg-white" />
-        <span className="w-6 h-[3px] bg-white" />
-      </section>
+    <nav className={`${aberto ? "w-auto" : "w-[60px]"} bg-[#135b78] flex border-r border-black/50 shadow-lg flex-col items-center min-h-screen text-white py-6 justify-between fixed top-0 z-10 transition-all duration-300`}>
 
-      {/* Menu dinâmico */}
-      <section className="flex flex-col space-y-6">
-        <button onClick={logout} className="rounded-md flex items-center hover:bg-[#1b7091d8]">
-          <img src={imgLogin} alt="Logout" className="w-7 h-7" />
-          {aberto && <p className="pl-2 text-[15px] font-semibold">Sair</p>}
-        </button>
+      {/*SEÇÃO SUPERIOR (Menu)*/}
+      <div className="flex flex-col items-center w-full gap-6">
+        {/* Botão hamburguer */}
+        <div className="w-full flex justify-start px-3">
+          <button
+            className="p-2 rounded hover:bg-[#1b7091d8] transition-colors"
+            onClick={() => setAberto(!aberto)}
+          >
+            <FaBars className="text-2xl" />
+          </button>
+        </div>
 
-        {renderMenuPorRole()}
+        {/* Menu dinâmico */}
+        <section className="flex flex-col w-full gap-2 overflow-y-auto">
+          {renderMenuPorRole()}
+        </section>
+      </div>
+
+      {/*SEÇÃO INFERIOR (Usuário + Logout)*/}
+      <section className="flex flex-col gap-2 w-full px-2 border-t border-[#1b7091d8]">
+        {aberto && (
+          <div className="flex flex-col items-center mb-2 text-center">
+            <p className="text-sm font-semibold text-center break-words max-w-full mt-2" title={user?.nome}>
+              {user?.nome || 'Usuário'}
+            </p>
+            <p className="text-xs opacity-80 capitalize break-words max-w-full">
+              {user?.cargo || 'Cargo'}
+            </p>
+          </div>
+        )}
+
+        {/* Botão Logout */}
+        <NavItem onClick={logout} icon={<MdLogout />} label="Sair" aberto={aberto} />
       </section>
 
       {/* Modal Dinâmico */}

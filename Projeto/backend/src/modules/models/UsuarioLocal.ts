@@ -11,7 +11,7 @@ export class UsuarioLocal {
   local: LocalTrabalho
 
   @ManyToOne(() => User, user => user.locais, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: "usuario_id" })
+  @JoinColumn({ name: "usuarioId" })
   usuario: User
 
   @Column({ type: 'date', nullable: true })

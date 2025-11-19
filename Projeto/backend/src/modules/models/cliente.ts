@@ -1,6 +1,5 @@
-import { IsDate, isDate } from "class-validator";
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { CategoriaFunil } from "../../utils/enums/categoriaFunil";
+import { IsDate } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity('cliente')
 export class Cliente {
@@ -11,18 +10,24 @@ export class Cliente {
     CNPJ: string
 
     @Column({ type: 'varchar', length: 255 })
-    NomeFantasia: string
+    nomeFantasia: string
 
     @IsDate()
-    @Column({ type: 'datetime'  })
-    PrazoFaturamento: Date
+    @Column({ type: 'date', default: '2000-01-01' })
+    prazoFaturamento: Date
 
     @Column({ type: 'varchar', length: 255  })
-    ContatoResponsavel: string
+    contatoResponsavel: string
 
     @Column({ type: 'varchar', length: 255 })
-    EmailResponsavel: string
+    emailResponsavel: string
 
-    @Column({ type: 'enum', enum: CategoriaFunil, default: CategoriaFunil.PROSPECT})
-    Categoria: CategoriaFunil
+    @Column({ type: 'varchar', length: 10 })
+    CNAE: string
+
+    @Column({ type: 'varchar', length: 255 })
+    descricaoCNAE: string
+
+    @Column({ type: 'int' })
+    colaboradorId: number
 }

@@ -1,11 +1,31 @@
 import { readCsv } from './csvService';
 import { FormField } from '../config/formSchemas';
 
+interface ValidationError {
+  field: string;
+  message: string;
+}
+
 export async function validateFormData(
   data: Record<string, any>,
   schema: FormField[],
   csvPath: string
-): Promise<string | null> {
+): Promise<ValidationError | null> {
+  // Regra especial: CPF ou CNPJ obrigatório
+  const cpf =
+    String(data["cpf"] ?? "").trim() ||
+    String(data["cpf-motorista"] ?? "").trim() ||
+    String(data["cpf-usuario"] ?? "").trim();
+    
+  const cnpj = String(data["cnpj"] ?? "").trim();
+
+  if (!cpf && !cnpj) {
+    return {
+      field: "cpf/cnpj",
+      message: "É necessário preencher CPF ou CNPJ."
+    };
+  }
+
   // Lê dados salvos
   const registros = await readCsv(csvPath);
 
@@ -15,12 +35,12 @@ export async function validateFormData(
 
     // 1. Validação de campo obrigatório
     if (field.required && !valor) {
-      return `Campo obrigatório "${field.name}" não preenchido.`;
+      return { field: field.name, message: `Campo obrigatório "${field.name}" não preenchido.` };
     }
 
     // 2. Validação por regex (formato)
     if (field.regex && valor && !field.regex.test(valor)) {
-      return `Formato inválido para o campo "${field.name}".`;
+      return { field: field.name, message: `Formato inválido para o campo "${field.name}".` };
     }
 
     // 3. Validação de valor único
@@ -31,7 +51,7 @@ export async function validateFormData(
       });
 
       if (valorExiste) {
-        return `Valor do campo "${field.name}" já está cadastrado.`;
+        return { field: field.name, message: `Valor do campo "${field.name}" já está cadastrado.` };
       }
     }
   }
