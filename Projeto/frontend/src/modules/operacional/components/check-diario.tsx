@@ -6,9 +6,10 @@ import InputMaskField from "../../administrativo/components/InputMaskField";
 
 type FormAberturaProps = {
     form: string;
+    onAcaoConcluida?: () => void
 };
 
-export default function CheckDiario({ form }: FormAberturaProps) {
+export default function CheckDiario({ form, onAcaoConcluida }: FormAberturaProps) {
     const [loading, setLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [nomeMotorista, setNomeMotorista] = useState("")
@@ -89,7 +90,10 @@ export default function CheckDiario({ form }: FormAberturaProps) {
 
             if (response.status === 201 || response.status === 200) {
                 setShowSuccess(true);
-                setTimeout(() => setShowSuccess(false), 3000);
+                setTimeout(() => {
+                    setShowSuccess(false)
+                    onAcaoConcluida && onAcaoConcluida()
+                }, 1000)
             } else {
                 alert(`Erro ${response.status}: ${response.statusText}`);
             }

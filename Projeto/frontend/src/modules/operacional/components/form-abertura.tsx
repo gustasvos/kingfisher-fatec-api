@@ -4,9 +4,10 @@ import { useState, FormEvent, ChangeEvent } from "react";
 
 type FormAberturaProps = {
   form: string;
+  onAcaoConcluida?: () => void
 };
 
-export default function FormAbertura({ form }: FormAberturaProps) {
+export default function FormAbertura({ form, onAcaoConcluida }: FormAberturaProps) {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -80,7 +81,10 @@ export default function FormAbertura({ form }: FormAberturaProps) {
         const resultado = await response.json();
         console.log('Sucesso! Backend respondeu:', resultado);
         setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
+        setTimeout(() => {
+          setShowSuccess(false)
+          onAcaoConcluida && onAcaoConcluida()
+        }, 1000)
       } else {
         const erroDetalhado = await response.text();
         console.log('Erro do backend:', response.status, erroDetalhado);

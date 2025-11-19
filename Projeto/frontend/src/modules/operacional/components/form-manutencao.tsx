@@ -4,9 +4,10 @@ import BotaoSubmit from "../../../shared/components/botao-submit";
 
 type FormAberturaProps = {
   form: string;
+  onAcaoConcluida?: () => void
 };
 
-export default function FormManutencao({ form }: FormAberturaProps) {
+export default function FormManutencao({ form, onAcaoConcluida }: FormAberturaProps) {
   const [mostraCadeira, setMostraCadeira] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -141,7 +142,15 @@ export default function FormManutencao({ form }: FormAberturaProps) {
         throw new Error(`Erro ao enviar: ${response.status}`);
       }
 
-      alert("Formulário de manutenção predial enviado com sucesso!");
+      if (response.status === 201 || response.status === 200) {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false)
+          onAcaoConcluida && onAcaoConcluida()
+        }, 1000)
+      } else {
+        alert(`Erro ${response.status}: ${response.statusText}`);
+      }
 
     } catch (error) {
       console.error("Erro no envio:", error);

@@ -5,9 +5,10 @@ import BotaoSubmit from "../../../shared/components/botao-submit"
 
 type FormAberturaProps = {
     form: string;
+    onAcaoConcluida?: () => void
 }
 
-export default function CheckGestao({ form }: FormAberturaProps) {
+export default function CheckGestao({ form, onAcaoConcluida }: FormAberturaProps) {
     const [formTitle, setFormTitle] = useState(form)
     const [email, setEmail] = useState('')
     const [cliente, setCliente] = useState('')
@@ -20,6 +21,7 @@ export default function CheckGestao({ form }: FormAberturaProps) {
     const [valorFrete, setValorFrete] = useState('')
     const [obs, setObs] = useState('')
     const [loading, setLoading] = useState(false)
+    const [showSuccess, setShowSuccess] = useState(false)
 
     const enviaForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -81,7 +83,15 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                 throw new Error(`Erro ao enviar: ${response.status}`);
             }
 
-            alert("Formulário enviado com sucesso!");
+            if (response.status === 201 || response.status === 200) {
+                setShowSuccess(true);
+                setTimeout(() => {
+                    setShowSuccess(false)
+                    onAcaoConcluida && onAcaoConcluida()
+                }, 1000)
+            } else {
+                alert(`Erro ${response.status}: ${response.statusText}`);
+            }
 
         } catch (error) {
             console.error("Erro no envio:", error);
@@ -326,20 +336,25 @@ export default function CheckGestao({ form }: FormAberturaProps) {
                                     </section>
                                 </div>
 
-                                 <div className="pt-6 flex justify-center">
-                            <BotaoSubmit
-                                loading={loading}
-                                label={loading ? "Enviando..." : "Enviar"}
-                                type="submit"
-                                className="bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
-                            />
-                        </div>
-                                </section>
+                                <div className="pt-6 flex justify-center">
+                                    <BotaoSubmit
+                                        loading={loading}
+                                        label={loading ? "Enviando..." : "Enviar"}
+                                        type="submit"
+                                        className="bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
+                                    />
+                                </div>
+                            </section>
                         </form>
                     </section>
                 </div>
             </div>
-            </div>
+            {showSuccess && (
+                <div className="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+                    Formulário enviado com sucesso!
+                </div>
+            )}
+        </div>
 
     )
 

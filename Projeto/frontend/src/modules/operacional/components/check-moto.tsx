@@ -343,11 +343,6 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                 <div className="relative">
                                     {tipoPessoa === 'pf' && (
                                         <div className="relative mb-6">
-                                            {/* <IMaskInput
-                                                mask={"000.000.000-00"} placeholder="" id="cpf" className={inputClasses} required
-                                                value={documento}
-                                                onAccept={(value: string) => setDocumento(value)} />
-                                            <label htmlFor="cpf" className={labelClasses}>CPF</label> */}
                                             <InputMaskField
                                                 label="CPF"
                                                 mask="000.000.000-00"
@@ -365,12 +360,6 @@ export default function CheckMoto({ form }: FormAberturaProps) {
 
                                     {tipoPessoa === 'pj' && (
                                         <div className="relative mb-6">
-                                            {/* <IMaskInput
-                                                mask={"00.000.000/0000-00"} placeholder="" id="cnpj"
-                                                value={documento} onAccept={(value: string) => setDocumento(value)} required
-                                                className={inputClasses}
-                                            />
-                                            <label htmlFor="cnpj" className={labelClasses}>CNPJ</label> */}
                                             <InputMaskField
                                                 label="CNPJ"
                                                 mask="00.000.000/0000-00"
@@ -401,7 +390,6 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                             setCelular(celLimpo)
                                         }}
                                     />
-                                    {/* <label htmlFor="celular" className={labelClasses}>Celular</label> */}
                                 </div>
 
                                 <InputLine type="email" placeholder="" id='email' htmlFor="email" value={email} onChange={(e) => setEmail(e.target.value)} required>E-mail</InputLine>
@@ -415,7 +403,6 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                             const rgLimpo = value.replace(".-", "").toUpperCase()
                                             setRg(rgLimpo)
                                         }} />
-                                    {/* <label htmlFor="rg" className={labelClasses}>RG</label> */}
                                 </div>
 
                                 <InputLine type="date" placeholder="" id='data-emissao' htmlFor="data-emissao" value={dataEmissao} onChange={(e) => setDataEmissao(e.target.value)} required>Data de Emissão</InputLine>
@@ -423,7 +410,6 @@ export default function CheckMoto({ form }: FormAberturaProps) {
 
                                 <InputLine type="text" placeholder="" id='nome-pai' htmlFor="nome-pai" value={nomePai} onChange={(e) => setNomePai(e.target.value)} required>Nome do Pai</InputLine>
                                 <InputLine type="text" placeholder="" id='nome-mae' htmlFor="nome-mae" value={nomeMae} onChange={(e) => setNomeMae(e.target.value)} required>Nome da Mãe</InputLine>
-                                {/* <InputLine type="text" placeholder="" id='pis-pasep' htmlFor="pis-pasep" value={pisPasep} onChange={(e) => setPisPasep(e.target.value)} required>PIS/PASEP</InputLine> */}
                                 <InputMaskField
                                     label="PIS/PASEP"
                                     mask={"000.00000.00-0"}
@@ -444,7 +430,6 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                         mask={"00000-000"} placeholder="" required
                                         value={cep}
                                         onAccept={handleCepChange} />
-                                    {/* <label htmlFor="cep-input" className={labelClasses}>CEP</label> */}
                                     {loading && <p className="text-blue-500 text-xs mt-1">Buscando...</p>}
                                 </div>
 
@@ -509,8 +494,7 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                                 </h2>
                                 <div className="grid grid-cols-2 gap-4">
                                     <InputLine type="text" placeholder="" id='nome-proprietario-veiculo' htmlFor="nome-proprietario-veiculo" value={nomeProprietarioVeiculo} required onChange={(e) => setNomeProprietarioVeiculo(e.target.value)}>Nome completo do Proprietário do Veículo</InputLine>
-                                    {/* <InputLine type="text" placeholder="" id='placa' htmlFor="placa" value={placa} required onChange={(e) => setPlaca(e.target.value)}>Placa</InputLine> */}
-                                    <InputMaskField
+                                   <InputMaskField
                                         label="Placa Veículo"
                                         mask="aaa-0000"
                                         placeholder=""
