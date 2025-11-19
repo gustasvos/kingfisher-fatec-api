@@ -1,5 +1,5 @@
 import express from 'express'
-import { createCliente, listCliente, listClienteById, listClientesComUltimoStatus, updateCliente, deleteCliente, updateClienteCategoria} from "../controllers/clienteController"
+import { createCliente, listCliente, listClienteById, listClientesComUltimoStatus, updateCliente, deleteCliente, updateClienteCategoria, sendFollowUpEmail} from "../controllers/clienteController"
 import { autenticarUsuario } from '../../middlewares/auth.middleware'
 import { autorizarUsuario } from '../../middlewares/autorizar.middleware'
 
@@ -12,5 +12,6 @@ router.get('/cliente/comercial/:id', autenticarUsuario, autorizarUsuario(['comer
 router.put('/cliente/:id', autenticarUsuario, autorizarUsuario(['comercial']), updateCliente);
 router.delete('/cliente/:id', autenticarUsuario, autorizarUsuario(['comercial']), deleteCliente);
 router.patch('/cliente/:id/categoria', autenticarUsuario, autorizarUsuario(['comercial']), updateClienteCategoria);
+router.post("/email/followup", sendFollowUpEmail);
 
 export default router

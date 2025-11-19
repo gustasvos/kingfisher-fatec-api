@@ -93,13 +93,13 @@ const FunilColumn: React.FC<FunilColumnProps> = ({ title, leads, onLeadDrop, sel
 
           <div className="bg-slate-100 flex-1 overflow-y-auto overflow-x-hidden">
             {leads.length > 0 ? (
-              leads.map((lead) => 
-              <LeadCard 
-                  key={lead.id} 
+              leads.map((lead) =>
+                <LeadCard
+                  key={lead.id}
                   lead={lead}
                   isSelected={lead.id === selectedLeadId}
                   onSelect={onSelectLead}
-                   />)
+                />)
             ) : (
               <div className="text-center text-xs text-gray-400 mt-4">
                 Nenhum lead aqui.
@@ -157,7 +157,7 @@ const FunilVendas: React.FC = () => {
       try {
         setLoading(true)
         setError(null)
-        
+
         const response = await instance.get(`/registroCliente/comercial/${userId}`)
         // Criar um Map para pegar apenas o registro mais recente de cada cliente
         const leadsMaisRecentesMap = new Map<number, any>()
@@ -197,6 +197,20 @@ const FunilVendas: React.FC = () => {
 
   const handleLeadDrop = async (leadId: string, novaCategoria: string) => {
     const categoriaId = CATEGORIA_MAP[novaCategoria]
+
+    if (novaCategoria === "Follow Up") {
+      const html = await fetch("/emailTemplate.html").then(r => r.text())
+
+      try {
+        await instance.post("/email/followup", {
+          leadId,
+          html
+        })
+        console.log("Email de Follow Up disparado!")
+      } catch (error) {
+        console.error("Erro ao enviar email:", error)
+      }
+    }
 
     if (!categoriaId) {
       console.error("Categoria desconhecida:", novaCategoria)
@@ -295,7 +309,7 @@ const FunilVendas: React.FC = () => {
         <div className="max-w-[90%] mx-auto">
           <header className="p-3 flex justify-between items-center">
             <h1 className="text-3xl font-bold text-gray-800 drop-shadow-md">Funil de Vendas</h1>
-            
+
           </header>
           {renderContent()}
         </div>
