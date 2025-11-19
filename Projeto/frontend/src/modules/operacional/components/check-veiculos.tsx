@@ -2,6 +2,7 @@ import { useState } from "react"
 import InputLine from "../../../shared/components/inputLine"
 import { IMaskInput } from "react-imask"
 import Botao from "../../../shared/components/botao"
+import InputMaskField from "../../administrativo/components/InputMaskField"
 
 type FormAberturaProps = {
     form: string;
@@ -361,12 +362,18 @@ export default function CheckVeiculos({ form }: FormAberturaProps) {
                             <h3 style={{ color: "#000000", fontSize: "1.3rem", fontWeight: 700 }} className="mt-8 mb-4 border-b pb-2">Sessão 1: Dados Cadastrais</h3>
                             <section className="space-y-6">
                                 <section className="relative">
-                                    <IMaskInput mask={"000.000.000-00"} id="cpf" required maxLength={14} onAccept={(value: string) => setCpfMotorista(value)} className="w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                    <IMaskInput mask={"000.000.000-00"} placeholder="" id="cpf" required maxLength={14} onAccept={(value: string) => setCpfMotorista(value)} className="w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                     <label htmlFor="" className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">CPF</label>
                                 </section>
                                 <InputLine type="text" placeholder="" id="nome" htmlfor="nome" required value={nomeMotorista} onChange={(e) => setNomeMotorista(e.target.value)}>Nome</InputLine>
                                 <InputLine type="email" placeholder="" id='email' htmlfor="email" required value={emailMotorista} onChange={(e) => setEmailMotorista(e.target.value)}>E-mail</InputLine>
-                                <InputLine type="text" placeholder="" maxLength={7} id='placaVeiculo' htmlfor="placa-veiculo" value={placaVeiculo} onChange={(e) => { setPlacaVeiculo(e.target.value); handlechange(e) }}>Placa do veículo(apenas os numeros e letras!)</InputLine>
+                                <InputMaskField label="Placa do veículo(apenas os numeros e letras!)" mask="aaa-0000" placeholder=""
+                                    required maxLength={8} value={placaVeiculo}
+                                    onAccept={(value: string) => {
+                                        const placaLimpa = value.replace("-", "").toUpperCase()
+                                        setPlacaVeiculo(placaLimpa)
+                                    }}
+                                />
                                 {erro && <p className="text-red-700 text-[12px]">{erro}</p>}
                                 <fieldset className="border border-gray-200 rounded-xl p-4 mb-6">
                                     <legend className="text-black">Tipo Veículo</legend>

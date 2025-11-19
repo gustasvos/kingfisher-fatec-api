@@ -30,7 +30,7 @@ export default function FormAbertura({ form }: FormAberturaProps) {
   const [cafeFeito, setCafeFeito] = useState<string | null>(null);
   const [sitAtipica, setSitAtipica] = useState(" ");
 
-  const enviaForm = async (e: FormEvent<HTMLFormElement>) => {
+  const enviaForm = async (e: FormEvent<HTMLFormElement>) => { 
     e.preventDefault();
     setLoading(true);
 
@@ -113,7 +113,7 @@ export default function FormAbertura({ form }: FormAberturaProps) {
             <InputLine
               type="date"
               id="data-abertura"
-              htmlFor="data-abertura"
+              htmlfor="data-abertura"
               required
               value={dataAbertura}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setDataAbertura(e.target.value)}
@@ -123,111 +123,111 @@ export default function FormAbertura({ form }: FormAberturaProps) {
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Abriu cadeado das correntes (FRENTE DA EMPRESA)?</legend>
-              <InputLine type="radio" name="cadeadoFrenteEmp" value="cadeado-sim" id="cadeado-sim" htmlFor="cadeado-sim" checked={cadeadoFrenteEmp === 'cadeado-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCadeadoFrenteEmp(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="cadeadoFrenteEmp" value="cadeado-nao" id="cadeado-nao" htmlFor="cadeado-nao" checked={cadeadoFrenteEmp === 'cadeado-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCadeadoFrenteEmp(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="cadeadoFrenteEmp" value="cadeado-sim" id="cadeado-sim" htmlfor="cadeado-sim" checked={cadeadoFrenteEmp === 'cadeado-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCadeadoFrenteEmp(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="cadeadoFrenteEmp" value="cadeado-nao" id="cadeado-nao" htmlfor="cadeado-nao" checked={cadeadoFrenteEmp === 'cadeado-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCadeadoFrenteEmp(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Abriu portão (SOCIAL)?</legend>
-              <InputLine type="radio" name="portaoSocial" value="portao-social-sim" id="portao-social-sim" htmlFor="portao-social-sim" checked={portaoSocial === 'portao-social-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaoSocial(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="portaoSocial" value="portao-social-nao" id="portao-social-nao" htmlFor="portao-social-nao" checked={portaoSocial === 'portao-social-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaoSocial(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="portaoSocial" value="portao-social-sim" id="portao-social-sim" htmlfor="portao-social-sim" checked={portaoSocial === 'portao-social-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaoSocial(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="portaoSocial" value="portao-social-nao" id="portao-social-nao" htmlfor="portao-social-nao" checked={portaoSocial === 'portao-social-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaoSocial(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Abriu porta rolante de ferro (ARMAZÉM)?</legend>
-              <InputLine type="radio" name="portaRolanteArmazem" value="porta-rolante-armazem-sim" id="porta-rolante-armazem-sim" htmlFor="porta-rolante-armazem-sim" checked={portaRolanteArmazem === 'porta-rolante-armazem-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaRolanteArmazem(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="portaRolanteArmazem" value="porta-rolante-armazem-nao" id="porta-rolante-armazem-nao" htmlFor="porta-rolante-armazem-nao" checked={portaRolanteArmazem === 'porta-rolante-armazem-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaRolanteArmazem(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="portaRolanteArmazem" value="porta-rolante-armazem-sim" id="porta-rolante-armazem-sim" htmlfor="porta-rolante-armazem-sim" checked={portaRolanteArmazem === 'porta-rolante-armazem-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaRolanteArmazem(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="portaRolanteArmazem" value="porta-rolante-armazem-nao" id="porta-rolante-armazem-nao" htmlfor="porta-rolante-armazem-nao" checked={portaRolanteArmazem === 'porta-rolante-armazem-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setPortaRolanteArmazem(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Desbloqueou o alarme?</legend>
-              <InputLine type="radio" name="desblAlarme" value="desbl-alarme-sim" id="desbl-alarme-sim" htmlFor="desbl-alarme-sim" checked={desblAlarme === 'desbl-alarme-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setDesblAlarme(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="desblAlarme" value="desbl-alarme-nao" id="desbl-alarme-nao" htmlFor="desbl-alarme-nao" checked={desblAlarme === 'desbl-alarme-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setDesblAlarme(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="desblAlarme" value="desbl-alarme-sim" id="desbl-alarme-sim" htmlfor="desbl-alarme-sim" checked={desblAlarme === 'desbl-alarme-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setDesblAlarme(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="desblAlarme" value="desbl-alarme-nao" id="desbl-alarme-nao" htmlfor="desbl-alarme-nao" checked={desblAlarme === 'desbl-alarme-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setDesblAlarme(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Apagou luzes (ARMAZÉM)?</legend>
-              <InputLine type="radio" name="apagoLuzArmazem" value="apago-luz-armazem-sim" id="apago-luz-armazem-sim" htmlFor="apago-luz-armazem-sim" checked={apagoLuzArmazem === 'apago-luz-armazem-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setApagoLuzArmazem(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="apagoLuzArmazem" value="apago-luz-armazem-nao" id="apago-luz-armazem-nao" htmlFor="apago-luz-armazem-nao" checked={apagoLuzArmazem === 'apago-luz-armazem-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setApagoLuzArmazem(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="apagoLuzArmazem" value="apago-luz-armazem-sim" id="apago-luz-armazem-sim" htmlfor="apago-luz-armazem-sim" checked={apagoLuzArmazem === 'apago-luz-armazem-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setApagoLuzArmazem(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="apagoLuzArmazem" value="apago-luz-armazem-nao" id="apago-luz-armazem-nao" htmlfor="apago-luz-armazem-nao" checked={apagoLuzArmazem === 'apago-luz-armazem-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setApagoLuzArmazem(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Acendeu luzes (OPERACIONAL)?</legend>
-              <InputLine type="radio" name="acendeuLuzOp" value="acendeu-luz-op-sim" id="acendeu-luz-op-sim" htmlFor="acendeu-luz-op-sim" checked={acendeuLuzOp === 'acendeu-luz-op-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAcendeuLuzOp(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="acendeuLuzOp" value="acendeu-luz-op-nao" id="acendeu-luz-op-nao" htmlFor="acendeu-luz-op-nao" checked={acendeuLuzOp === 'acendeu-luz-op-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAcendeuLuzOp(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="acendeuLuzOp" value="acendeu-luz-op-sim" id="acendeu-luz-op-sim" htmlfor="acendeu-luz-op-sim" checked={acendeuLuzOp === 'acendeu-luz-op-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAcendeuLuzOp(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="acendeuLuzOp" value="acendeu-luz-op-nao" id="acendeu-luz-op-nao" htmlfor="acendeu-luz-op-nao" checked={acendeuLuzOp === 'acendeu-luz-op-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAcendeuLuzOp(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Ligou o Ar condicionado?</legend>
-              <InputLine type="radio" name="ligouAr" value="ligou-ar-sim" id="ligou-ar-sim" htmlFor="ligou-ar-sim" checked={ligouAr === 'ligou-ar-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouAr(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="ligouAr" value="ligou-ar-nao" id="ligou-ar-nao" htmlFor="ligou-ar-nao" checked={ligouAr === 'ligou-ar-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouAr(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="ligouAr" value="ligou-ar-sim" id="ligou-ar-sim" htmlfor="ligou-ar-sim" checked={ligouAr === 'ligou-ar-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouAr(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="ligouAr" value="ligou-ar-nao" id="ligou-ar-nao" htmlfor="ligou-ar-nao" checked={ligouAr === 'ligou-ar-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouAr(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Ligou TV (CAMERAS)?</legend>
-              <InputLine type="radio" name="ligouTvCamera" value="ligou-tv-camera-sim" id="ligou-tv-camera-sim" htmlFor="ligou-tv-camera-sim" checked={ligouTvCamera === 'ligou-tv-camera-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvCamera(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="ligouTvCamera" value="ligou-tv-camera-nao" id="ligou-tv-camera-nao" htmlFor="ligou-tv-camera-nao" checked={ligouTvCamera === 'ligou-tv-camera-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvCamera(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="ligouTvCamera" value="ligou-tv-camera-sim" id="ligou-tv-camera-sim" htmlfor="ligou-tv-camera-sim" checked={ligouTvCamera === 'ligou-tv-camera-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvCamera(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="ligouTvCamera" value="ligou-tv-camera-nao" id="ligou-tv-camera-nao" htmlfor="ligou-tv-camera-nao" checked={ligouTvCamera === 'ligou-tv-camera-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvCamera(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Ligou TV (DASHBOARD)?</legend>
-              <InputLine type="radio" name="ligouTvDashboard" value="ligou-tv-dashboard-sim" id="ligou-tv-dashboard-sim" htmlFor="ligou-tv-dashboard-sim" checked={ligouTvDashboard === 'ligou-tv-dashboard-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvDashboard(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="ligouTvDashboard" value="ligou-tv-dashboard-nao" id="ligou-tv-dashboard-nao" htmlFor="ligou-tv-dashboard-nao" checked={ligouTvDashboard === 'ligou-tv-dashboard-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvDashboard(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="ligouTvDashboard" value="ligou-tv-dashboard-sim" id="ligou-tv-dashboard-sim" htmlfor="ligou-tv-dashboard-sim" checked={ligouTvDashboard === 'ligou-tv-dashboard-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvDashboard(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="ligouTvDashboard" value="ligou-tv-dashboard-nao" id="ligou-tv-dashboard-nao" htmlfor="ligou-tv-dashboard-nao" checked={ligouTvDashboard === 'ligou-tv-dashboard-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setLigouTvDashboard(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Coletou chaves internas no chaveiro?</legend>
-              <InputLine type="radio" name="chaveInterna" value="chave-interna-sim" id="chave-interna-sim" htmlFor="chave-interna-sim" checked={chaveInterna === 'chave-interna-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setChaveInterna(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="chaveInterna" value="chave-interna-nao" id="chave-interna-nao" htmlFor="chave-interna-nao" checked={chaveInterna === 'chave-interna-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setChaveInterna(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="chaveInterna" value="chave-interna-sim" id="chave-interna-sim" htmlfor="chave-interna-sim" checked={chaveInterna === 'chave-interna-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setChaveInterna(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="chaveInterna" value="chave-interna-nao" id="chave-interna-nao" htmlfor="chave-interna-nao" checked={chaveInterna === 'chave-interna-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setChaveInterna(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Abriu porta do banheiro?</legend>
-              <InputLine type="radio" name="abriuPortaBanheiro" value="abriu-porta-banheiro-sim" id="abriu-porta-banheiro-sim" htmlFor="abriu-porta-banheiro-sim" checked={abriuPortaBanheiro === 'abriu-porta-banheiro-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAbriuPortaBanheiro(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="abriuPortaBanheiro" value="abriu-porta-banheiro-nao" id="abriu-porta-banheiro-nao" htmlFor="abriu-porta-banheiro-nao" checked={abriuPortaBanheiro === 'abriu-porta-banheiro-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAbriuPortaBanheiro(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="abriuPortaBanheiro" value="abriu-porta-banheiro-sim" id="abriu-porta-banheiro-sim" htmlfor="abriu-porta-banheiro-sim" checked={abriuPortaBanheiro === 'abriu-porta-banheiro-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAbriuPortaBanheiro(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="abriuPortaBanheiro" value="abriu-porta-banheiro-nao" id="abriu-porta-banheiro-nao" htmlfor="abriu-porta-banheiro-nao" checked={abriuPortaBanheiro === 'abriu-porta-banheiro-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setAbriuPortaBanheiro(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Removeu cadeado portão 1?</legend>
-              <InputLine type="radio" name="removeCadeadoPortao1" value="remove-cadeado-portao1-sim" id="remove-cadeado-portao1-sim" htmlFor="remove-cadeado-portao1-sim" checked={removeCadeadoPortao1 === 'remove-cadeado-portao1-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao1(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="removeCadeadoPortao1" value="remove-cadeado-portao1-nao" id="remove-cadeado-portao1-nao" htmlFor="remove-cadeado-portao1-nao" checked={removeCadeadoPortao1 === 'remove-cadeado-portao1-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao1(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="removeCadeadoPortao1" value="remove-cadeado-portao1-sim" id="remove-cadeado-portao1-sim" htmlfor="remove-cadeado-portao1-sim" checked={removeCadeadoPortao1 === 'remove-cadeado-portao1-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao1(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="removeCadeadoPortao1" value="remove-cadeado-portao1-nao" id="remove-cadeado-portao1-nao" htmlfor="remove-cadeado-portao1-nao" checked={removeCadeadoPortao1 === 'remove-cadeado-portao1-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao1(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Removeu cadeado portão 2?</legend>
-              <InputLine type="radio" name="removeCadeadoPortao2" value="remove-cadeado-portao2-sim" id="remove-cadeado-portao2-sim" htmlFor="remove-cadeado-portao2-sim" checked={removeCadeadoPortao2 === 'remove-cadeado-portao2-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao2(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="removeCadeadoPortao2" value="remove-cadeado-portao2-nao" id="remove-cadeado-portao2-nao" htmlFor="remove-cadeado-portao2-nao" checked={removeCadeadoPortao2 === 'remove-cadeado-portao2-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao2(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="removeCadeadoPortao2" value="remove-cadeado-portao2-sim" id="remove-cadeado-portao2-sim" htmlfor="remove-cadeado-portao2-sim" checked={removeCadeadoPortao2 === 'remove-cadeado-portao2-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao2(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="removeCadeadoPortao2" value="remove-cadeado-portao2-nao" id="remove-cadeado-portao2-nao" htmlfor="remove-cadeado-portao2-nao" checked={removeCadeadoPortao2 === 'remove-cadeado-portao2-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setRemoveCadeadoPortao2(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Posicionou cone no estacionamento PCD?</legend>
-              <InputLine type="radio" name="coneEstacionamentoPcd" value="cone-estacionamento-pcd-sim" id="cone-estacionamento-pcd-sim" htmlFor="cone-estacionamento-pcd-sim" checked={coneEstacionamentoPcd === 'cone-estacionamento-pcd-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setConeEstacionamentoPcd(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="coneEstacionamentoPcd" value="cone-estacionamento-pcd-nao" id="cone-estacionamento-pcd-nao" htmlFor="cone-estacionamento-pcd-nao" checked={coneEstacionamentoPcd === 'cone-estacionamento-pcd-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setConeEstacionamentoPcd(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="coneEstacionamentoPcd" value="cone-estacionamento-pcd-sim" id="cone-estacionamento-pcd-sim" htmlfor="cone-estacionamento-pcd-sim" checked={coneEstacionamentoPcd === 'cone-estacionamento-pcd-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setConeEstacionamentoPcd(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="coneEstacionamentoPcd" value="cone-estacionamento-pcd-nao" id="cone-estacionamento-pcd-nao" htmlfor="cone-estacionamento-pcd-nao" checked={coneEstacionamentoPcd === 'cone-estacionamento-pcd-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setConeEstacionamentoPcd(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Ligou tomada e retirou plástico do bebedouro?</legend>
-              <InputLine type="radio" name="bebedouroTomadaPlastico" value="bebedouro-tomada-plastico-sim" id="bebedouro-tomada-plastico-sim" htmlFor="bebedouro-tomada-plastico-sim" checked={bebedouroTomadaPlastico === 'bebedouro-tomada-plastico-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setBebedouroTomadaPlastico(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="bebedouroTomadaPlastico" value="bebedouro-tomada-plastico-nao" id="bebedouro-tomada-plastico-nao" htmlFor="bebedouro-tomada-plastico-nao" checked={bebedouroTomadaPlastico === 'bebedouro-tomada-plastico-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setBebedouroTomadaPlastico(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="bebedouroTomadaPlastico" value="bebedouro-tomada-plastico-sim" id="bebedouro-tomada-plastico-sim" htmlfor="bebedouro-tomada-plastico-sim" checked={bebedouroTomadaPlastico === 'bebedouro-tomada-plastico-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setBebedouroTomadaPlastico(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="bebedouroTomadaPlastico" value="bebedouro-tomada-plastico-nao" id="bebedouro-tomada-plastico-nao" htmlfor="bebedouro-tomada-plastico-nao" checked={bebedouroTomadaPlastico === 'bebedouro-tomada-plastico-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setBebedouroTomadaPlastico(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Colocou tapetes nos devidos lugares ? (Atividade às segundas-feiras)</legend>
-              <InputLine type="radio" name="tapeteLugar" value="tapete-lugar-sim" id="tapete-lugar-sim" htmlFor="tapete-lugar-sim" checked={tapeteLugar === 'tapete-lugar-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setTapeteLugar(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="tapeteLugar" value="tapete-lugar-nao" id="tapete-lugar-nao" htmlFor="tapete-lugar-nao" checked={tapeteLugar === 'tapete-lugar-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setTapeteLugar(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="tapeteLugar" value="tapete-lugar-sim" id="tapete-lugar-sim" htmlfor="tapete-lugar-sim" checked={tapeteLugar === 'tapete-lugar-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setTapeteLugar(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="tapeteLugar" value="tapete-lugar-nao" id="tapete-lugar-nao" htmlfor="tapete-lugar-nao" checked={tapeteLugar === 'tapete-lugar-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setTapeteLugar(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <fieldset className="border border-gray-300 rounded-xl p-4 hover:border-gray-700 transition-colors duration-200">
               <legend className="text-gray-800">Fez café do dia?</legend>
-              <InputLine type="radio" name="cafeFeito" value="cafe-feito-sim" id="cafe-feito-sim" htmlFor="cafe-feito-sim" checked={cafeFeito === 'cafe-feito-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCafeFeito(e.target.value)}>Sim</InputLine>
-              <InputLine type="radio" name="cafeFeito" value="cafe-feito-nao" id="cafe-feito-nao" htmlFor="cafe-feito-nao" checked={cafeFeito === 'cafe-feito-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCafeFeito(e.target.value)}>Não</InputLine>
+              <InputLine type="radio" name="cafeFeito" value="cafe-feito-sim" id="cafe-feito-sim" htmlfor="cafe-feito-sim" checked={cafeFeito === 'cafe-feito-sim'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCafeFeito(e.target.value)}>Sim</InputLine>
+              <InputLine type="radio" name="cafeFeito" value="cafe-feito-nao" id="cafe-feito-nao" htmlfor="cafe-feito-nao" checked={cafeFeito === 'cafe-feito-nao'} onChange={(e: ChangeEvent<HTMLInputElement>) => setCafeFeito(e.target.value)}>Não</InputLine>
             </fieldset>
 
             <InputLine
               type="text"
               id="sit-atipica"
-              htmlFor="sit-atipica"
-              placeholder=""
+              htmlfor="sit-atipica"
+              placeholder=" "
               value={sitAtipica}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setSitAtipica(e.target.value)}
             >
