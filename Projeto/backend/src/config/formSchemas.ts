@@ -260,6 +260,8 @@ export const cadastroAgregadoMotoSchema: FormField[] = [
 export const formularioManutencaoPredialSchema: FormField[] = [
   { name: "formTitle", required: true, type: "string" },
   { name: "timestamp", required: false, type: "date" },
+  { name: "id-usuario", required: true, type: "string" },
+  { name: "cpf-usuario", required: true, regex: regexCpf, type: "string" },
 
   { name: "data_verificacao", required: false, type: "date" },
   { name: "condicoes_piso_escritorio", required: false, type: "string" },

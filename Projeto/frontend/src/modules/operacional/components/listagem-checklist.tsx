@@ -8,6 +8,7 @@ import FormFechamentoPage from "../pages/form-fechamento-page";
 import CheckDiario from "./check-diario";
 import CheckDiarioPage from "../pages/check-diario-page";
 import CheckGestaoPage from "../pages/check-gestao-page";
+import CheckManutencao from "../pages/form-manutencao-page"
 
 type Checklist = {
   id: string;
@@ -51,6 +52,12 @@ export default function ListagemChecklist() {
   const abrirModalGestao = (e: React.MouseEvent) => {
     e.preventDefault()
     setConteudoModal(<CheckGestaoPage/>)
+    setAbertoModal(true)
+  }
+
+  const abrirModalManutencao = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setConteudoModal(<CheckManutencao/>)
     setAbertoModal(true)
   }
   
@@ -142,6 +149,7 @@ export default function ListagemChecklist() {
               { nome: "Formulário de Abertura", acao: abrirModalAbertura, copiar: false },
               { nome: "Formulário de Fechamento", acao:abrirModalFechamento, copiar: false },
               { nome: "Checklist Gestão de Coleta", acao:abrirModalGestao, copiar: false },              
+              { nome: "Formulário de manutenção predial", acao:abrirModalManutencao, copiar: false },              
             ].map((form) => (
               <div
                 key={form.link}
