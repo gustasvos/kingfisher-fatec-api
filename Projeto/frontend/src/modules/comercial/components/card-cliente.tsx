@@ -9,17 +9,21 @@ import { HistoricoInteracao } from "./historico-interacao"
 export type ClienteCardProps = {
   cliente: Cliente
   excluir: (id: number) => void
-  onUpdate: (newCategory: string, clienteId: number) => void
 }
 
-export default function CardCliente({ cliente, excluir, onUpdate }: ClienteCardProps) {
+const formatCNPJ = (cnpj: string) => {
+  return cnpj
+    ?.replace(/\D/g, "")
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/, ".$1/$2")
+    .replace(/(\d{4})(\d)/, "$1-$2")
+    .slice(0, 18);
+};
+
+export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
   const [abertoModal, setAbertoModal] = useState(false)
   const [conteudoModal, setConteudoModal] = useState<React.ReactNode>(null)
-
-  const handleCategoryUpdate = (newCategory: string) => {
-    onUpdate(newCategory, cliente.id)
-    setAbertoModal(false)
-  }
 
   const abrirModalEditar = () => {
     setConteudoModal(<CadastroCliente clienteId={cliente.id} />)
@@ -28,7 +32,7 @@ export default function CardCliente({ cliente, excluir, onUpdate }: ClienteCardP
 
   const abrirModalHistorico = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<HistoricoInteracao clienteId={cliente.id} onCategoryUpdated={handleCategoryUpdate} onClose={() => setAbertoModal(false)} />)
+    setConteudoModal(<HistoricoInteracao clienteId={cliente.id} />)
     setAbertoModal(true)
   }
 
@@ -45,7 +49,7 @@ export default function CardCliente({ cliente, excluir, onUpdate }: ClienteCardP
       <section className="bg-white w-[450px] rounded-2xl drop-shadow-lg flex flex-col justify-between p-5 transition hover:shadow-xl">
         {/* Header */}
         <div className="border-b pb-2 mb-2">
-          <p className="font-semibold text-lg text-gray-800">{cliente.CNPJ}</p>
+          <p className="font-semibold text-lg text-gray-800">{formatCNPJ(cliente.CNPJ)}</p>
           <p className="font-sans text-xl font-bold text-gray-900">{cliente.NomeFantasia}</p>
         </div>
 

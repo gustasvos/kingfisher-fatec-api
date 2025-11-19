@@ -90,15 +90,14 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
     };
 
     // Normaliza o formato antes de enviar
-    const prazoISO = new Date(prazoFaturamento).toISOString().split("T")[0]; // "2025-11-30"
-
+    const prazoISO = prazoFaturamento;
 
     const payload = {
       CNPJ: CNPJ.replace(/\D/g, ""),
-      nomeFantasia: limparTexto(nomeFantasia),
-      prazoFaturamento: prazoISO,
-      contatoResponsavel: limparTexto(contatoResponsavel),
-      emailResponsavel: emailResponsavel,
+      NomeFantasia: limparTexto(nomeFantasia),
+      PrazoFaturamento: prazoISO,
+      ContatoResponsavel: limparTexto(contatoResponsavel),
+      EmailResponsavel: emailResponsavel,
       CNAE: CNAE,
       descricaoCNAE: descricaoCNAE,
       colaboradorId: userId
@@ -203,17 +202,19 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               classNameInput='w-[400px]'
               value={prazoFaturamento ? formatarDataParaPtBr(prazoFaturamento) : ""}
               style={{ outline: 'none', boxShadow: 'none' }}
-              onAccept={(value: string) => {
-                if (isValidDataPtBr(value)) {
-                  setPrazoFaturamento(dataLimpa(value));
-                }
-              }}
-              onPaste={(e) => {
-                const pastedData = e.clipboardData.getData('Text');
-                if (!isValidDataPtBr(pastedData)) e.preventDefault();
-              }}
-            />
-          </div>
+
+            onAccept={(value: string) => {
+  
+          if (isValidDataPtBr(value)) {
+           setPrazoFaturamento(dataLimpa(value));
+         }
+       }}
+        onPaste={(e) => {
+         const pastedData = e.clipboardData.getData('Text');
+         if (!isValidDataPtBr(pastedData)) e.preventDefault();
+        }}
+          />
+        </div>
 
           <div>
             <InputField
