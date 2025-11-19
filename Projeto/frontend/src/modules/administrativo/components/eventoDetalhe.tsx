@@ -143,9 +143,12 @@ export default function EventoDetalhe({ eventoId, conviteId, onFechar, statusCon
                                         <li className="font-sans text-[15px] font-semibold">{evento ? evento.localizacao : "Carregando..."}</li>
                                     </ul>
 
+                                    <p className="font-sans text-[15px] font-semibold">
+                                        Status: {statusConvite}
+                                    </p>
                                     {/* Se for recusado, mostra o motivo */}
                                     {statusConvite?.toUpperCase() === "RECUSADO" && motivoConvite && (
-                                        <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-md shadow-sm">
+                                        <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-md shadow-sm w-full break-words">
                                             <p className="font-sans text-sm font-semibold text-red-800 mb-2">
                                              Motivo da Recusa:
                                             </p>
@@ -159,7 +162,7 @@ export default function EventoDetalhe({ eventoId, conviteId, onFechar, statusCon
                                 <span className="row-start-1 row-span-3 w-[2px] h-full bg-[#C2E8FF]" />
 
                                 {/* --- DIREITA (CONFIRMAÇÃO/STATUS) --- */}
-                                <section className="flex flex-col items-center relative col-start-3 row-span-3 pt-[30px] space-y-5">
+                                <section className="flex flex-col items-center relative col-start-3 row-span-3 pt-[30px] space-y-5 w-full">
                                     <p className="font-sans text-[18px] font-semibold pb-[10px]">
                                         Status: {isRespondido ? getStatusLabel(statusConvite) : "Confirmação"}
                                     </p>
