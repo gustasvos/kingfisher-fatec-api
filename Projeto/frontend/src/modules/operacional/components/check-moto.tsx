@@ -1,10 +1,6 @@
 import { useState, ChangeEvent, FormEvent, ReactNode } from "react"
 import instance from "../../../services/api";
 
-// --- Início dos Componentes Simulados ---
-// Recriei seus componentes aqui para que o código possa compilar,
-// mas mantendo suas classes de estilo originais.
-
 // Suas classes de estilo originais
 const inputClasses = "w-[300px] block rounded-t-lg px-2.5 pb-2.5 pt-5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 const labelClasses = "absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
@@ -22,6 +18,11 @@ interface InputLineProps {
     checked?: boolean;
     readOnly?: boolean;
     placeholder?: string;
+}
+
+interface ValidationError {
+    field: string;
+    message: string;
 }
 
 const InputLine = ({
@@ -135,6 +136,9 @@ type FormAberturaProps = {
 }
 
 export default function CheckMoto({ form }: FormAberturaProps) {
+    const [erro, setErro] = useState<ValidationError | string>('')
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
     const [formTitle, setFormTitle] = useState(form)
 
     // Dados pessoais
@@ -256,6 +260,7 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                             onSubmit={async (e: FormEvent) => {
                                 e.preventDefault();
                                 setLoading(true);
+                                setErro('');
 
                                 try {
                                     const payload = {
@@ -294,15 +299,14 @@ export default function CheckMoto({ form }: FormAberturaProps) {
 
                                     const response = await instance.post("/submit", payload);
 
-                                    console.log("Enviado com sucesso:", response.data);
-                                    alert("Formulário enviado com sucesso!");
-
-                                    // Se quiser limpar o formulário:
-                                    // window.location.reload();
+                                    setShowSuccess(true);
+                                    setTimeout(() => setShowSuccess(false), 3000);
 
                                 } catch (error: any) {
-                                    console.error("Erro ao enviar formulário:", error);
-                                    alert("Erro ao enviar formulário. Verifique os dados e tente novamente.");
+                                        const erroDetalhado = error.response?.data?.message
+                                        setErro(erroDetalhado);
+                                        setShowError(true);
+                                        setTimeout(() => setShowError(false), 3000);
                                 } finally {
                                     setLoading(false);
                                 }
@@ -523,6 +527,19 @@ export default function CheckMoto({ form }: FormAberturaProps) {
                     </section>
                 </div>
             </div>
+            {showSuccess && (
+                <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+                    Formulário enviado com sucesso!
+                </div>
+            )
+            }
+
+            {showError && (
+                <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+                    {typeof erro === 'string' ? erro : erro.message}
+                </div>
+            )
+            }
         </div>
     )
 }

@@ -1,6 +1,5 @@
-// ------------------------------------------
-// Nova definição de Interface para maior clareza
-// ------------------------------------------
+
+// Definição de Interface para maior clareza
 export interface FormField {
   name: string;
   required: boolean;
@@ -30,7 +29,7 @@ const ResponsavelVistoria = [
 
 const regexTipoVeiculo = new RegExp(`^(${TipoVeiculo.map(escapeForRegex).join('|')})$`, 'i');
 const regexResponsavelVistoria = new RegExp(`^(${ResponsavelVistoria.map(escapeForRegex).join('|')})$`, 'i');
-const regexSimNaoNa = /^(SIM|NÃO)$/i;
+const regexSimNaoNa = /^(SIM|NÃO|N\/A)$/i
 const regexSimNao = /^(SIM|NÃO)$/i;
 const regexPlaca = /^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$/i; 
 const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,19 +37,6 @@ const regexCpf = /^\d{11}$/;
 const regexCnpj = /^\d{14}$/;
 const regexTelefone = /^\d{10,11}$/; 
 const regexCep = /^\d{8}$/;
-
-// ------------------------------------------
-// Schemas de Formulário
-// ------------------------------------------
-
-// Esquema de cadastro de pessoa (exemplo)
-export const cadastroPessoaSchema: FormField[] = [
-  { name: 'name', required: true, type: "string" },
-  { name: 'email', required: true, regex: regexEmail, unique: true, type: "string" },
-  { name: 'cpf', required: true, regex: regexCpf, unique: true, type: "string" },
-  { name: 'imagePaths', required: false, type: "upload" }
-];
-
 
 export const checkVeiculosAgregadosSchema: FormField[] = [
   { name: 'formTitle', required: true, type: "string" }, // Identificador (não deve ir para o CSV)
@@ -223,21 +209,21 @@ export const formularioFechamentoSchema: FormField[] = [
 export const cadastroAgregadoMotoSchema: FormField[] = [
   { name: "formTitle", required: true, type: "string" }, // Identificador (não vai para o CSV)
   // Sessão 1: Dados Pessoais
-  { name: "genero", required: true, type: "radio" }, // opções: Masculino, Feminino, Prefiro não informar
+    { name: "genero", required: true, type: "radio", regex: /^(Masculino|Feminino|Prefiro não informar)$/i },// opções: Masculino, Feminino, Prefiro não informar
   { name: "nome-completo-motorista", required: true, type: "string" },
-  { name: "cnpj", required: false, type: "string" },
-  { name: "cpf", required: false, type: "string" },
-  { name: "data-nascimento", required: true, type: "date" },
+  { name: "cnpj", required: false, type: "string", regex: regexCnpj },
+  { name: "cpf", required: true, type: "string", regex: regexCpf },
+  { name: "data-nascimento", required: true, type: "date", regex: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/ },
   { name: "cidade-nascimento", required: true, type: "string" },
-  { name: "telefone", required: true, type: "string" },
-  { name: "email", required: true, type: "string" }, // se tiver regexEmail, pode adicionar regex: regexEmail
+  { name: "telefone", required: true, type: "string", regex: regexTelefone },
+  { name: "email", required: true, type: "string", regex: regexEmail }, // se tiver regexEmail, pode adicionar regex: regexEmail
   { name: "rg", required: true, type: "string" },
-  { name: "data-emissao-rg", required: true, type: "date" },
+  { name: "data-emissao-rg", required: true, type: "date", regex: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/ },
   { name: "orgao-expedidor", required: true, type: "string" },
   { name: "nome-do-pai", required: true, type: "string" },
   { name: "nome-da-mae", required: true, type: "string" },
   { name: "pis-pasep", required: true, type: "string" },
-  { name: "cep", required: true, type: "string" },
+  { name: "cep", required: true, type: "string", regex: regexCep },
   { name: "endereco", required: true, type: "string" }, // Rua, N°, Bairro e Cidade
 
   // Sessão 2: Dados da Moto
@@ -252,8 +238,8 @@ export const cadastroAgregadoMotoSchema: FormField[] = [
   { name: "possui-seguro", required: true, regex: regexSimNao, type: "radio" },
 
   // Sessão 3: Dados de Frete
-  { name: "valor-minimo-por-saida", required: true, type: "string" },
-  { name: "valor-minimo-por-km", required: true, type: "string" },
+  { name: "valor-minimo-por-saida", required: true, type: "string", regex: /^\d+([.,]\d{1,2})?$/ },
+  { name: "valor-minimo-por-km", required: true, type: "string", regex: /^\d+([.,]\d{1,2})?$/ },
   { name: "possui-curso-moto-frete", required: true, regex: regexSimNao, type: "radio" }
 ];
 
@@ -314,11 +300,7 @@ export const formularioManutencaoPredialSchema: FormField[] = [
   { name: "detalhe_adicional", required: false, type: "string" }
 ];
 
-
-// ------------------------------------------
 // Mapa Centralizado de Schemas
-// ------------------------------------------
-
 export const allFormSchemas: Record<string, FormField[]> = {
   "Checklist de Veículos Agregados": checkVeiculosAgregadosSchema,
   "Checklist Diário - Frota Newe": checklistDiarioFrotaNeweSchema,

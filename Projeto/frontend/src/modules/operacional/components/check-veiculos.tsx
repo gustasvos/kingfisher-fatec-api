@@ -6,13 +6,19 @@ import Botao from "../../../shared/components/botao"
 type FormAberturaProps = {
     form: string;
 }
+interface ValidationError {
+  field: string;
+  message: string;
+}
 
 export default function CheckVeiculos({ form }: FormAberturaProps) {
     const [mostraOutro, setMostraOutro] = useState(false)
     const [respVistoria, setRespVistoria] = useState('')
     const [letraNum, setLetraNum] = useState('')
-    const [erro, setErro] = useState('')
+    const [erro, setErro] = useState<ValidationError| string>('')
     const [loading, setLoading] = useState(false)
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     const [formTitle, setFormTitle] = useState(form)
     //Sessão 1: Dados cadastrais
@@ -238,6 +244,7 @@ export default function CheckVeiculos({ form }: FormAberturaProps) {
     const enviaForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
+        setErro('');
 
         // Função para normalizar valores em -> "SIM", "NÃO", "N/A"
         const normalizaSimNaoNa = (valor: string) => {
@@ -334,13 +341,15 @@ export default function CheckVeiculos({ form }: FormAberturaProps) {
                 method: "POST",
                 body: formData
             })
-            if (!response.ok) {
-                throw new Error(`Erro ao enviar: ${response.status}`);
+            if (response.ok) {
+                setShowSuccess(true);
+                setTimeout(() => setShowSuccess(false), 3000);
+            } else {
+                const erroDetalhado = await response.json();
+                setErro(erroDetalhado);
+                setShowError(true);
+                setTimeout(() => setShowError(false), 3000);
             }
-            setTimeout(() => {
-                alert("Formulário enviado!")
-                setLoading(false)
-            }, 2000)
 
         } catch (error) {
             console.error("Erro no envio:", error);
@@ -366,8 +375,7 @@ export default function CheckVeiculos({ form }: FormAberturaProps) {
                                 </section>
                                 <InputLine type="text" placeholder="" id="nome" htmlfor="nome" required value={nomeMotorista} onChange={(e) => setNomeMotorista(e.target.value)}>Nome</InputLine>
                                 <InputLine type="email" placeholder="" id='email' htmlfor="email" required value={emailMotorista} onChange={(e) => setEmailMotorista(e.target.value)}>E-mail</InputLine>
-                                <InputLine type="text" placeholder="" maxLength={7} id='placaVeiculo' htmlfor="placa-veiculo" value={placaVeiculo} onChange={(e) => { setPlacaVeiculo(e.target.value); handlechange(e) }}>Placa do veículo(apenas os numeros e letras!)</InputLine>
-                                {erro && <p className="text-red-700 text-[12px]">{erro}</p>}
+                                <InputLine type="text" placeholder="" maxLength={7} id='placaVeiculo' htmlfor="placa-veiculo" value={placaVeiculo} onChange={(e) => { setPlacaVeiculo(e.target.value)}}>Placa do veículo(apenas os numeros e letras!)</InputLine>
                                 <fieldset className="border border-gray-200 rounded-xl p-4 mb-6">
                                     <legend className="text-black">Tipo Veículo</legend>
                                     <InputLine type="radio" name="tipoVeiculo" value="van" id='van' htmlfor="van" required checked={tipoVeiculo === 'van'} onChange={handleTipoVeiculoChange}>Van</InputLine>
@@ -628,6 +636,19 @@ export default function CheckVeiculos({ form }: FormAberturaProps) {
                     </section>
                 </div>
             </div>
+            {showSuccess && (
+                <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+                    Formulário enviado com sucesso!
+                </div>
+            )
+            }
+
+            {showError && (
+                <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 animate-fade-in-out">
+                    {erro.message}
+                </div>
+            )
+            }
         </div>
     )
 }
