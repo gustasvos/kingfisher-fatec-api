@@ -19,6 +19,7 @@ import imgColab from './../../../assets/imgTeam.svg'
 import Modal from '../../../shared/components/modal'
 import NovoEvento from './novoEvento'
 import Navbar from '../../../shared/components/navbar'
+import AgendamentoCliente from '../../comercial/pages/agendamento-cliente';
 
 function PaginaEventos() {
   const [eventosCalendar, setEventosCalendar] = useState<any[]>([])
@@ -112,6 +113,18 @@ function PaginaEventos() {
     setAbertoModal(true)
   }
 
+  const abrirModalAgendamentoCliente = (e: React.MouseEvent) => {
+  e.preventDefault()
+  setConteudoModal(
+    <AgendamentoCliente
+      // sem nomeCliente, deixando opcional
+      // sem idCliente, para mostrar o dropdown
+    />
+  )
+  setAbertoModal(true)
+}
+
+
   const menuItems = [
     { src: imgLogin, alt: "Login", title: "Login", route: "/" },
     { src: imgHome, alt: "Home", title: "Home", route: "/home" },
@@ -147,6 +160,12 @@ function PaginaEventos() {
             style={{ color: '#000' }}
           />
         </div>
+
+        {user?.role === "comercial" && (
+    <button onClick={abrirModalAgendamentoCliente} className="btn">
+      Agendar com Cliente
+    </button>
+  )}
 
         <div id="calendar">
           <FullCalendar
