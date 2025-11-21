@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.header h1 {
+    color: #135b78;
+    font-size: 22px;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.intro p {
+    padding-bottom: 1px;
+}
+
+.content {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.45;
+}
+
+.info {
+    margin-bottom: 14px;
+}
+
+.info p {
+    margin: 3px 0;
+}
+
+.label {
+    font-weight: bold;
+    color: #135b78;
+}
+
+.pdf-link {
+    margin-top: 16px;
+}
+
+.footer {
+    text-align: center;
+    font-size: 13px;
+    color: #777;
+    margin-top: 18px;
+}
