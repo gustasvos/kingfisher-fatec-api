@@ -1,12 +1,13 @@
 import { IsDate } from "class-validator";
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Cotacao } from "./cotacao"
 
 @Entity('cliente')
 export class Cliente {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ type: 'varchar', length: 14  })
+    @Column({ type: 'varchar', length: 14 })
     CNPJ: string
 
     @Column({ type: 'varchar', length: 255 })
@@ -16,7 +17,7 @@ export class Cliente {
     @Column({ type: 'date', default: '2000-01-01' })
     prazoFaturamento: Date
 
-    @Column({ type: 'varchar', length: 255  })
+    @Column({ type: 'varchar', length: 255 })
     contatoResponsavel: string
 
     @Column({ type: 'varchar', length: 255 })
@@ -30,4 +31,7 @@ export class Cliente {
 
     @Column({ type: 'int' })
     colaboradorId: number
+
+    @OneToMany(() => Cotacao, cotacao => cotacao.cliente)
+    cotacoes: Cotacao[];
 }

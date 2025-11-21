@@ -2,7 +2,8 @@ import { useState } from "react"
 import Navbar from "../../../shared/components/navbar"
 import Botao from "../../../shared/components/botao"
 import Modal from "../../../shared/components/modal"
-import CheckGestao from "../../operacional/components/check-gestão"
+import CheckGestao from "../../operacional/components/check-gestao"
+import CalculoCotacao from "../../comercial/pages/CalculoCotacao"
 import { FiFileText, FiSend, FiPlus, FiRepeat } from "react-icons/fi"
 import jsPDF from "jspdf"
 
@@ -131,7 +132,8 @@ export default function CotacaoFrete() {
 
             {/* Conteúdo rolável do popup */}
             <div className="flex-1 overflow-y-auto p-4">
-              <CheckGestao form="Formulário de Gestão de Coleta" />
+              {/* Aqui renderizamos o componente CalculoCotacao */}
+              <CalculoCotacao />
             </div>
           </div>
         </div>
