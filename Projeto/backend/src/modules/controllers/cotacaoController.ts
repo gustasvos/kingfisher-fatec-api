@@ -4,14 +4,12 @@ import { Cotacao } from "../models/cotacao"
 import { Cliente } from "../models/cliente"
 import { DeepPartial } from "typeorm";
 import nodemailer from "nodemailer"
+import nodemailer from "nodemailer"
 import fs from "fs";
 import path from "path";
 import dotenv from 'dotenv'
 import PDFDocument from "pdfkit"; // biblioteca para gerar PDFs
 import { cotacoesDir } from "../../config/paths";
-import { gerarPDF } from "../../services/gerarPDF";
-
-dotenv.config()
 
 export const createCotacao = async (req: Request, res: Response) => {
     try {
@@ -141,6 +139,68 @@ export const deleteCotacao = async (req: Request, res: Response) => {
 
     } catch (error) {
         return res.status(500).json({ message: "Erro ao remover cotação!" })
+    }
+}
+
+// POST /cotacao/enviar-email
+export const enviarEmailCotacao = async (req: Request, res: Response) => {
+    try {
+        const { cotacaoId, template } = req.body
+
+        if (!cotacaoId || !template) {
+            return res.status(400).json({ message: "cotacaoId ou template vazio." })
+        }
+
+        const cotacaoRepository = AppDataSource.getRepository(Cotacao)
+
+        const cotacao = await cotacaoRepository.findOne({
+            where: { id: cotacaoId },
+            relations: ["cliente"]
+        });
+
+        if (!cotacao) {
+            return res.status(404).json({ message: "Cotação não encontrada." })
+        }
+
+        // substitui variáveis no template
+        let htmlFinal = template
+            .replace(/{{valor_total}}/g, cotacao.valor_total.toFixed(2))
+            .replace(/{{nomeFantasia}}/g, cotacao.cliente.nomeFantasia)
+            .replace(/{{CNPJ}}/g, cotacao.cliente.CNPJ || "")
+            .replace(/{{contatoResponsavel}}/g, cotacao.cliente.contatoResponsavel || "")
+            .replace(/{{emailResponsavel}}/g, cotacao.cliente.emailResponsavel || "")
+            .replace(/{{data_criacao}}/g, cotacao.data_criacao.toISOString().slice(0, 10))
+            .replace(/{{data_validade}}/g, cotacao.data_validade.toISOString().slice(0, 10))
+            .replace(/{{detalhes_frete}}/g, cotacao.detalhes_frete || "")
+            .replace(/{{caminho_arquivo_pdf}}/g, cotacao.caminho_arquivo_pdf || "")
+
+        // configura o transport
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_APP_PASSWORD
+            }
+        })
+
+        await transporter.sendMail({
+            from: `"Newe Logística" <${process.env.GMAIL_USER}>`,
+            to: process.env.EMAIL_RECEIVER,
+            subject: `Nova Cotação — Cliente ${cotacao.cliente.nomeFantasia}`,
+            html: htmlFinal
+        }).catch(e => {
+            console.error("ERRO DO NODEMAILER: ", e)
+            throw e
+        })
+
+        return res.status(200).json({ message: "E-mail enviado com sucesso!" })
+
+    } catch (error) {
+        console.error("Erro ao enviar e-mail:", error)
+        // console.log("USER:", process.env.GMAIL_USER);
+        // console.log("PASS:", process.env.GMAIL_APP_PASSWORD);
+        return res.status(500).json({ message: "Erro ao enviar e-mail." })
+
     }
 }
 
