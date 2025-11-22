@@ -273,7 +273,7 @@ function PaginaEventos() {
           onFechar={handleFecharModalPrincipal}
           modalClassName=""
         >
-          <div className='max-w-[900px] w-[70vw] bg-white rounded-lg p-4'>
+          <div className='max-w-[900px] w-[70vw] rounded-lg p-4'>
             {conteudoModal}
           </div>
         </Modal>

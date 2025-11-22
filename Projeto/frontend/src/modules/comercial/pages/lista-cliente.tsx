@@ -125,7 +125,7 @@ export default function ListaCliente() {
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-3">
                         {clienteFiltrados.map((c) => (
                             <CardCliente key={c.id} cliente={c} excluir={excluirCliente} onUpdate={handleClientCategoryUpdate} />
                         ))}

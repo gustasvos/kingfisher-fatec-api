@@ -1,9 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "./../../contexts/AuthContext";
-import { FaBars, FaHome, FaUserPlus, FaCalendarAlt, FaBell, FaUsers, FaClipboardList, FaListUl, FaFilter, FaEdit } from "react-icons/fa";
+import { FaBars, FaHome, FaUserPlus, FaCalendarAlt, FaBell, FaUsers, FaClipboardList, FaListUl, FaFilter, FaEdit, FaMoneyBill } from "react-icons/fa";
 import { MdDashboard, MdLogout, MdPersonAdd } from "react-icons/md";
-import { FaListCheck } from "react-icons/fa6";
+import { FaHandHoldingDollar, FaListCheck, FaMoneyBillTrendUp, FaMoneyCheckDollar } from "react-icons/fa6";
 
 
 // Componentes e modais
@@ -112,6 +112,7 @@ export default function Navbar() {
             <NavItem to="/listaCliente" icon={<FaListUl />} label="Clientes" aberto={aberto} />
             <NavItem to="/eventos-colaborador" icon={<FaBell />} label="Convites" aberto={aberto} />
             <NavItem to="/funilVendas" icon={<FaFilter />} label="Funil de Vendas" aberto={aberto} />
+            <NavItem to="/cotacao" icon={<FaHandHoldingDollar />} label="Cotações" aberto={aberto} />
           </div>
         );
 

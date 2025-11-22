@@ -187,7 +187,7 @@ export default function ListagemEventos() {
   return (
     <>
       <Navbar />
-      <main className="p-8 min-h-screen bg-[#d8ecf3]">
+      <main className="p-8 min-h-screen">
         <form className="w-full mb-8" onSubmit={(e) => e.preventDefault()}>
           <input
             type="text"
@@ -195,7 +195,7 @@ export default function ListagemEventos() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-6 py-3 rounded-full border border-[#9aa7ad]
-              bg-[#f3fbfd] text-[#0f5260] placeholder-[#9aa7ad]
+               text-[#0f5260] placeholder-[#9aa7ad]
               focus:outline-none focus:ring-2 focus:ring-[#0f5260] focus:border-transparent
               transition-colors text-lg"
           />
