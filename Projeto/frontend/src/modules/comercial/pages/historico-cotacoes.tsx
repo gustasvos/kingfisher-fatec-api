@@ -1,8 +1,6 @@
 import { useState } from "react"
 import Navbar from "../../../shared/components/navbar"
 import Botao from "../../../shared/components/botao"
-import Modal from "../../../shared/components/modal"
-import CheckGestao from "../../operacional/components/check-gestao"
 import CalculoCotacao from "../../comercial/pages/CalculoCotacao"
 import { FiFileText, FiSend, FiPlus, FiRepeat } from "react-icons/fi"
 import jsPDF from "jspdf"
@@ -15,7 +13,7 @@ type Cotacao = {
   valor: string
 }
 
-export default function CotacaoFrete() {
+export default function HistoricoCotacoes() {
   const [cotacoes, setCotacoes] = useState<Cotacao[]>([
     { id: 1, origem: "São Paulo", destino: "Curitiba", carga: "Alimentos", valor: "R$ 2.000" },
     { id: 2, origem: "Rio de Janeiro", destino: "Florianópolis", carga: "Eletrônicos", valor: "R$ 3.500" }

@@ -1,8 +1,4 @@
 import express, { NextFunction, Request, Response } from 'express'
-import nodemailer from 'nodemailer'
-import fs from 'fs'
-import path from 'path'
-import dotenv from 'dotenv'
 import { AppDataSource } from '../../config/database'
 import { Cliente } from '../models/cliente'
 import { RegistroCliente } from '../models/registroCliente'
@@ -259,30 +255,30 @@ export const updateClienteCategoria = async (req: Request, res: Response) => {
 
 // envio de email para follow up no funil
 // POST /email/followup
-export const sendFollowUpEmail = async (req: Request, res: Response) => {
-  try {
-    const { html, leadId } = req.body
+// export const sendFollowUpEmail = async (req: Request, res: Response) => {
+//   try {
+//     const { html, leadId } = req.body
 
-    const finalHtml = html.replace("{{leadId}}", leadId)
+//     const finalHtml = html.replace("{{leadId}}", leadId)
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-      },
-    })
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.GMAIL_USER,
+//         pass: process.env.GMAIL_APP_PASSWORD,
+//       },
+//     })
 
-    await transporter.sendMail({
-      from: `"Kingfisher" <${process.env.GMAIL_USER}>`,
-      to: process.env.EMAIL_RECEIVER,
-      subject: "Cliente movido para Follow Up",
-      html: finalHtml
-    })
+//     await transporter.sendMail({
+//       from: `"Kingfisher" <${process.env.GMAIL_USER}>`,
+//       to: process.env.EMAIL_RECEIVER,
+//       subject: "Cliente movido para Follow Up",
+//       html: finalHtml
+//     })
 
-    return res.status(200).json({ message: "Email enviado com sucesso" })
-  } catch (err) {
-    console.error("Erro ao enviar email:", err)
-    return res.status(500).json({ error: "Erro ao enviar email" })
-  }
-}
+//     return res.status(200).json({ message: "Email enviado com sucesso" })
+//   } catch (err) {
+//     console.error("Erro ao enviar email:", err)
+//     return res.status(500).json({ error: "Erro ao enviar email" })
+//   }
+// }

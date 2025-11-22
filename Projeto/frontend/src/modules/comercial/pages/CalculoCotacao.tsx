@@ -141,11 +141,35 @@ export default function CalculoCotacao() {
 
     const [showCalculation, setShowCalculation] = useState(false);
 
+    // helper: retorna string 'YYYY-MM-DD' ou null
+    const formatToYYYYMMDD = (input: string | null | undefined): string | null => {
+        if (!input) return null
+
+        // se for datetime-local (contém 'T'), pega parte antes do T
+        if (input.includes("T")) return input.split("T")[0]
+
+        const possibleDate = input.substring(0, 10)
+        const d = new Date(possibleDate)
+
+        // se já estiver em YYYY-MM-DD, retorna direto (pequena validação)
+        if (!isNaN(d.getTime())) return possibleDate
+        return null
+    }
+
     // Função para enviar os dados para o backend
     const enviarBackend = async () => {
         if (!resultados || clienteSelecionado === null) {
             alert("Você precisa calcular antes de enviar ou selecionar um cliente!");
             return;
+        }
+
+        // formata data_validade corretamente
+        let dataValidadePayload = formatToYYYYMMDD(dataValidade)
+
+        // SE NÃO EXISTIR → bloqueia e alerta
+        if (!dataValidadePayload) {
+            alert("Por favor, preencha uma data de validade válida.")
+            return
         }
 
         // "id_cliente": {{clienteId}},
@@ -160,7 +184,7 @@ export default function CalculoCotacao() {
 
         const payload = {
             id_cliente: clienteSelecionado,
-            data_validade: dataValidade,
+            data_validade: dataValidadePayload,
             status: "Rascunho",
             valor_total: resultados.Cfinal,
             detalhes_frete: JSON.stringify({
@@ -178,12 +202,20 @@ export default function CalculoCotacao() {
 
         try {
             setLoading(true);
+
             const resp = await instance.post("/cotacao/create", payload);
+            const html = await fetch("/emailTemplate.html").then(r => r.text())
+
+            await instance.post("/cotacao/enviar-email", {
+                cotacaoId: resp.data.id,
+                template: html
+            })
             alert("Cotação enviada com sucesso!");
             console.log(resp.data);
         } catch (error) {
             console.error(error);
-            alert("Erro ao enviar a cotação para o backend.");
+            console.log(dataValidade)
+            alert("Erro ao enviar a cotação.");
         } finally {
             setLoading(false);
         }
@@ -312,7 +344,7 @@ export default function CalculoCotacao() {
                                 ([id, value, setter, label]) => (
                                     <InputLine
                                         key={id}
-                                        type={label.includes("Data") ? "datetime-local" :
+                                        type={id === "dataValidade" ? "date" : label.includes("Data") ? "datetime-local" :
                                             label.includes("Custo") ? "number" :
                                                 label.includes("Taxa") ? "number" :
                                                     label.includes("Total") ? "number" :
