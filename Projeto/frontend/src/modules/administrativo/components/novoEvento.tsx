@@ -78,6 +78,7 @@ export default function NovoEvento({ onFechar }: { onFechar: () => void }) {
   const navigate = useNavigate();
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
+  
 
   const formEnviado = async (e: React.FormEvent) => {
     e.preventDefault()
