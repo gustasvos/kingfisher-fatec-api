@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resumo da Cotação</title>
+    <link rel="stylesheet" href="emailTemplate.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cotação Registrada</h1>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <p>Uma nova cotação foi registrada. Seguem os principais dados:</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Valor Total:</p>
+                <p>R$ {{valor_total}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Cliente:</p>
+                <p>Nome: {{nomeFantasia}}</p>
+                <p>CNPJ: {{CNPJ}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Responsável:</p>
+                <p>Nome: {{contatoResponsavel}}</p>
+                <p>E-mail: {{emailResponsavel}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Datas:</p>
+                <p>Criação: {{data_criacao}}</p>
+                <p>Validade: {{data_validade}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Frete:</p>
+                <p>{{detalhes_frete}}</p>
+                <!-- <p>Origem: </p>
+                <p>Destino: </p> -->
+            </div>
+
+            <div class="pdf-link">
+                <p class="label">Documento da cotação:</p>
+                <p>
+                    <a href="{{caminho_arquivo_pdf}}" target="_blank">
+                        Clique para abrir o PDF
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            2025 Newe Logistica Integrada
+        </div>
+    </div>
+</body>
+</html>
