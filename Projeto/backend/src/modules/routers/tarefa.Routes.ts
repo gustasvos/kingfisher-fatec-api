@@ -8,5 +8,6 @@ router.get('/tarefas/pendentes', tarefaController.getPendentesVendedor);
 router.get('/tarefas/:id', tarefaController.getById);
 router.put('/tarefas/:id', tarefaController.update);
 router.delete('/tarefas/:id', tarefaController.delete);
+
  
 export default router;
