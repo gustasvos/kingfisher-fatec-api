@@ -198,24 +198,24 @@ const FunilVendas: React.FC = () => {
   const handleLeadDrop = async (leadId: string, novaCategoria: string) => {
     const categoriaId = CATEGORIA_MAP[novaCategoria]
 
-    if (novaCategoria === "Follow Up") {
-      const html = await fetch("/emailTemplate.html").then(r => r.text())
+    // if (novaCategoria === "Follow Up") {
+  //     const html = await fetch("/emailTemplate.html").then(r => r.text())
 
-      try {
-        await instance.post("/email/followup", {
-          leadId,
-          html
-        })
-        console.log("Email de Follow Up disparado!")
-      } catch (error) {
-        console.error("Erro ao enviar email:", error)
-      }
-    }
+  //     try {
+  //       await instance.post("/email/followup", {
+  //         leadId,
+  //         html
+  //       })
+  //       console.log("Email de Follow Up disparado!")
+  //     } catch (error) {
+  //       console.error("Erro ao enviar email:", error)
+  //     }
+  // }
 
-    if (!categoriaId) {
-      console.error("Categoria desconhecida:", novaCategoria)
-      return
-    }
+    // if (!categoriaId) {
+    //   console.error("Categoria desconhecida:", novaCategoria)
+    //   return
+    // }
 
     try {
       // Criar a data local no fuso horário do Brasil
