@@ -74,15 +74,15 @@ export default function CalculoCotacao() {
         setLoading(true);
 
         try {
-            const v = parseFloat(V) || 0;               // Valor da Mercadoria (base para cálculo de GRIS e Ad Valorem)
-            const g = parseFloat(G) || 0;               // Taxa GRIS (Gerenciamento de Risco)
-            const a = parseFloat(A) || 0;               // Taxa Ad Valorem
-            const ktot = parseFloat(Ktot) || 0;         // Quilometragem total da viagem
-            const ckm = parseFloat(Ckm) || 0;           // Custo Base por Quilômetro
-            const cag = parseFloat(Cag) || 0;           // Custo do agregado por quilômetro
-            const p = parseFloat(P) || 0;               // Total de pedágios da viagem
-            const r = parseFloat(R) || 0;               // Rentabilidade mínima desejada
-            const cad = parseFloat(Cadicional) || 0;    // Custo adicional eventual
+            const v = parseFloat(V.replace(",", ".")) || 0;               // Valor da Mercadoria (base para cálculo de GRIS e Ad Valorem)
+            const g = parseFloat(G.replace(",", ".")) || 0;               // Taxa GRIS (Gerenciamento de Risco)
+            const a = parseFloat(A.replace(",", ".")) || 0;               // Taxa Ad Valorem
+            const ktot = parseFloat(Ktot.replace(",", ".")) || 0;         // Quilometragem total da viagem
+            const ckm = parseFloat(Ckm.replace(",", ".")) || 0;           // Custo Base por Quilômetro
+            const cag = parseFloat(Cag.replace(",", ".")) || 0;           // Custo do agregado por quilômetro
+            const p = parseFloat(P.replace(",", ".")) || 0;               // Total de pedágios da viagem
+            const r = parseFloat(R.replace(",", ".")) || 0;               // Rentabilidade mínima desejada
+            const cad = parseFloat(Cadicional.replace(",", ".")) || 0;    // Custo adicional eventual
 
             // 1) Frete base = Valor da Mercadoria * (GRIS + Ad Valorem) + (Quilometragem Total * Custo Base por km)
             const freteBase = v * (g + a) + ktot * ckm
@@ -204,18 +204,12 @@ export default function CalculoCotacao() {
             setLoading(true);
 
             const resp = await instance.post("/cotacao/create", payload);
-            const html = await fetch("/emailTemplate.html").then(r => r.text())
-
-            await instance.post("/cotacao/enviar-email", {
-                cotacaoId: resp.data.id,
-                template: html
-            })
-            alert("Cotação enviada com sucesso!");
+            alert("Cotação salva com sucesso!");
             console.log(resp.data);
         } catch (error) {
             console.error(error);
             console.log(dataValidade)
-            alert("Erro ao enviar a cotação.");
+            alert("Erro ao salvar a cotação.");
         } finally {
             setLoading(false);
         }
@@ -375,7 +369,7 @@ export default function CalculoCotacao() {
                             {/* Botão que faz submit e envia para o backend */}
                             <BotaoSubmit
                                 loading={loading}
-                                label={loading ? "Enviando..." : "Enviar Cotação"}
+                                label={loading ? "Enviando..." : "Salvar Cotação"}
                                 type="button" // mantemos type button e chamamos função
                                 onClick={enviarBackend}
                                 className="text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg"
@@ -383,7 +377,6 @@ export default function CalculoCotacao() {
                         </div>
                     </form>
 
-                    {/* Resultado */}
                     {/* Resultado */}
                     {showCalculation && resultado !== null && (
                         <div className="mt-8 p-6 bg-green-50 border border-green-400 rounded-xl text-black text-lg">

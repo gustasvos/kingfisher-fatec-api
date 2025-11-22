@@ -1,5 +1,5 @@
 import express from "express"
-import { createCotacao, listCotacoes, listCotacaoById, updateCotacao, deleteCotacao, enviarEmailCotacao } from "../controllers/cotacaoController"
+import { createCotacao, listCotacoes, listCotacaoById, updateCotacao, deleteCotacao, enviarEmailCotacao, getUltimaCotacaoByCliente } from "../controllers/cotacaoController"
 import { autenticarUsuario } from "../../middlewares/auth.middleware"
 import { autorizarUsuario } from "../../middlewares/autorizar.middleware"
 
@@ -11,7 +11,7 @@ router.get( "/cotacao/:id", autenticarUsuario, autorizarUsuario(["comercial"]), 
 router.put( "/cotacao/:id", autenticarUsuario, autorizarUsuario(["comercial"]), updateCotacao )
 router.delete( "/cotacao/:id", autenticarUsuario, autorizarUsuario(["comercial"]), deleteCotacao )
 
-router.post("/cotacao/enviar-email", autenticarUsuario, autorizarUsuario, enviarEmailCotacao)
-
+router.post("/cotacao/enviar-email", autenticarUsuario, autorizarUsuario(["comercial"]), enviarEmailCotacao)
+router.get("/cotacao/ultima/:clienteId", autenticarUsuario, autorizarUsuario(["comercial"]), getUltimaCotacaoByCliente)
 
 export default router

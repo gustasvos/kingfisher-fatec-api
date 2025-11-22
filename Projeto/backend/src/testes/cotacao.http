@@ -24,6 +24,17 @@ Content-Type: application/json
   "senha": "Ana@2025"
 }
 
+### Login Usuário Comercial
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "54294676000",
+  "senha": "Rafa@2025"
+}
+
+
 ###
 @token = {{login.response.body.token}}
 @colaboradorId = {{login.response.body.user.id}}
