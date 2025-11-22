@@ -24,7 +24,7 @@ export class Tarefa {
     @Column({ type: 'varchar', length: 255 })
     titulo: string;
  
-    @Column({ type: 'date' })
+    @Column({ type: 'datetime' })
     data: Date;
  
     @Column({

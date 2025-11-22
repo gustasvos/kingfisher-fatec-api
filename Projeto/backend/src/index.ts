@@ -7,6 +7,7 @@ import dashboardOpRoutes from './modules/routers/dashboardOpRoutes';
 import formRoutes from './modules/routers/formRoutes'
 import registroClienteRoutes from './modules/routers/registroClienteRoutes';
 import tarefaRoutes from './modules/routers/tarefa.Routes'
+import cotacaoRoutes from './modules/routers/cotacaoRoutes'
 import path from 'path';
 import { uploadsDir,dataDir } from './config/paths'
 import { initFolders } from './utils/initFolders';
@@ -31,6 +32,7 @@ app.use("/", tarefaRoutes);
 app.use("/data", express.static(dataDir));
 app.use("/", formRoutes);
 app.use("/", registroClienteRoutes);
+app.use('/', cotacaoRoutes)
 app.get('/', (req:Request, res:Response) =>{
     res.send('Bem Vindo')
 })

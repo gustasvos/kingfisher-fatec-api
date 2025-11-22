@@ -1,133 +1,138 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
+import axios from "axios"
 import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
-
-// Aqui futuramente você pode trocar pela busca real da API
-const clientesMock = [
-    { id: 1, nome: "Cliente A" },
-    { id: 2, nome: "Cliente B" },
-    { id: 3, nome: "Cliente C" },
-]
-
+ 
+const API_URL = "http://localhost:8080";
+ 
 type Props = {
     idCliente?: number
-    nomeCliente?: string        // agora opcional
+    nomeCliente?: string
+    vendedorId?: number
 }
-
+ 
 export default function AgendamentoCliente(props: Props) {
-
-    const [clienteId, setClienteId] = useState(props.idCliente ?? 0)
-    const [clienteNome, setClienteNome] = useState(props.nomeCliente ?? "")
-
     const [titulo, setTitulo] = useState('')
     const [data, setData] = useState('')
     const [localizacao, setLocalizacao] = useState('')
     const [descricao, setDescricao] = useState('')
     const [loading, setLoading] = useState(false)
-
-    const handleChangeCliente = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = Number(e.target.value)
-        setClienteId(value)
-
-        const cliente = clientesMock.find(c => c.id === value)
-        setClienteNome(cliente?.nome || "")
-    }
-
+ 
     const Enviar = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+       
         if (loading) return
-
-        // validação extra se nomeCliente não for enviado
-        if (!clienteNome) {
-            alert("Selecione um cliente")
+ 
+        if (!props.idCliente) {
+            alert("Erro: Cliente não identificado.")
             return
         }
-
+ 
         setLoading(true)
-
-        // simulação
-        await new Promise(resolve => setTimeout(resolve, 1000))
-
-        setLoading(false)
-        setTitulo('')
-        setData('')
-        setLocalizacao('')
-        setDescricao('')
-
-        alert(`Agendado com ${clienteNome}`)
+ 
+        try {
+            const idVendedor = props.vendedorId || Number(localStorage.getItem('usuario_id')) || 1;
+ 
+            const descricaoCompleta = localizacao
+                ? `Local: ${localizacao}\nDetalhes: ${descricao}`
+                : descricao;
+ 
+            const payload = {
+                titulo: titulo,
+                data: data,           // Formato do input datetime-local
+                status: 'pendente',   // Enum StatusTarefa
+                tipo: 'reuniao',      // Enum TipoTarefa
+                descricao: descricaoCompleta,
+                cliente_id: props.idCliente,
+                vendedor_id: idVendedor
+            };
+ 
+            await axios.post(`${API_URL}/tarefas`, payload);
+ 
+            alert('Agendamento realizado com sucesso!');
+           
+            // Limpa os campos
+            setTitulo('')
+            setData('')
+            setLocalizacao('')
+            setDescricao('')
+ 
+        } catch (error: any) {
+            console.error("Erro ao agendar:", error);
+           
+            if (error.response) {
+                const msg = error.response.data?.message || "Erro no servidor";
+                alert(`Falha ao agendar: ${msg}`);
+            } else if (error.request) {
+                alert("Erro de conexão: Verifique se o backend está a rodar na porta 8080.");
+            } else {
+                alert("Erro inesperado ao processar a requisição.");
+            }
+        } finally {
+            setLoading(false)
+        }
     }
-
+ 
     return (
         <section>
             <form onSubmit={Enviar} className="flex justify-center items-center">
                 <section className="flex justify-center items-center h-full w-full p-14 rounded-3xl bg-white">
                     <section className="flex flex-col m-auto justify-center items-center space-y-14">
-
-                        <h1 className="text-blue-600 font-semibold text-3xl mb-6">
-                            {clienteNome
-                                ? `Marcar agendamento com ${clienteNome}`
-                                : "Selecionar cliente para agendamento"}
+                        <h1 className=" text-blue-600 font-semibold text-3xl mb-6">
+                            {props.nomeCliente
+                                ? `Marcar agendamento com ${props.nomeCliente}`
+                                : "Marcar agendamento"}
                         </h1>
-
-                        {/* Se nomeCliente NÃO veio → mostra dropdown */}
-                        {!props.nomeCliente && (
-                            <select
-                                className="border border-gray-300 rounded-lg p-3 text-lg"
-                                value={clienteId}
-                                onChange={handleChangeCliente}
-                                required
-                            >
-                                <option value={0}>Selecione um cliente</option>
-                                {clientesMock.map(c => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.nome}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
-
+                       
                         <section className="flex m-auto gap-32">
-                            <InputLine type="text"
+                            <InputLine
+                                type="text"
+                                placeholder="Ex: Reunião de Alinhamento"
                                 value={titulo}
                                 id="titulo"
                                 htmlfor="titulo"
-                                onChange={(e) => setTitulo(e.target.value)}
-                                required>
+                                onChange={(e: any) => setTitulo(e.target.value)}
+                                required
+                            >
                                 Título da reunião
                             </InputLine>
-
                             <InputLine
                                 type="datetime-local"
+                                placeholder=""
                                 value={data}
                                 id="data"
                                 htmlfor="data"
-                                onChange={(e) => setData(e.target.value)}
-                                required>
-                                Data
+                                onChange={(e: any) => setData(e.target.value)}
+                                required
+                            >
+                                Data e Hora
                             </InputLine>
                         </section>
-
+                       
                         <section className="flex m-auto gap-32">
                             <InputLine
                                 type="text"
+                                placeholder="Ex: Escritório do Cliente"
                                 value={localizacao}
                                 id="localizacao"
                                 htmlfor="localizacao"
-                                onChange={(e) => setLocalizacao(e.target.value)}
-                                required>
+                                onChange={(e: any) => setLocalizacao(e.target.value)}
+                                required
+                            >
                                 Localização
                             </InputLine>
-
                             <InputLine
                                 type="text"
+                                placeholder="Observações..."
                                 value={descricao}
                                 id="descricao"
                                 htmlfor="descricao"
-                                onChange={(e) => setDescricao(e.target.value)}>
-                                Descrição
+                                onChange={(e: any) => setDescricao(e.target.value)}
+                            >
+                                Descrição (Opcional)
                             </InputLine>
                         </section>
-
+                       
                         <BotaoSubmit
                             loading={loading}
                             label={loading ? "Agendando..." : "Agendar"}

@@ -39,7 +39,8 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
   // esse ainda nao
   const abrirModalAgendar = (e: React.MouseEvent) => {
     e.preventDefault()
-    setConteudoModal(<AgendamentoCliente nomeCliente={cliente.NomeFantasia}/>)
+    setConteudoModal(<AgendamentoCliente nomeCliente={cliente.NomeFantasia}
+    idCliente={cliente.id}/>)
     setAbertoModal(true)
     // alert("Abrir modal de agendamento com cliente pré-selecionado.")
   }
