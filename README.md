@@ -42,7 +42,7 @@ A plataforma busca unificar e padronizar esses processos em um sistema centraliz
 | Sprint | Período | Documentação | Vídeo do Incremento |
 |---|---|---|---|
 | 1 | 08/09/2025 - 28/09/2025 | [Documentação Sprint 1](/documents/sprint-1/README.md) | [Vídeo Sprint 1](https://youtu.be/kRzsDg2WI8k) |
-| 2 | 06/10/2025 - 26/10/2025 | [Documentação Sprint 2](/documents/sprint-2/README.md) | [Vídeo Sprint 2](#) |
+| 2 | 06/10/2025 - 26/10/2025 | [Documentação Sprint 2](/documents/sprint-2/README.md) | [Vídeo Sprint 2](https://www.youtube.com/watch?v=qgLnJRZcLRU) |
 
 ---
 
