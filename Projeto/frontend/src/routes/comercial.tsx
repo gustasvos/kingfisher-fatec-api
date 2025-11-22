@@ -14,7 +14,7 @@ export default function RotasComercial(){
         <Route path="/listaCliente" element={<PrivateWrapper roles={['comercial']}><ListaCliente /></PrivateWrapper>} />
         <Route path="/funilVendas" element={<PrivateWrapper roles={['comercial']}><FunilVendas /></PrivateWrapper>} />
         <Route path="/agendaCliente" element={<PrivateWrapper roles={['comercial']}><AgendamentoCliente /></PrivateWrapper>} />
-        <Route path="/historico-cotacoes" element={<PrivateWrapper roles={['comercial']}><HistoricoCotacoes /></PrivateWrapper>} />
+        <Route path="/cotacoes" element={<PrivateWrapper roles={['comercial']}><HistoricoCotacoes /></PrivateWrapper>} />
         <Route path="/calculoCusto" element={<PrivateWrapper roles={['comercial']}>< CalculoCotacao /></PrivateWrapper>} />
         </>
     )

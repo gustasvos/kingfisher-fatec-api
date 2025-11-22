@@ -112,7 +112,7 @@ export default function Navbar() {
             <NavItem to="/listaCliente" icon={<FaListUl />} label="Clientes" aberto={aberto} />
             <NavItem to="/eventos-colaborador" icon={<FaBell />} label="Convites" aberto={aberto} />
             <NavItem to="/funilVendas" icon={<FaFilter />} label="Funil de Vendas" aberto={aberto} />
-            <NavItem to="/cotacao" icon={<FaHandHoldingDollar />} label="Cotações" aberto={aberto} />
+            <NavItem to="/cotacoes" icon={<FaHandHoldingDollar />} label="Cotações" aberto={aberto} />
           </div>
         );
 
