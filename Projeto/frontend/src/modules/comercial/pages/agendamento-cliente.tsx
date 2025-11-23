@@ -98,7 +98,7 @@ export default function AgendamentoCliente(props: Props) {
                 <section className="flex justify-center items-center h-full w-full p-8 rounded-3xl bg-white">
                     <section className="flex flex-col m-auto justify-center items-center space-y-8 w-full">
                         
-                        <h1 className="text-blue-600 font-semibold text-3xl mb-2">
+                        <h1 className="text-[#135b78] font-semibold text-3xl mb-2">
                             {props.nomeCliente
                                 ? `Agendar com ${props.nomeCliente}`
                                 : "Novo Agendamento"}
@@ -131,7 +131,7 @@ export default function AgendamentoCliente(props: Props) {
                             <div>
                                 <InputLine
                                     type="text"
-                                    placeholder="Ex: Reunião de Alinhamento"
+                                    placeholder=""
                                     value={titulo}
                                     id="titulo"
                                     htmlfor="titulo"
@@ -161,7 +161,7 @@ export default function AgendamentoCliente(props: Props) {
                             <div>
                                 <InputLine
                                     type="text"
-                                    placeholder="Ex: Escritório do Cliente"
+                                    placeholder=""
                                     value={localizacao}
                                     id="localizacao"
                                     htmlfor="localizacao"
@@ -174,7 +174,7 @@ export default function AgendamentoCliente(props: Props) {
                             <div>
                                 <InputLine
                                     type="text"
-                                    placeholder="Observações..."
+                                    placeholder=""
                                     value={descricao}
                                     id="descricao"
                                     htmlfor="descricao"
@@ -189,7 +189,7 @@ export default function AgendamentoCliente(props: Props) {
                             loading={loading}
                             label={loading ? "Agendando..." : "Agendar"}
                             type="submit"
-                            className="w-[200px] m-auto bg-[#17607f] hover:bg-[#14536f] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg mt-4"
+                            className="w-[200px] m-auto bg-[#17607f] hover:bg-[#053657] text-white font-semibold rounded-xl px-8 py-3 transition-all duration-300 shadow-md hover:shadow-lg mt-4"
                         >
                         </BotaoSubmit>
                     </section>
