@@ -1,0 +1,23 @@
+### login Usuário Comercial Ana
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "54294676000",
+  "senha": "Rafa@2025"
+}
+
+###
+@token = {{login.response.body.token}}
+@id_usuario = {{login.response.body.user.id}}
+
+### Enviar e-mail da cotação
+POST http://localhost:8080/cotacao/enviar-email
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "cotacaoId": "1",
+  "template": "<h1>Cotação para {{nomeFantasia}}</h1><p>Data de criação: {{data_criacao}}</p><p>Validade: {{data_validade}}</p><p>Contato: {{contatoResponsavel}}</p><p>Email: {{emailResponsavel}}</p>"
+}

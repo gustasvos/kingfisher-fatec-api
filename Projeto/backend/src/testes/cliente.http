@@ -6,11 +6,11 @@ Content-Type: application/json
   "nome": "Ana Costa",
   "cpf": "91123794090",
   "genero": "F",
-  "data_nascimento": "1992-03-10",
+  "dataNascimento": "1992-03-10",
   "cargo": "Vendedor",
   "setor": "Comercial",
   "senha": "Ana@2025",
-  "data_contratacao": "2025-10-01",
+  "dataContratacao": "2025-10-01",
   "role": "comercial"
 }
 
@@ -24,25 +24,237 @@ Content-Type: application/json
   "senha": "Ana@2025"
 }
 
+### login Usuário Comercial Ana
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "54294676000",
+  "senha": "Rafa@2025"
+}
+
 ###
 @token = {{login.response.body.token}}
+@colaboradorId = {{login.response.body.user.id}}
+
+
+### Listar cliente por ID (requer 'comercial')
+GET http://localhost:8080/cliente/comercial/{{colaboradorId}}
+Authorization: Bearer {{token}}
+
 
 ### Criar novo cliente (requer 'comercial')
-# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "12345678000195",
+  "nomeFantasia": "Tech Solutions LTDA",
+  "prazoFaturamento": "2025-12-31",
+  "contatoResponsavel": "Maria Oliveira",
+  "emailResponsavel": "maria.oliveira@techsolutions.com",
+  "CNAE": "47.89-0/01",
+  "descricaoCNAE": "Comércio varejista de produtos eletrônicos",
+  "colaboradorId": {{colaboradorId}}
+}
+
+
+### Criar cliente: Empresa de Teste Alfa Ltda
 POST http://localhost:8080/cliente/create
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "CNPJ": "29.140.503/0001-44",
-  "NomeFantasia": "Empresa de Teste Alfa Ltda",
-  "PrazoFaturamento": "2025-11-30T10:00:00Z",
-  "ContatoResponsavel": "Carlos Silva",
-  "EmailResponsavel": "carlos.silva@alfa.com"
+  "nomeFantasia": "Empresa de Teste Alfa Ltda",
+  "prazoFaturamento": "2025-11-30",
+  "contatoResponsavel": "Carlos Silva",
+  "emailResponsavel": "carlos.silva@alfa.com",
+  "CNAE": "47.11-3/01",
+  "descricaoCNAE": "Comércio varejista de mercadorias em geral",
+  "colaboradorId": {{colaboradorId}}
 }
 
-###
-@clienteId = {{createCliente.response.body.cliente.id}}
+### Criar cliente: Tech Solutions Brasil
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "11.133.747/0001-34",
+  "nomeFantasia": "Tech Solutions Brasil",
+  "prazoFaturamento": "2025-12-10",
+  "contatoResponsavel": "Fernanda Souza",
+  "emailResponsavel": "fernanda.souza@techsol.com",
+  "CNAE": "62.02-3/00",
+  "descricaoCNAE": "Desenvolvimento de software sob encomenda",
+  "colaboradorId": "1"
+}
+
+### Criar cliente: Maxi Distribuidora
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "97.826.881/0001-36",
+  "nomeFantasia": "Maxi Distribuidora",
+  "prazoFaturamento": "2025-11-25",
+  "contatoResponsavel": "Juliana Castro",
+  "emailResponsavel": "juliana.castro@maxidis.com",
+  "CNAE": "46.90-0/01",
+  "descricaoCNAE": "Comércio atacadista de produtos alimentícios",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Mercado Bom Preço
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "27.246.081/0001-60",
+  "nomeFantasia": "Mercado Bom Preço",
+  "prazoFaturamento": "2025-10-20",
+  "contatoResponsavel": "Eduardo Lima",
+  "emailResponsavel": "eduardo.lima@bompreco.com",
+  "CNAE": "47.11-3/02",
+  "descricaoCNAE": "Supermercados e mercearias",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Auto Peças Rápidas
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "78.676.146/0001-49",
+  "nomeFantasia": "Auto Peças Rápidas",
+  "prazoFaturamento": "2025-09-12",
+  "contatoResponsavel": "Ricardo Matos",
+  "emailResponsavel": "ricardo.matos@autorap.com",
+  "CNAE": "45.31-7/01",
+  "descricaoCNAE": "Comércio varejista de autopeças",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Farmácia Vida Saudável
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "26.080.014/0001-56",
+  "nomeFantasia": "Farmácia Vida Saudável",
+  "prazoFaturamento": "2025-10-01",
+  "contatoResponsavel": "Aline Ribeiro",
+  "emailResponsavel": "aline.ribeiro@vidasau.com",
+  "CNAE": "47.73-2/01",
+  "descricaoCNAE": "Comércio varejista de produtos farmacêuticos",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Construtora Top House
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "54.560.231/0001-89",
+  "nomeFantasia": "Construtora Top House",
+  "prazoFaturamento": "2025-12-20",
+  "contatoResponsavel": "Diego Fernandes",
+  "emailResponsavel": "diego.fernandes@tophouse.com",
+  "CNAE": "41.20-4/01",
+  "descricaoCNAE": "Construção de edifícios",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: AgroMais Cooperativa
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "64.440.556/0001-81",
+  "nomeFantasia": "AgroMais Cooperativa",
+  "prazoFaturamento": "2025-11-15",
+  "contatoResponsavel": "Patrícia Gomes",
+  "emailResponsavel": "patricia.gomes@agromais.com",
+  "CNAE": "01.11-3/01",
+  "descricaoCNAE": "Cultivo de grãos",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Digital Marketing Pro
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "73.606.400/0001-19",
+  "nomeFantasia": "Digital Marketing Pro",
+  "prazoFaturamento": "2025-12-01",
+  "contatoResponsavel": "Bruno Teixeira",
+  "emailResponsavel": "bruno.teixeira@dmpro.com",
+  "CNAE": "73.11-4/00",
+  "descricaoCNAE": "Agências de publicidade",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Eco Energia Solar
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "07.358.987/0001-60",
+  "nomeFantasia": "Eco Energia Solar",
+  "prazoFaturamento": "2025-09-28",
+  "contatoResponsavel": "Sílvia Andrade",
+  "emailResponsavel": "silvia.andrade@ecoenergia.com",
+  "CNAE": "35.11-2/01",
+  "descricaoCNAE": "Geração de energia elétrica solar",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Loja Universo Kids
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "35.055.550/0001-92",
+  "nomeFantasia": "Loja Universo Kids",
+  "prazoFaturamento": "2025-08-18",
+  "contatoResponsavel": "Tatiana Moreira",
+  "emailResponsavel": "tatiana.moreira@universokids.com",
+  "CNAE": "47.64-8/01",
+  "descricao_CNAE": "Comércio varejista de artigos infantis",
+  "colaboradorId": {{colaboradorId}}
+}
+
+### Criar cliente: Global Import Solutions
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "14.294.435/0001-09",
+  "nomeFantasia": "Global Import Solutions",
+  "prazoFaturamento": "2025-10-22",
+  "contatoResponsavel": "Flávio Campos",
+  "emailResponsavel": "flavio.campos@globalimp.com",
+  "CNAE": "46.19-2/02",
+  "descricao_CNAE": "Comércio atacadista de importados",
+  "colaboradorId": {{colaboradorId}}
+}
+
+# @clienteId = {{createCliente.response.body.cliente.id}}
 
 ### Listar todos os clientes (requer 'comercial')
 GET http://localhost:8080/cliente/list

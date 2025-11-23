@@ -22,7 +22,7 @@ export default function CardColaborador({ colaborador, excluir }: ColaboradorCar
 
     return (
         <>
-            <section className="w-[450px] h-[160px] bg-white rounded-[15px] grid grid-cols-[60%,40%] drop-shadow-lg">
+            <section className="w-[450px] h-[160px] bg-white rounded-[15px] grid grid-cols-[60%,40%] drop-shadow-md">
                 <section className="p-4 space-y-2 justify-center items-center">
                     <p className="font-sans text-[22px]">{colaborador.nome}</p>
                     <p className="font-sans text-[16px]">{colaborador.cargo}</p>

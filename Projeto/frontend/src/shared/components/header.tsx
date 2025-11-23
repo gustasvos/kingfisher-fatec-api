@@ -1,7 +1,7 @@
 import React from "react";
 
-interface User {
-  name: string;
+export interface User {
+  nome: string;
   role: string;
 }
 
@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
 
       <div>
         <h1 className="text-2xl font-bold tracking-wide text-white">
-          SEJA BEM-VINDO {user.name.toUpperCase()}
+          SEJA BEM-VINDO {user.nome.toUpperCase()}
         </h1>
         <p id="cargo" className="mt-4 font-medium text-white">
           {user.role}

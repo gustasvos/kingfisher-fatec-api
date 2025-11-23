@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resumo da Cotação</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 6px;
+            padding: 18px 22px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .header h1 {
+            color: #135b78;
+            font-size: 22px;
+            margin: 0 0 10px 0;
+            text-align: center;
+        }
+
+        .intro p {
+            padding-bottom: 1px;
+        }
+
+        .content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.45;
+        }
+
+        .info {
+            margin-bottom: 14px;
+        }
+
+        .info p {
+            margin: 3px 0;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #135b78;
+        }
+
+        .pdf-link {
+            margin-top: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+            margin-top: 18px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cotação Registrada</h1>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <p>Uma nova cotação foi registrada. Seguem os principais dados:</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Valor Total:</p>
+                <p>R$ {{valor_total}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Cliente:</p>
+                <p>Nome: {{nomeFantasia}}</p>
+                <p>CNPJ: {{CNPJ}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Responsável:</p>
+                <p>Nome: {{contatoResponsavel}}</p>
+                <p>E-mail: {{emailResponsavel}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Datas:</p>
+                <p>Criação: {{data_criacao}}</p>
+                <p>Validade: {{data_validade}}</p>
+            </div>
+
+            <div class="info">
+                <p class="label">Frete:</p>
+                <p>{{detalhes_frete}}</p>
+                <!-- <p>Origem: </p>
+                <p>Destino: </p> -->
+            </div>
+
+            <!-- <div class="pdf-link">
+                <p class="label">Documento da cotação:</p>
+                <p>
+                    <a href="{{caminho_arquivo_pdf}}" target="_blank">
+                        Clique para abrir o PDF
+                    </a>
+                </p>
+            </div> -->
+        </div>
+
+        <div class="footer">
+            2025 Newe Logistica Integrada
+        </div>
+    </div>
+</body>
+
+</html>

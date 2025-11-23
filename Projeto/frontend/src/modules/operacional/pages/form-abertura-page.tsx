@@ -1,7 +1,13 @@
 import FormAbertura from "../components/form-abertura";
 
-export default function FormAberturaPage(){
+type CheckAberturaoPageProps = {
+    onAcaoConcluida?: () => void;
+}
+
+export default function FormAberturaPage({ onAcaoConcluida }: CheckAberturaoPageProps){
     return(
-        <FormAbertura form='Formulário de abertura'/>
+        <FormAbertura form='Formulário de abertura'
+        onAcaoConcluida={onAcaoConcluida}
+        />
     )
 }

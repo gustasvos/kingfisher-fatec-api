@@ -1,12 +1,12 @@
 :root {
   --teal: #135b78;
-  --bg: #eaf3fb;
+  --bg: #f8fafc;
 }
 
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  /* background: var(--bg); */
+  background-color: #f8fafc;
 }
 
 #datePicker {

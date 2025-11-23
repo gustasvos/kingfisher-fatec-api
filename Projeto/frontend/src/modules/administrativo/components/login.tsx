@@ -43,7 +43,7 @@ export default function Login() {
                 login(token, user);
                 setSucesso("Login realizado com sucesso!");
                 if (user.role === "admin") setTimeout(() => navigate("/home"), 1000);
-                else if (user.role === "operacional") setTimeout(() => navigate("/home-op-admin"), 1000);
+                else if (user.role === "operacional") setTimeout(() => navigate("/home-colab"), 1000);
                 else if (user.role === "comercial") setTimeout(() => navigate("/listaCliente"), 1000);
                 else {
                     setErro("Acesso negado: usuário não possui permissão para se logar.");

@@ -6,11 +6,11 @@ Content-Type: application/json
   "nome": "Thiago Lima",
   "cpf": "85107366007",
   "genero": "M",
-  "data_nascimento": "1985-04-20",
+  "dataNascimento": "1985-04-20",
   "cargo": "Product Owner",
   "setor": "Desenvolvimento",
   "senha": "Thiago@PO2025",
-  "data_contratacao": "2025-09-01",
+  "dataContratacao": "2025-09-01",
   "role": "admin"
 }
 
@@ -69,10 +69,10 @@ Content-Type: application/json
   "nome": "Larissa Andrade",
   "cpf": "11144477735",
   "genero": "F",
-  "data_nascimento": "1990-05-15",
+  "dataNascimento": "1990-05-15",
   "cargo": "Desenvolvedora",
   "senha": "Larissa@2025",
-  "data_contratacao": "2024-07-01",
+  "dataContratacao": "2024-07-01",
   "role": "admin"
 }
 
@@ -97,3 +97,6 @@ Content-Type: application/json
 GET http://localhost:8080/usuario/2/local/check
 Authorization: Bearer {{token}}
 Content-Type: application/json
+
+###
+POST http://localhost:8080/login

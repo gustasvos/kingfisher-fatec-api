@@ -46,7 +46,7 @@ export default function ListagemColaborador() {
     }
 
     return (
-        <section className="bg-[#d4eeff] flex">
+        <section className="flex">
             <section>
                 <Navbar />
             </section>

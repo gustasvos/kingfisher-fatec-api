@@ -1,9 +1,12 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { AppDataSource } from '../../config/database'
 import { Cliente } from '../models/cliente'
+import { RegistroCliente } from '../models/registroCliente'
 import { Not } from 'typeorm'
-import { validarCNPJ } from "../../utils/validarCNPJ" 
+import { validarCNPJ } from "../../utils/validarCNPJ"
 import { validarEmail } from '../../utils/validarEmail'
+import { CategoriaFunil } from '../../utils/enums/categoriaFunil'
+import { isEnum, IsEnum } from 'class-validator'
 
 export const createCliente = async (req: Request, res: Response) => {
     try {
@@ -40,6 +43,8 @@ export const createCliente = async (req: Request, res: Response) => {
 
         // 4. Salva o novo cliente
         data.CNPJ = cnpjLimpo // Garante que o CNPJ salvo está sem formatação
+        data.CategoriaFunil = CategoriaFunil.PROSPECT
+
         const newCliente = clienteRepository.create(data)
         await clienteRepository.save(newCliente)
 
@@ -69,7 +74,7 @@ export const listCliente = async (req: Request, res: Response) => {
     }
 }
 
-export const listlienteById = async (req: Request, res: Response) => {
+export const listClienteById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const clienteRepository = AppDataSource.getRepository(Cliente)
@@ -88,8 +93,66 @@ export const listlienteById = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Erro ao listar o cliente!' })
     }
 }
+// Rota: GET /cliente/comercial/:id_usuario
+export const listClientesComUltimoStatus = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const user = req.user
 
-export const updateliente = async (req: Request, res: Response) => {
+        const clienteRepository = AppDataSource.getRepository(Cliente)
+        const registroRepository = AppDataSource.getRepository(RegistroCliente)
+
+        let clientes: Cliente[] = []
+
+        clientes = await clienteRepository.find({ where: { colaboradorId: parseInt(id!) } })
+
+
+        if (clientes.length === 0) {
+            return res.status(200).json([])
+        }
+
+        const clienteIds = clientes.map((c) => c.id)
+
+        // Buscar todos os registros dos clientes
+        const registros = await registroRepository
+            .createQueryBuilder("registro")
+            .leftJoinAndSelect("registro.categoria", "categoria")
+            .leftJoinAndSelect("registro.cliente", "cliente")
+            .where("registro.clienteId IN (:...clienteIds)", { clienteIds })
+            .orderBy("registro.dataRegistro", "DESC")
+            .getMany()
+
+        // Mapear último status por cliente
+        const ultimoStatusMap = new Map<number, string>()
+        registros.forEach(r => {
+            if (r.cliente && r.categoria && !ultimoStatusMap.has(r.cliente.id)) {
+                ultimoStatusMap.set(r.cliente.id, r.categoria.categoria)
+            }
+        })
+
+        // Montar resposta final
+        const resposta = clientes.map(c => ({
+            id: c.id,
+            CNPJ: c.CNPJ,
+            NomeFantasia: c.nomeFantasia,
+            PrazoFaturamento: c.prazoFaturamento,
+            ContatoResponsavel: c.contatoResponsavel,
+            EmailResponsavel: c.emailResponsavel,
+            CNAE: c.CNAE,
+            descricao_CNAE: c.descricaoCNAE,
+            colaboradorId: c.colaboradorId,
+            ultimaCategoria: ultimoStatusMap.get(c.id) || null
+        }))
+
+        return res.status(200).json(resposta)
+    } catch (error) {
+        console.error("Erro ao listar clientes com último status:", error)
+        return res.status(500).json({ message: "Erro ao listar clientes com último status" })
+    }
+}
+
+
+export const updateCliente = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const data = req.body
@@ -137,7 +200,7 @@ export const updateliente = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteliente = async (req: Request, res: Response) => {
+export const deleteCliente = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const clienteRepository = AppDataSource.getRepository(Cliente)
@@ -156,3 +219,66 @@ export const deleteliente = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Erro ao deletar o cliente!" })
     }
 }
+
+export const updateClienteCategoria = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const { categoria } = req.body
+
+        if (!categoria) {
+            return res.status(400).json({ message: 'Nova categoria é obrigatória' })
+        }
+        
+        if (!isEnum(categoria, CategoriaFunil)) {
+            return res.status(400).json({ message: `Categoria inválida: ${categoria}` });
+        }
+
+        const clienteRepository = AppDataSource.getRepository(Cliente);
+        const cliente = await clienteRepository.findOneBy({ id: parseInt(id!) });
+
+        if (!cliente) {
+            return res.status(404).json({ message: 'Cliente não encontrado!' });
+        }
+
+        // cliente.Categoria = categoria;
+        await clienteRepository.save(cliente);
+
+        return res.status(200).json({
+            message: `Cliente movido para ${categoria} com sucesso!`,
+            cliente: cliente
+        });
+
+    } catch (error) {
+        return res.status(500).json({ message: "Erro ao atualizar categoria do cliente!", error });
+    }
+};
+
+// envio de email para follow up no funil
+// POST /email/followup
+// export const sendFollowUpEmail = async (req: Request, res: Response) => {
+//   try {
+//     const { html, leadId } = req.body
+
+//     const finalHtml = html.replace("{{leadId}}", leadId)
+
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.GMAIL_USER,
+//         pass: process.env.GMAIL_APP_PASSWORD,
+//       },
+//     })
+
+//     await transporter.sendMail({
+//       from: `"Kingfisher" <${process.env.GMAIL_USER}>`,
+//       to: process.env.EMAIL_RECEIVER,
+//       subject: "Cliente movido para Follow Up",
+//       html: finalHtml
+//     })
+
+//     return res.status(200).json({ message: "Email enviado com sucesso" })
+//   } catch (err) {
+//     console.error("Erro ao enviar email:", err)
+//     return res.status(500).json({ error: "Erro ao enviar email" })
+//   }
+// }

@@ -24,7 +24,7 @@ const BotaoSubmit: React.FC<BotaoSubmitProps> = ({
       disabled={disabled || loading}
       className={`
         px-4 py-2 rounded-xl font-semibold transition-all duration-200
-        ${disabled || loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}
+        ${disabled || loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#135b78] hover:bg-[#053657]"}
         text-white ${className}
       `}
     >

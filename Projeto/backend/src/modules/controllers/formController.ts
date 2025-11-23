@@ -68,7 +68,9 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
     const validationError = await validateFormData(fieldsToValidate, validationSchema, currentCsvPath);
     if (validationError) {
       await deleteUserUploadFolder(files);
-      return res.status(400).json({ message: validationError });
+      console.log('Erro de validação:', validationError); // debug
+      return res.status(400).json({  field: validationError.field,
+    message: validationError.message, });
     }
 
     // 4. Processamento dos arquivos
@@ -86,14 +88,16 @@ export const handleFormSubmit = async (req: Request, res: Response) => {
         return acc;
       }, {});
 
-      schema.filter(f => f.type === 'upload').forEach(field => {
+      for (const field of schema.filter(f => f.type === 'upload')) {
         const filePaths = filesMap[field.name] || [];
         if (filePaths.length > 0) {
           rowToSave[field.name] = filePaths.length === 1 ? filePaths[0] : JSON.stringify(filePaths);
         } else if (field.required) {
-          return res.status(400).json({ message: `Campo de upload obrigatório "${field.name}" não preenchido.` });
+          await deleteUserUploadFolder(files);
+          return res.status(400).json({ field: field.name,
+            message: `Campo de upload obrigatório "${field.name}" não preenchido.` });
         }
-      });
+      }
     }
 
     // 5. Salvar dados

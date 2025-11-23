@@ -6,11 +6,11 @@ Content-Type: application/json
   "nome": "Larissa Andrade",
   "cpf": "11144477735",
   "genero": "F",
-  "data_nascimento": "1990-05-15",
+  "dataNascimento": "1990-05-15",
   "cargo": "Desenvolvedora",
   "setor": "Tecnologia",
   "senha": "Larissa@2025",
-  "data_contratacao": "2024-07-01",
+  "dataContratacao": "2024-07-01",
   "role": "operacional"
 }
 
@@ -22,11 +22,11 @@ Content-Type: application/json
   "nome": "Rafael Monteiro",
   "cpf": "54294676000",
   "genero": "M",
-  "data_nascimento": "1988-03-22",
+  "dataNascimento": "1988-03-22",
   "cargo": "Analista de Dados",
   "setor": "Dados",
   "senha": "Rafa@2025",
-  "data_contratacao": "2024-08-15",
+  "dataContratacao": "2024-08-15",
   "role": "comercial"
 }
 
@@ -39,11 +39,11 @@ Content-Type: application/json
   "nome": "Juliana Costa",
   "cpf": "88997057049",
   "genero": "F",
-  "data_nascimento": "1992-11-05",
+  "dataNascimento": "1992-11-05",
   "cargo": "Gerente de Projetos",
   "setor": "Gestão de Projetos",
   "senha": "JuCosta@123",
-  "data_contratacao": "2023-11-20",
+  "dataContratacao": "2023-11-20",
   "role": "operacional"
 }
 
@@ -56,11 +56,11 @@ Content-Type: application/json
   "nome": "Carlos Henrique",
   "cpf": "60394609034",
   "genero": "M",
-  "data_nascimento": "1985-07-19",
+  "dataNascimento": "1985-07-19",
   "cargo": "Engenheiro de Software",
   "setor": "Engenharia de Software",
   "senha": "Carlos@Dev2024",
-  "data_contratacao": "2025-01-05",
+  "dataContratacao": "2025-01-05",
   "role": "comercial"
 }
 
@@ -73,11 +73,11 @@ Content-Type: application/json
   "nome": "Amanda Ribeiro",
   "cpf": "33383627063",
   "genero": "F",
-  "data_nascimento": "1994-12-30",
+  "dataNascimento": "1994-12-30",
   "cargo": "UX Designer",
   "setor": "Design",
   "senha": "Amanda@2024",
-  "data_contratacao": "2024-04-10",
+  "dataContratacao": "2024-04-10",
   "role": "operacional"
 }
 
@@ -89,11 +89,11 @@ Content-Type: application/json
   "nome": "Camila Rocha",
   "cpf": "31415926590",
   "genero": "F",
-  "data_nascimento": "1994-07-07",
+  "dataNascimento": "1994-07-07",
   "cargo": "Operadora",
   "setor": "Operações",
   "senha": "Camila@2025",
-  "data_contratacao": "2025-08-01",
+  "dataContratacao": "2025-08-01",
   "role": "admin"
 }
 
@@ -107,11 +107,11 @@ Content-Type: application/json
   "nome": "Eduardo Martins",
   "cpf": "55566677720",
   "genero": "M",
-  "data_nascimento": "1986-01-11",
+  "dataNascimento": "1986-01-11",
   "cargo": "Coordenador",
   "setor": "Coordenação",
   "senha": "Eduardo@2025",
-  "data_contratacao": "2025-06-01",
+  "dataContratacao": "2025-06-01",
   "role": "admin"
 }
 

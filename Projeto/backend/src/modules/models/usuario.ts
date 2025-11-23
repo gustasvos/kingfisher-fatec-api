@@ -22,17 +22,17 @@ export class User {
 
     @IsDate()
     @Column({ type: 'date' })
-    data_nascimento: Date
+    dataNascimento: Date
 
     @Column({ type: 'varchar', length: 100 })
     cargo: string
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'text' })
     senha: string
 
     @IsDate()
     @Column({ type: 'date' })
-    data_contratacao: Date
+    dataContratacao: Date
 
     @Column({ type: 'varchar', length: 30 })
     setor: string

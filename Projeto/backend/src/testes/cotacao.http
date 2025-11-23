@@ -1,0 +1,109 @@
+### Criar usuário Comercial (necessário para as rotas de cotação)
+POST http://localhost:8080/usuario/create
+Content-Type: application/json
+
+{
+  "nome": "Ana Costa",
+  "cpf": "91123794090",
+  "genero": "F",
+  "dataNascimento": "1992-03-10",
+  "cargo": "Vendedor",
+  "setor": "Comercial",
+  "senha": "Ana@2025",
+  "dataContratacao": "2025-10-01",
+  "role": "comercial"
+}
+
+### Login Usuário Comercial
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "91123794090",
+  "senha": "Ana@2025"
+}
+
+### Login Usuário Comercial
+# @name login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "cpf": "54294676000",
+  "senha": "Rafa@2025"
+}
+
+
+###
+@token = {{login.response.body.token}}
+@colaboradorId = {{login.response.body.user.id}}
+
+# CLIENTE (necessário para criar cotação)
+
+### Criar cliente teste para usar na cotação
+# @name createCliente
+POST http://localhost:8080/cliente/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "CNPJ": "60.326.261/0001-28",
+  "nomeFantasia": "Cliente Exemplo para Cotação",
+  "prazoFaturamento": "2025-12-01",
+  "contatoResponsavel": "Marcos Silva",
+  "emailResponsavel": "marcos.silva@exemplo.com",
+  "CNAE": "47.11-3/01",
+  "descricaoCNAE": "Comércio varejista",
+  "colaboradorId": {{colaboradorId}}
+}
+
+###
+@clienteId = {{createCliente.response.body.cliente.id}}
+
+# COTAÇÃO
+
+### Criar nova cotação
+# @name createCotacao
+POST http://localhost:8080/cotacao/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id_cliente": {{clienteId}},
+  "data_validade": "2025-12-31",
+  "status": "Rascunho",
+  "valor_total": 1850.75,
+  "detalhes_frete": "Carga leve | Origem: SP | Destino: RJ",
+  "caminho_arquivo_pdf": "/cotacoes/2025/cotacao_001.pdf"
+}
+
+###
+@cotacaoId = {{createCotacao.response.body.cotacao.id}}
+
+### Listar todas as cotações
+GET http://localhost:8080/cotacao/list
+Authorization: Bearer {{token}}
+
+### Buscar cotação por ID
+GET http://localhost:8080/cotacao/{{cotacaoId}}
+Authorization: Bearer {{token}}
+
+### Atualizar cotação
+PUT http://localhost:8080/cotacao/{{cotacaoId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "Enviada",
+  "valor_total": 1990.99,
+  "observacoes_internas": "Atualizado pelo setor comercial"
+}
+
+### Deletar cotação
+DELETE http://localhost:8080/cotacao/{{cotacaoId}}
+Authorization: Bearer {{token}}
+
+### Testar cotação deletada (espera 404)
+GET http://localhost:8080/cotacao/{{cotacaoId}}
+Authorization: Bearer {{token}}

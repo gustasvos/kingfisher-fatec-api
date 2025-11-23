@@ -5,7 +5,7 @@ Projeto desenvolvido pela equipe Kingfisher do 2º semestre de Desenvolvimento d
 ---
 <div align="center">
 
-[🧩 O Desafio](#-o-desafio) | [📋 Backlog de Produto](#-backlog-de-produto) | [🗓️ Cronograma de Evolução do Projeto](assets/sprint-1/cronograma-evolucao.jpg) | [👟 Sprints](#-sprints) | [💻 Tecnologias Utilizadas](#-tecnologias-utilizadas) | [🗂️ Estrutura do Projeto](#️-estrutura-do-projeto) | [📖 Manual de instalação](#-manual-de-instalação) | [📚 Documentação](/documents/) | [👥 Equipe](#-equipe)
+[🧩 O Desafio](#-o-desafio) | [📋 Backlog de Produto](#-backlog-de-produto) | [🗓️ Cronograma de Evolução do Projeto](assets/sprint-1/cronograma-evolucao.jpg) | [👟 Sprints](#-sprints) | [💻 Tecnologias Utilizadas](#-tecnologias-utilizadas) | [🗂️ Estrutura do Projeto](#️-estrutura-do-projeto) | [📖 Manual de instalação](#-manual-de-instalação) | [📚 Documentação](/documents/) | [👥 Equipe](#-equipe) | [📒 Manual do Usuário](documents/Manual%20do%20Usuário.pdf)
 
 </div>
 
@@ -43,6 +43,7 @@ A plataforma busca unificar e padronizar esses processos em um sistema centraliz
 |---|---|---|---|
 | 1 | 08/09/2025 - 28/09/2025 | [Documentação Sprint 1](/documents/sprint-1/README.md) | [Vídeo Sprint 1](https://youtu.be/kRzsDg2WI8k) |
 | 2 | 06/10/2025 - 26/10/2025 | [Documentação Sprint 2](/documents/sprint-2/README.md) | [Vídeo Sprint 2](https://www.youtube.com/watch?v=qgLnJRZcLRU) |
+| 3 | 03/11/2025 - 24/11/2025 | [Documentação Sprint 3](/documents/sprint-3/README.md) | [Vídeo Sprint 3](https://youtu.be/Ie3C62doMhs) |
 
 ---
 

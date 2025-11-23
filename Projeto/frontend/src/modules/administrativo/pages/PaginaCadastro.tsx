@@ -4,6 +4,7 @@ import InputMaskField from '../components/InputMaskField.tsx';
 import './PaginaCadastro.css';
 import { useNavigate } from 'react-router-dom';
 import instance from "../../../services/api";
+import InputLine from '../../../shared/components/inputLine.tsx';
 
 
 // Regex simples para validar formato DD/MM/YYYY
@@ -25,12 +26,33 @@ const formatarDataParaPtBr = (dataIso: string): string => {
   return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
 };
 
+// Verifica se a pessoa tem pelo menos 16 anos
+const isMaiorIdade = (dataIso: string) => {
+  const hoje = new Date()
+  const nascimento = new Date(dataIso)
+
+  const limite = new Date()
+  limite.setFullYear(hoje.getFullYear() - 16)
+
+  return nascimento <= limite
+}
+
+// Verifica se a data é no futuro
+const isDataNoFuturo = (dataIso: string) => {
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+
+  const data = new Date(dataIso)
+  return data > hoje
+}
+
+
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
-  const [data_nascimento, setData_nascimento] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
   const [genero, setGenero] = useState("");
-  const [data_contratacao, setDataContratacao] = useState("");
+  const [dataContratacao, setDataContratacao] = useState("");
   const [cargo, setCargo] = useState("");
   const [setor, setSetor] = useState("");
   const [senha, setSenha] = useState("");
@@ -44,6 +66,27 @@ export default function Cadastro() {
     setErro(null);
     setSucesso(null);
 
+    // validações
+    if (!dataNascimento || !dataContratacao) {
+      setErro("Preencha as datas corretamente.")
+      return
+    }
+
+    if (isDataNoFuturo(dataNascimento)) {
+      setErro("Data de nascimento inválida.")
+      return
+    }
+
+    if (!isMaiorIdade(dataNascimento)) {
+      setErro("O usuário deve ter mais de 16 anos.")
+      return
+    }
+
+    if (isDataNoFuturo(dataContratacao)) {
+      setErro("A data de contratação inválida.")
+      return
+    }
+
     const limparTexto = (texto: string) => {
       return texto
         .replace(/[^\p{L}\sçÇ]/gu, '')
@@ -51,33 +94,28 @@ export default function Cadastro() {
         .trim();
     };
 
-  const payload = {
-    nome: limparTexto(nome),
-    cpf: cpf.replace(/\D/g, ""),
-    genero: genero.trim().charAt(0).toUpperCase(),
-    data_nascimento,
-    cargo: limparTexto(cargo),
-    senha,
-    data_contratacao,
-    role,
-    setor: limparTexto(setor)
-  };
+    const payload = {
+      nome: limparTexto(nome),
+      cpf: cpf.replace(/\D/g, ""),
+      genero: genero.trim().charAt(0).toUpperCase(),
+      dataNascimento,
+      cargo: limparTexto(cargo),
+      senha,
+      dataContratacao,
+      role,
+      setor: limparTexto(setor)
+    };
 
 
     try {
       const response = await instance.post("/usuario/create", payload);
       setSucesso(`Cadastro realizado com sucesso! ID: ${response.data.id}`);
       setTimeout(() => {
-        navigate(-1);
+        navigate(0);
       }, 1000);
     } catch (error) {
       setErro("Erro ao cadastrar. Verifique os dados e tente novamente.");
     }
-  };
-
-  const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setRole(value);
   };
 
   return (
@@ -94,33 +132,36 @@ export default function Cadastro() {
           <InputField
             label="Nome Completo"
             type="text"
-            placeholder="Digite o nome completo"
+            placeholder=""
             required
             maxLength={100}
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            classNameInput='w-[400px]'
           />
-
+          
           <InputMaskField
             label="CPF"
             mask="000.000.000-00"
-            placeholder="Digite o CPF"
+            placeholder=""
             required
             maxLength={14}
             value={cpf}
             onAccept={(value: string) => setCpf(value)}
+            classNameInput='w-[400px]'
           />
 
           <InputMaskField
-            label="Data de Nascimento"
+            label="Data de Nascimento(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
-            value={data_nascimento ? formatarDataParaPtBr(data_nascimento) : ""}
+            classNameInput='w-[400px]'
+            value={dataNascimento ? formatarDataParaPtBr(dataNascimento) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
-                setData_nascimento(dataLimpa(value));
+                setDataNascimento(dataLimpa(value));
               }
             }}
             onPaste={(e) => {
@@ -130,22 +171,24 @@ export default function Cadastro() {
           />
 
           <InputField
-            label="Gênero"
+            label="Gênero(Ex: Masculino, Feminino, Outro)"
             type="text"
-            placeholder="Ex: Masculino, Feminino, Outro"
+            placeholder=""
             required
             maxLength={20}
             value={genero}
+            classNameInput='w-[400px]'
             onChange={(e) => setGenero(e.target.value)}
           />
 
           <InputMaskField
-            label="Data de Contratação"
+            label="Data de Contratação(DD/MM/AAAA)"
             mask="00/00/0000"
-            placeholder="DD/MM/AAAA"
+            placeholder=""
             required
             maxLength={10}
-            value={data_contratacao ? formatarDataParaPtBr(data_contratacao) : ""}
+            classNameInput='w-[400px]'
+            value={dataContratacao ? formatarDataParaPtBr(dataContratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
                 setDataContratacao(dataLimpa(value));
@@ -160,30 +203,33 @@ export default function Cadastro() {
           <InputField
             label="Cargo"
             type="text"
-            placeholder="Digite o cargo"
+            placeholder=""
             required
             maxLength={50}
             value={cargo}
+            classNameInput='w-[400px]'
             onChange={(e) => setCargo(e.target.value)}
           />
 
           <InputField
             label="Setor"
             type="text"
-            placeholder="Digite o setor"
+            placeholder=""
             required
             maxLength={50}
             value={setor}
+            classNameInput='w-[400px]'
             onChange={(e) => setSetor(e.target.value)}
           />
 
           <InputField
-            label="Senha"
+            label="Digite uma senha segura"
             type="password"
-            placeholder="Digite uma senha segura"
+            placeholder=""
             required
             maxLength={100}
             value={senha}
+            classNameInput='w-[400px]'
             onChange={(e) => setSenha(e.target.value)}
           />
 
@@ -197,7 +243,6 @@ export default function Cadastro() {
               className="w-full px-4 py-2 rounded-md text-black"
             >
               <option value="">Selecione</option>
-              <option value="usuario">Usuário</option>
               <option value="admin">Administrador</option>
               <option value="comercial">Comercial</option>
               <option value="operacional">Operacional</option>
