@@ -226,6 +226,34 @@ export const enviarEmailCotacao = async (req: Request, res: Response) => {
 }
 
 
+// GET /cotacao/list/:usuarioId
+export const getCotacoesByUsuario = async (req: Request, res: Response) => {
+  try {
+    const { usuarioId } = req.params;
+
+    const cotacaoRepository = AppDataSource.getRepository(Cotacao);
+
+    // Busca todas as cotações de clientes associados ao colaborador
+    const cotacoes = await cotacaoRepository.find({
+      relations: ["cliente"], // incluir dados do cliente
+      where: {
+        cliente: { colaboradorId: parseInt(usuarioId!) } // filtra pelo vendedor
+      },
+      order: { data_criacao: "DESC" } // ordena da mais recente para a mais antiga
+    });
+
+    if (!cotacoes || cotacoes.length === 0) {
+      return res.status(404).json({ message: "Nenhuma cotação encontrada para este vendedor." });
+    }
+
+    return res.status(200).json(cotacoes);
+
+  } catch (error) {
+    console.error("Erro ao buscar cotações do vendedor:", error);
+    return res.status(500).json({ message: "Erro ao buscar cotações do vendedor." });
+  }
+};
+
 // GET /cotacao/ultima/:clienteId
 export const getUltimaCotacaoByCliente = async (req: Request, res: Response) => {
     try {
