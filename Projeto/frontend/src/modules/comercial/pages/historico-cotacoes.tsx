@@ -3,7 +3,6 @@ import Navbar from "../../../shared/components/navbar"
 import Botao from "../../../shared/components/botao"
 import CalculoCotacao from "../../comercial/pages/CalculoCotacao"
 import { FiFileText, FiSend, FiPlus, FiRepeat } from "react-icons/fi"
-import jsPDF from "jspdf"
 import instance from "../../../services/api"
 
 type DetalhesFrete = {
@@ -21,6 +20,7 @@ type Cotacao = {
     emailResponsavel: string
   }
   valor_total: number
+  caminho_arquivo_pdf: string    // <<< novo campo
   detalhes_frete: DetalhesFrete | null
   detalhes_internas?: any
 }
@@ -28,6 +28,9 @@ type Cotacao = {
 export default function HistoricoCotacoes() {
   const [cotacoes, setCotacoes] = useState<Cotacao[]>([])
   const [abertoModal, setAbertoModal] = useState(false)
+  const storedUser = localStorage.getItem("user");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const userId = parsedUser?.id || "";
 
   const abrirModalNovaCotacao = () => setAbertoModal(true)
   const fecharModal = () => setAbertoModal(false)
@@ -42,30 +45,22 @@ export default function HistoricoCotacoes() {
   }
 
   useEffect(() => {
-    instance.get('/cotacao/list').then(res => {
-      setCotacoes(formatCotacoes(res.data))
-    })
-  }, [])
+    const carregarCotacoes = async () => {
+      try {
+        const cotacaoResponse = await instance.get(`/cotacao/list/${userId}`);
+        // Trata JSON dos campos TEXT
+        const formatadas = formatCotacoes(cotacaoResponse.data);
+        console.log("Cotações formatadas:", formatadas);
 
-  const gerarPDF = (cotacao: Cotacao) => {
-    const d = cotacao.detalhes_frete
+        setCotacoes(formatadas);
 
-    const doc = new jsPDF()
-    doc.setFontSize(16)
-    doc.text("Cotação de Frete", 20, 20)
+      } catch (error) {
+        console.error("Erro ao carregar cotações:", error);
+      }
+    };
 
-    doc.setFontSize(12)
-    doc.text(`ID da Cotação: ${cotacao.id}`, 20, 40)
-    doc.text(`Cliente: ${cotacao.cliente?.nomeFantasia}`, 20, 50)
-    doc.text(`Mercadoria: ${d?.mercadoria}`, 20, 60)
-    doc.text(`Coleta: ${d?.localColeta}`, 20, 70)
-    doc.text(`Entrega: ${d?.localEntrega}`, 20, 80)
-    doc.text(`Peso Estimado: ${d?.pesoEstimado}`, 20, 90)
-    doc.text(`Veículo: ${d?.tipoVeiculo}`, 20, 100)
-    doc.text(`Valor Total: R$ ${cotacao.valor_total}`, 20, 120)
-
-    doc.save(`cotacao_${cotacao.id}.pdf`)
-  }
+    carregarCotacoes();
+  }, [userId]);
 
   const reenviarCotacao = async (cotacao: Cotacao) => {
     if (!confirm(`Reenviar a cotação #${cotacao.id}?`)) return
@@ -86,6 +81,34 @@ export default function HistoricoCotacoes() {
     }
   }
 
+  // Abre o PDF existente em nova aba
+  const baixarPDF = async (caminho: string) => {
+    if (!caminho) return;
+
+    try {
+      // Pega o PDF como blob
+      const res = await fetch(`http://localhost:8080${caminho}`);
+      if (!res.ok) throw new Error("Erro ao baixar PDF");
+
+      const blob = await res.blob();
+
+      // Cria URL temporário para download
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = caminho.split("/").pop() || "cotacao.pdf";
+
+      // Dispara o download
+      link.click();
+
+      // Revoga a URL depois de um pequeno delay
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível baixar o PDF.");
+    }
+  };
 
 
   return (
@@ -130,7 +153,7 @@ export default function HistoricoCotacoes() {
                     {/* PDF */}
                     <button
                       className="text-red-600 hover:text-red-800"
-                      onClick={() => gerarPDF(c)}
+                      onClick={() => baixarPDF(c.caminho_arquivo_pdf)}
                       title="Baixar PDF"
                     >
                       <FiFileText size={18} />

@@ -94,10 +94,10 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
 
     const payload = {
       CNPJ: CNPJ.replace(/\D/g, ""),
-      NomeFantasia: limparTexto(nomeFantasia),
-      PrazoFaturamento: prazoISO,
-      ContatoResponsavel: limparTexto(contatoResponsavel),
-      EmailResponsavel: emailResponsavel,
+      nomeFantasia: limparTexto(nomeFantasia),
+      prazoFaturamento: prazoISO,
+      contatoResponsavel: contatoResponsavel ? limparTexto(contatoResponsavel) : "",
+      emailResponsavel: emailResponsavel || "",
       CNAE: CNAE,
       descricaoCNAE: descricaoCNAE,
       colaboradorId: userId
@@ -169,7 +169,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
           </div>
           <div className="mb-4">
             <InputField
-              label="Descrição do CNAE"              
+              label="Descrição do CNAE"
               classNameLabel="!text-[#015084]"
               type="text"
               placeholder=""
@@ -181,13 +181,13 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
 
           <div>
             <InputField
-              label="Nome Fantasia"              
+              label="Nome Fantasia"
               classNameLabel="!text-[#015084]"
               type="text"
               placeholder=""
               value={nomeFantasia}
               classNameInput='w-[400px]'
-              onChange={(e) => setNomeFantasia(e.target.value)}                         
+              onChange={(e) => setNomeFantasia(e.target.value)}
             />
           </div>
 
@@ -203,39 +203,39 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               value={prazoFaturamento ? formatarDataParaPtBr(prazoFaturamento) : ""}
               style={{ outline: 'none', boxShadow: 'none' }}
 
-            onAccept={(value: string) => {
-  
-          if (isValidDataPtBr(value)) {
-           setPrazoFaturamento(dataLimpa(value));
-         }
-       }}
-        onPaste={(e) => {
-         const pastedData = e.clipboardData.getData('Text');
-         if (!isValidDataPtBr(pastedData)) e.preventDefault();
-        }}
-          />
-        </div>
+              onAccept={(value: string) => {
+
+                if (isValidDataPtBr(value)) {
+                  setPrazoFaturamento(dataLimpa(value));
+                }
+              }}
+              onPaste={(e) => {
+                const pastedData = e.clipboardData.getData('Text');
+                if (!isValidDataPtBr(pastedData)) e.preventDefault();
+              }}
+            />
+          </div>
 
           <div>
             <InputField
-              label="Contato do Responsável"              
+              label="Contato do Responsável"
               classNameLabel="!text-[#015084]"
               type="text"
               placeholder=""
               value={contatoResponsavel}
               classNameInput='w-[400px]'
-              onChange={(e) => setContatoResponsavel(e.target.value)}                        
+              onChange={(e) => setContatoResponsavel(e.target.value)}
             />
           </div>
 
 
           <div>
             <InputField
-              label="E-mail do Responsável"              
+              label="E-mail do Responsável"
               classNameLabel="!text-[#015084]"
               type="text"
               placeholder=""
-              value={emailResponsavel}              
+              value={emailResponsavel}
               classNameInput='w-[400px]'
               onChange={(e) => setEmailResponsavel(e.target.value)}
             />
