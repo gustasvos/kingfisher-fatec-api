@@ -5,6 +5,7 @@ import { FaCarSide, FaMotorcycle, FaCheck } from 'react-icons/fa'
 import Navbar from "../../../shared/components/navbar.tsx";
 import PieChart from '../../../shared/components/grafico-setor';
 import Header from '../../../shared/components/header';
+import BASE_URL from "./../../../services/api";
 
 // Definição da estrutura do usuário
 interface UserData {
@@ -61,8 +62,8 @@ const initialState: DashboardData = {
   }
 };
 
-const API_URL = 'http://localhost:8080/dashboard-op';
-const USER_API_URL = 'http://localhost:8080/user/me';
+const API_URL = `${BASE_URL}/dashboard-op`;
+const USER_API_URL = `${BASE_URL}/user/me`;
 
 const HomeOpAdminPage: React.FC = () => {
   const [data, setData] = useState<DashboardData>(initialState); // Inicializa o estado com a estrutura de dados vazia

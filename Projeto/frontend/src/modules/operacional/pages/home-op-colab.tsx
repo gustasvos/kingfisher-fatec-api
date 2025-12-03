@@ -10,6 +10,7 @@ import instance from "../../../services/api";
 import Loading from '../../../shared/components/loading';
 import Modal from '../../../shared/components/modal';
 import LocalTrabalho from '../../administrativo/components/localTrabalho';
+import BASE_URL from "./../../../services/api"
 
 
 const HomeOpColabPage: React.FC = () => {
@@ -109,7 +110,7 @@ const HomeOpColabPage: React.FC = () => {
     const headers = { Authorization: `Bearer ${token}` };
     setLoadingUser(true);
 
-    axios.get(`http://localhost:8080/usuario/${userId}`, { headers })
+    axios.get(`${BASE_URL}/usuario/${userId}`, { headers })
       .then(res => {
         const userData = res.data;
         setUser({
@@ -137,8 +138,8 @@ const HomeOpColabPage: React.FC = () => {
     setLoadingEventos(true);
 
     Promise.allSettled([
-      axios.get(`http://localhost:8080/admin/events/convidado/${userId}`, { headers }),
-      axios.get(`http://localhost:8080/admin/events/respostas/`, { headers })
+      axios.get(`${BASE_URL}/admin/events/convidado/${userId}`, { headers }),
+      axios.get(`${BASE_URL}/admin/events/respostas/`, { headers })
     ])
       .then(([resEventos, resFormEvento]) => {
         // Processa Eventos

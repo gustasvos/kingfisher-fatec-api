@@ -4,6 +4,7 @@ import Botao from "../../../shared/components/botao"
 import CalculoCotacao from "../../comercial/pages/CalculoCotacao"
 import { FiFileText, FiSend, FiPlus, FiRepeat } from "react-icons/fi"
 import instance from "../../../services/api"
+import BASE_URL from "../../../services/api"
 
 type DetalhesFrete = {
   mercadoria: string
@@ -87,7 +88,7 @@ export default function HistoricoCotacoes() {
 
     try {
       // Pega o PDF como blob
-      const res = await fetch(`http://localhost:8080${caminho}`);
+      const res = await fetch(`${BASE_URL}/${caminho}`);
       if (!res.ok) throw new Error("Erro ao baixar PDF");
 
       const blob = await res.blob();

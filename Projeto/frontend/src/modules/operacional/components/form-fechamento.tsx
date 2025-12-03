@@ -1,6 +1,7 @@
 import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
 import { useState } from "react";
+import BASE_URL from "./../../../services/api"
 
 type FormAberturaProps = {
     form: string;
@@ -167,7 +168,7 @@ export default function FormFechamento({ form, onAcaoConcluida }: FormAberturaPr
             payload["cpf-usuario"] = userCpf;
 
             // Envia a requisição POST
-            const response = await fetch("http://localhost:8080/submit", {
+            const response = await fetch(`${BASE_URL}/submit`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

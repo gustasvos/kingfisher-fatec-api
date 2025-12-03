@@ -1,6 +1,7 @@
 import { useState } from "react";
 import InputLine from "../../../shared/components/inputLine";
 import BotaoSubmit from "../../../shared/components/botao-submit";
+import BASE_URL from "./../../../services/api";
 
 type FormAberturaProps = {
   form: string;
@@ -132,7 +133,7 @@ export default function FormManutencao({ form, onAcaoConcluida }: FormAberturaPr
         "cpf-usuario": userCpf
       };
 
-      const response = await fetch("http://localhost:8080/submit", {
+      const response = await fetch(`${BASE_URL}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

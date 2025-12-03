@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../../shared/components/navbar";
 import axios from "axios";
+import BASE_URL from "./../../../services/api"
 
 type Relatorio = {
   id: number;
@@ -146,7 +147,7 @@ const Relatorios: React.FC = () => {
   useEffect(() => {
     const fetchRelatorios = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/admin/events/respostas");
+        const res = await axios.get(`${BASE_URL}/admin/events/respostas`);
         const dados = Array.isArray(res.data) ? res.data : res.data?.data || [];
 
         const mapeados = dados.map((d: any) => ({
@@ -176,7 +177,7 @@ const Relatorios: React.FC = () => {
 
     try {
       const res = await axios.get(
-        `http://localhost:8080/admin/events/respostas/${id}`
+        `${BASE_URL}/admin/events/respostas/${id}`
       );
 
       const d = res.data;

@@ -3,6 +3,7 @@ import InputLine from "../../../shared/components/inputLine"
 import { IMaskInput } from "react-imask"
 import Botao from "../../../shared/components/botao"
 import InputMaskField from "../../administrativo/components/InputMaskField"
+import BASE_URL from "../../../services/api"
 
 type FormAberturaProps = {
     form: string;
@@ -338,7 +339,7 @@ export default function CheckVeiculos({ form }: FormAberturaProps) {
                 }
             });
 
-            const response = await fetch("http://localhost:8080/submit", {
+            const response = await fetch(`${BASE_URL}/submit`, {
                 method: "POST",
                 body: formData
             })
