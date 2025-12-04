@@ -63,13 +63,14 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
       }
 
       setCnpj(cliente.CNPJ);
-      setNomeFantasia(cliente.NomeFantasia);
-      setPrazoFaturamento(cliente.PrazoFaturamento);
-      setContatoResponsavel(cliente.ContatoResponsavel);
-      setEmailResponsavel(cliente.EmailResponsavel);
-      setCnae(cliente.CNAE)
-      setDescricaoCNAE(cliente.descricaoCNAE)
-      console.log('cliente:', cliente)
+      setNomeFantasia(cliente.nomeFantasia);
+      setPrazoFaturamento(cliente.prazoFaturamento);
+      setContatoResponsavel(cliente.contatoResponsavel);
+      setEmailResponsavel(cliente.emailResponsavel);
+      setCnae(cliente.CNAE);
+      setDescricaoCNAE(cliente.descricaoCNAE);
+
+      console.log("Cliente carregado no estado:", cliente);
 
     } catch (error) {
       setErro("Falha ao carregar dados do cliente, tente novamente mais tarde.");
