@@ -22,15 +22,15 @@ export default function CardColaborador({ colaborador, excluir }: ColaboradorCar
 
     return (
         <>
-            <section className="w-[450px] h-[160px] bg-white rounded-[15px] grid grid-cols-[60%,40%] drop-shadow-md">
+            <section className="w-full h-[160px] md: h-auto bg-white rounded-[15px] grid grid-cols-[60%,40%] drop-shadow-md">
                 <section className="p-4 space-y-2 justify-center items-center">
                     <p className="font-sans text-[22px]">{colaborador.nome}</p>
                     <p className="font-sans text-[16px]">{colaborador.cargo}</p>
                     <p className="font-sans text-[16px]">CPF: {colaborador.cpf}</p>
                 </section>
-                <section className="flex flex-col justify-end pb-5 space-y-2">
-                    <Botao onClick={abrirModalEditarColaborador} className="max-w-[90px] max-h-8">Editar</Botao>
-                    <Botao onClick={() => excluir(colaborador.id)} className="max-w-[90px] max-h-8">Excluir</Botao>
+                <section className="flex flex-col items-end m-2 justify-end pb-5 space-y-2">
+                    <Botao onClick={abrirModalEditarColaborador} className="max-w-[90px]  max-h-8 md: w-[90%]">Editar</Botao>
+                    <Botao onClick={() => excluir(colaborador.id)} className="max-w-[90px] max-h-8 md: w-[90%]">Excluir</Botao>
                 </section>
             </section>
 
