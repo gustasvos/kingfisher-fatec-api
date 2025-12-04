@@ -151,3 +151,36 @@ body {
   border-radius: 50%;
   background-color: #f0f0f0;
 }
+
+
+@media (max-width: 640px) {
+
+  body {
+    background-color: #d1edff;
+  }
+
+  .container {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .header {
+    font-size: 28px !important;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .inputs {
+    gap: 15px;
+    max-height: 65vh;
+    padding-right: 2vw;
+    padding-left: 2vw;
+  }
+
+  .submit {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+}

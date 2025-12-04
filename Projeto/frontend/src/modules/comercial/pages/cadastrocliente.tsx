@@ -131,7 +131,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center items-center min-h-screen w-full">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-[90%] md:w-[500px]">
         <h1 className="text-2xl font-bold text-center text-[#015084] mb-6">
           {clienteId ? "Editar Cliente" : "Cadastro de Cliente"}
@@ -148,7 +148,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               required
               maxLength={18}
               value={CNPJ}
-              classNameInput='w-[400px]'
+              classNameInput='w-[300px] md:w-[400px]'
               onAccept={(value: string) => setCnpj(value)}
               style={{ outline: 'none', boxShadow: 'none' }}
             />
@@ -162,7 +162,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               required
               maxLength={11}
               value={CNAE}
-              classNameInput='w-[400px]'
+              classNameInput='w-[310px] md:w-[400px]'
               onAccept={(value: string) => setCnae(value)}
               style={{ outline: 'none', boxShadow: 'none' }}
             />
@@ -174,7 +174,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               type="text"
               placeholder=""
               value={descricaoCNAE}
-              classNameInput='w-[400px]'
+              classNameInput='w-[310px] md:w-[400px]'
               onChange={(e) => setDescricaoCNAE(e.target.value)}
             />
           </div>
@@ -186,7 +186,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               type="text"
               placeholder=""
               value={nomeFantasia}
-              classNameInput='w-[400px]'
+              classNameInput='w-[310px] md:w-[400px]'
               onChange={(e) => setNomeFantasia(e.target.value)}
             />
           </div>
@@ -199,7 +199,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               placeholder=""
               required
               maxLength={10}
-              classNameInput='w-[400px]'
+              classNameInput='w-[310px] md:w-[400px]'
               value={prazoFaturamento ? formatarDataParaPtBr(prazoFaturamento) : ""}
               style={{ outline: 'none', boxShadow: 'none' }}
 
@@ -223,7 +223,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               type="text"
               placeholder=""
               value={contatoResponsavel}
-              classNameInput='w-[400px]'
+              classNameInput='w-[310px] md:w-[400px]'
               onChange={(e) => setContatoResponsavel(e.target.value)}
             />
           </div>
@@ -236,7 +236,7 @@ export default function CadastroCliente({ clienteId }: CadastroClienteProps) {
               type="text"
               placeholder=""
               value={emailResponsavel}
-              classNameInput='w-[400px]'
+              classNameInput='w-[310px] md:w-[400px]'
               onChange={(e) => setEmailResponsavel(e.target.value)}
             />
           </div>

@@ -94,7 +94,7 @@ export default function AgendamentoCliente(props: Props) {
 
     return (
         <section>
-            <form onSubmit={Enviar} className="flex justify-center items-center">
+            <form onSubmit={Enviar} className="flex justify-center items-center w-[400px] md:w-full">
                 <section className="flex justify-center items-center h-full w-full p-8 rounded-3xl bg-white">
                     <section className="flex flex-col m-auto justify-center items-center space-y-8 w-full">
                         

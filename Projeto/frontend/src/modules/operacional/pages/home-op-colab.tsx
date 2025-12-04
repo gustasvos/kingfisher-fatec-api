@@ -243,7 +243,7 @@ const HomeOpColabPage: React.FC = () => {
       <Navbar />
 
       <div>
-        <h1 className='text-azul-principal ml-[5%] mt-10 text-[30px] font-bold drop-shadow-md'>Verifique as informações dos seus eventos</h1>
+        <h1 className='text-azul-principal ml-16 md:ml-[5%] mt-10 text-[20px] md:text-[30px] font-bold drop-shadow-md'>Verifique as informações dos seus eventos</h1>
       </div>
       <div className="p-8  pb-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 ml-10">
 
@@ -275,7 +275,7 @@ const HomeOpColabPage: React.FC = () => {
         />
       </div>
       <div>
-        <h1 className='text-azul-principal ml-[5%] mt-10 text-[30px] font-bold drop-shadow-md'>Verifique as informações dos seus formulários e checklists</h1>
+        <h1 className='text-azul-principal ml-16 md:ml-[5%] mt-10 text-[20px] md:text-[30px] font-bold drop-shadow-md'>Verifique as informações dos seus formulários e checklists</h1>
       </div>
       <div className="p-8 pt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 ml-10 mt-0 w-max">
         <HighlightCard

@@ -72,14 +72,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex bg-slate-50 font-sans">
       <Navbar />
-      <main className="flex-1 px-6 py-8">
+      <main className="flex-1 px-4 sm:px-6 py-6 sm:py-8 max-w-full">
         <Header user={user} />
 
         {/* ======= Grid Principal ======= */}
-        <section className="grid grid-cols-12 gap-6 mt-6">
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6">
           {/* Lado esquerdo */}
-          <div className="col-span-4 space-y-6">
-            <div className="shadow-md">
+          <div className="col-span-8 lg:col-span-4 space-y-6">
+            <div className="shadow-md bg-white rounded-md p-3">
             <CalendarioHome
               currentMonth={currentMonth}
               currentYear={currentYear}
@@ -88,13 +88,13 @@ export default function HomePage() {
               todayYear={new Date().getFullYear()}
             />
             </div>
-            <div className="shadow-md">
+            <div className="shadow-md bg-white rounded-md p-3">
             <ContadorHome eventos={eventos} />
             </div>
           </div>
 
           <div className="col-span-8">
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-[12px] shadow-md p-6 flex flex-col items-center justify-center">
                 <h3 className="font-semibold mb-4 text-black">Locais de Trabalho (Hoje)</h3>
                 <div className="h-[250px] w-full flex items-center justify-center">

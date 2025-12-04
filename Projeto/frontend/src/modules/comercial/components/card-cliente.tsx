@@ -47,7 +47,7 @@ export default function CardCliente({ cliente, excluir }: ClienteCardProps) {
 
   return (
     <>
-      <section className="bg-white w-[450px] rounded-2xl drop-shadow-lg flex flex-col justify-between p-5 transition hover:shadow-xl">
+      <section className="bg-white w-full max-w-[450px] rounded-2xl drop-shadow-lg flex flex-col justify-between p-5 transition hover:shadow-xl">
         {/* Header */}
         <div className="border-b pb-2 mb-2">
           <p className="font-semibold text-lg text-gray-800">{formatCNPJ(cliente.CNPJ)}</p>

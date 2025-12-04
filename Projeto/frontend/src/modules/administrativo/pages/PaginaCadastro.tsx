@@ -119,7 +119,7 @@ export default function Cadastro() {
   };
 
   return (
-    <div className="form-container container">
+    <div className="form-container container  max-w-[95%] md:max-w-[500px] mx-auto">
       <div className="header">
         <p className="text-[25px] md:text-[45px] font-sans font-bold italic text-white pt-5 md:drop-shadow-[10px_8px_3px_rgba(0,0,0,0.3)]">
           Cadastro
@@ -137,9 +137,9 @@ export default function Cadastro() {
             maxLength={100}
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
           />
-          
+
           <InputMaskField
             label="CPF"
             mask="000.000.000-00"
@@ -148,7 +148,7 @@ export default function Cadastro() {
             maxLength={14}
             value={cpf}
             onAccept={(value: string) => setCpf(value)}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
           />
 
           <InputMaskField
@@ -157,7 +157,7 @@ export default function Cadastro() {
             placeholder=""
             required
             maxLength={10}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
             value={dataNascimento ? formatarDataParaPtBr(dataNascimento) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
@@ -177,7 +177,7 @@ export default function Cadastro() {
             required
             maxLength={20}
             value={genero}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
             onChange={(e) => setGenero(e.target.value)}
           />
 
@@ -187,7 +187,7 @@ export default function Cadastro() {
             placeholder=""
             required
             maxLength={10}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
             value={dataContratacao ? formatarDataParaPtBr(dataContratacao) : ""}
             onAccept={(value: string) => {
               if (isValidDataPtBr(value)) {
@@ -207,7 +207,7 @@ export default function Cadastro() {
             required
             maxLength={50}
             value={cargo}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
             onChange={(e) => setCargo(e.target.value)}
           />
 
@@ -218,7 +218,7 @@ export default function Cadastro() {
             required
             maxLength={50}
             value={setor}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
             onChange={(e) => setSetor(e.target.value)}
           />
 
@@ -229,7 +229,7 @@ export default function Cadastro() {
             required
             maxLength={100}
             value={senha}
-            classNameInput='w-[400px]'
+            classNameInput='w-[340px] md:w-[400px]'
             onChange={(e) => setSenha(e.target.value)}
           />
 

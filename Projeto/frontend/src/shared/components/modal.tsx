@@ -25,6 +25,15 @@ const Modal: React.FC<ModalProps> = ({ aberto, onFechar, children, modalClassNam
         <section
             className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999] overflow-y-auto ${modalClassName}`}
             onClick={handleClickOutside}>
+            <button
+                onClick={onFechar}
+                className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center
+                               rounded-full bg-gray-200 hover:bg-gray-300 text-gray-800
+                               font-bold text-lg shadow"
+            >
+                ×
+            </button>
+
             {children}
             {/* <section className={`p-6 w-[30vw] h-[40vh] max-w-full max-h-auto ${modalClassName}`} onClick={(e) => e.stopPropagation()}>
                 {children}
