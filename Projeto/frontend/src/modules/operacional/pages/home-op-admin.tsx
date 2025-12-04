@@ -5,7 +5,7 @@ import { FaCarSide, FaMotorcycle, FaCheck } from 'react-icons/fa'
 import Navbar from "../../../shared/components/navbar.tsx";
 import PieChart from '../../../shared/components/grafico-setor';
 import Header from '../../../shared/components/header';
-import BASE_URL from "./../../../services/api";
+import { BASE_URL } from "./../../../services/api";
 
 // Definição da estrutura do usuário
 interface UserData {

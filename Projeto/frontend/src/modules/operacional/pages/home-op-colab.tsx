@@ -10,7 +10,7 @@ import instance from "../../../services/api";
 import Loading from '../../../shared/components/loading';
 import Modal from '../../../shared/components/modal';
 import LocalTrabalho from '../../administrativo/components/localTrabalho';
-import BASE_URL from "./../../../services/api"
+import { BASE_URL } from "./../../../services/api"
 
 
 const HomeOpColabPage: React.FC = () => {

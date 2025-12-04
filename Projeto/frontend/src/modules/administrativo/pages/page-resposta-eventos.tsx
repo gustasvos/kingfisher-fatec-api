@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../../shared/components/navbar";
 import axios from "axios";
-import BASE_URL from "./../../../services/api"
+import { BASE_URL } from "./../../../services/api"
 
 type Relatorio = {
   id: number;

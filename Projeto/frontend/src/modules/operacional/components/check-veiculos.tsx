@@ -3,7 +3,7 @@ import InputLine from "../../../shared/components/inputLine"
 import { IMaskInput } from "react-imask"
 import Botao from "../../../shared/components/botao"
 import InputMaskField from "../../administrativo/components/InputMaskField"
-import BASE_URL from "../../../services/api"
+import { BASE_URL } from "../../../services/api"
 
 type FormAberturaProps = {
     form: string;

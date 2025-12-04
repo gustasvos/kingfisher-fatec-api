@@ -2,7 +2,7 @@ import { useState } from "react"
 import { IMaskInput } from "react-imask"
 import InputLine from "../../../shared/components/inputLine"
 import BotaoSubmit from "../../../shared/components/botao-submit"
-import BASE_URL from "./../../../services/api"
+import { BASE_URL } from "./../../../services/api"
 
 type FormAberturaProps = {
     form: string;
