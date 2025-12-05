@@ -225,7 +225,7 @@ function PaginaEventos() {
             )}
             
             {/* Botão Agendar para Comercial ou Admin */}
-            {(user?.role === "comercial" || user?.role === "admin" || user?.role === "operacional") && (
+            {(user?.role === "comercial") && (
                 <button onClick={abrirModalAgendamentoCliente} className="btn bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
                 Agendar com Cliente
                 </button>
