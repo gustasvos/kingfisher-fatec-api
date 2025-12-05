@@ -49,11 +49,16 @@ export default function HistoricoCotacoes() {
     const carregarCotacoes = async () => {
       try {
         const cotacaoResponse = await instance.get(`/cotacao/list/${userId}`);
-        // Trata JSON dos campos TEXT
-        const formatadas = formatCotacoes(cotacaoResponse.data);
-        console.log("Cotações formatadas:", formatadas);
 
-        setCotacoes(formatadas);
+        const formatadas = formatCotacoes(cotacaoResponse.data);
+
+        // Atualiza APENAS se mudou
+        setCotacoes(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(formatadas)) {
+            return prev; // sem mudança → evita rerender
+          }
+          return formatadas;
+        });
 
       } catch (error) {
         console.error("Erro ao carregar cotações:", error);
@@ -61,6 +66,8 @@ export default function HistoricoCotacoes() {
     };
 
     carregarCotacoes();
+    const interval = setInterval(carregarCotacoes, 5000);
+    return () => clearInterval(interval);
   }, [userId]);
 
   const reenviarCotacao = async (cotacao: Cotacao) => {

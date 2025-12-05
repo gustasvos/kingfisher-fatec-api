@@ -200,7 +200,7 @@ export const enviarEmailCotacao = async (req: Request, res: Response) => {
 
         await transporter.sendMail({
             from: `"Newe Logística" <${process.env.GMAIL_USER}>`,
-            to: process.env.EMAIL_RECEIVER,
+            to: `${cotacao.cliente.emailResponsavel}, ${process.env.EMAIL_RECEIVER}`,
             subject: `Nova Cotação — Cliente ${cotacao.cliente.nomeFantasia}`,
             html: htmlFinal,
             attachments: [
